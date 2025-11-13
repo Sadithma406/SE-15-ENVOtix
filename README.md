@@ -1,4 +1,4 @@
-# SE-15-ENVOtix
+# SE-15-ENVOTIX
 Envotix Smart Waste Management System
 
 Envotix is an innovative Smart Waste Management System that leverages IoT technology to streamline waste collection and monitoring for municipal councils and households. The system integrates smart bins equipped with sensors to track fill levels, ensuring timely waste collection and reducing unnecessary trips, ultimately promoting environmental sustainability.

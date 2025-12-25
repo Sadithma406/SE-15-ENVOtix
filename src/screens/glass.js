@@ -12,7 +12,7 @@ import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-r
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const PlasticBinScreen = () => {
+const GlassBinScreen = () => {
   // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
   const [fillLevel] = useState(80); 
 
@@ -42,15 +42,15 @@ const PlasticBinScreen = () => {
 
         <View style={styles.subHeader}>
             <ChevronLeft color="#333" size={24} />
-            <Text style={styles.subHeaderTitle}>Plastic Bin</Text>
+            <Text style={styles.subHeaderTitle}>Glass Bin</Text>
         </View>
         <View style={styles.iconTitleSection}>
           <Image 
-            source={require('../../images/plastic.png')} // Make sure this filename matches your asset
-            style={styles.recycleImage} 
+            source={require('../../images/glass.png')} // Make sure this filename matches your asset
+            style={styles.glassImage} 
             resizeMode="contain"
           />
-          <Text style={styles.iconSectionText}>Plastic Bin</Text>
+          <Text style={styles.iconSectionText}>Glass Bin</Text>
         </View> 
 
 
@@ -66,12 +66,12 @@ const PlasticBinScreen = () => {
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
             <Lightbulb color="#4CAF50" size={20} />
-            <Text style={styles.tipsTitle}>Plastic Recycling Tips</Text>
+            <Text style={styles.tipsTitle}>Glass Recycling Tips</Text>
           </View>
-           <Text style={styles.tipItem}>• Avoid single-use plastics by choosing reusable alternatives daily.</Text>
-                    <Text style={styles.tipItem}>• Clean plastic containers before recycling to prevent contamination.</Text>
-                    <Text style={styles.tipItem}>• Separate plastic waste from food and other materials.</Text>
-                    <Text style={styles.tipItem}>• Reuse plastic bottles and containers whenever possible.</Text>
+           <Text style={styles.tipItem}>• Rinse glass bottles and jars before placing them in recycling.</Text>
+            <Text style={styles.tipItem}>• Throwing glass carelessly causes injuries and long-lasting environmental damage.</Text>
+            <Text style={styles.tipItem}>• Reuse glass containers for storage instead of discarding.</Text>
+            <Text style={styles.tipItem}>• Improper glass disposal harms wildlife, sanitation workers, and public safety.</Text>
         </View>
       </ScrollView>
       <View style={styles.footer}>
@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
     marginLeft: 10, 
     color: '#333' 
   },
-  recycleImage: {
-  width: 35,
-  height: 35,
-  marginRight: 12,
+  glassImage: {
+  width: 55,
+  height: 55,
+  marginRight:2,
 },
 iconTitleSection: { 
   flexDirection: 'row', 
@@ -196,4 +196,4 @@ updateText: {
   }
 });
 
-export default PlasticBinScreen;
+export default GlassBinScreen;

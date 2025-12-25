@@ -5,18 +5,15 @@ import { Trash2 } from 'lucide-react-native';
 
 const CircularGauge = ({ percentage }) => {
   const strokeWidth = 14; 
-  const radius = 90 * percentage / 100;
+  
+  const radius = 80; 
 
-  /**
-   * ARC LENGTH INCREASE: 
-   * I increased the multiplier to 1.65 to account for the extra wrap-around.
-   */
-  const circumference = radius * Math.PI * 1.65; 
-  const dashOffset = circumference - (circumference * percentage) / 100;
+  const totalArcLength = 2 * Math.PI * radius * 0.77; 
+  
+  const dashOffset = totalArcLength - (totalArcLength * percentage) / 100;
 
   return (
     <View style={styles.container}>
-      {/* Svg height increased to 280 to handle the extreme downward curve */}
       <Svg width="280" height="280" viewBox="0 0 200 200">
         <Defs>
           <LinearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -26,10 +23,7 @@ const CircularGauge = ({ percentage }) => {
           </LinearGradient>
         </Defs>
 
-        {/* PATH CHANGE: 
-          Start at (60, 180) and End at (140, 180). 
-          Moving these X-coordinates closer together makes the circle wrap further down.
-        */}
+        {/* Background Track (Gray) */}
         <Path
           d="M 60 180 A 75 75 0 1 1 140 180"
           fill="none"
@@ -38,21 +32,22 @@ const CircularGauge = ({ percentage }) => {
           strokeLinecap="round"
         />
 
+        {/* Progress Track (Colored) */}
         <Path
           d="M 60 180 A 75 75 0 1 1 140 180"
           fill="none"
           stroke="url(#gaugeGrad)"
           strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
+          strokeDasharray={totalArcLength}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
         />
       </Svg>
 
       <View style={styles.labelContainer}>
-        <Trash2 size={60} color="#333" style={{ marginBottom: 20 }} />
+        <Trash2 size={60} color="#333" style={{ marginBottom: 15 }} />
         <Text style={styles.percentText}>{percentage}%</Text>
-        <Text style={styles.statusText}>Full</Text>
+        <Text style={styles.statusText}>Filled</Text>
       </View>
     </View>
   );
@@ -66,18 +61,18 @@ const styles = StyleSheet.create({
   },
   labelContainer: { 
     position: 'absolute', 
-    top: 95, // Pushed lower to center it inside the near-complete circle
+    top: 90, 
     alignItems: 'center',
     justifyContent: 'center'
   },
   percentText: { 
     fontSize: 52, 
     fontWeight: 'bold', 
-    color: '#F44336',
+    color: '#F44336', // You could also make this dynamic!
     lineHeight: 55
   },
   statusText: { 
-    fontSize: 38, 
+    fontSize: 32, 
     fontWeight: 'bold', 
     color: '#1A1A1A',
     marginTop: -5

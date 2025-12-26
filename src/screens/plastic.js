@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
   subHeader: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    marginBottom: 25 
+    marginBottom: 25,
+    marginTop: 30,
   },
   subHeaderTitle: { 
     fontSize: 22, 

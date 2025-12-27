@@ -1,0 +1,66 @@
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+    padding: 15,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  searchBar: {
+    backgroundColor: "#FFF",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  categoryChip: {
+    backgroundColor: "#E0F2E9",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  categoryText: {
+    color: "#2E7D32",
+    fontSize: 13,
+  },
+  card: {
+    backgroundColor: "#FFF",
+    borderRadius: 15,
+    padding: 10,
+    width: "48%",
+    marginBottom: 15,
+  },
+  image: {
+    width: "100%",
+    height: 90,
+    borderRadius: 10,
+  },
+  tag: {
+    backgroundColor: "#DFF5EA",
+    alignSelf: "flex-start",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginTop: 5,
+  },
+  tagText: {
+    fontSize: 11,
+    color: "#2E7D32",
+  },
+  discount: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+  coins: {
+    fontSize: 12,
+    color: "#777",
+  },
+});

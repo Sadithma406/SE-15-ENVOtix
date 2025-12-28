@@ -1,59 +1,109 @@
+{/* Header Section */}
+<View style={styles.header}>
+  <Image 
+    source={require('../../images/whiteLogoNoBg2.png')}
+    style={styles.logo}
+    resizeMode="contain"
+  />
 
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-const CoinHeader = () => {
-  return (
-    <View style={styles.container}>
-      {/* Logo */}
-      <Image
-        source={require('./assets/envo_logo.png')} 
-        style={styles.logo}
-        resizeMode="contain"
-      />
+  <View style={styles.headerTextContainer}>
+    <Text style={styles.headerBaseText}>
+      <Text style={styles.envoText}>ENVO</Text>
+      <Text style={styles.tixText}>tix</Text>
+    </Text>
+  </View>
 
-      {/* Spacer */}
-      <View style={{ flex: 1 }} />
+  <View style={styles.headerIcons}>
+    <Bell color="black" size={24} style={{ marginRight: 15 }} />
+    <Menu color="black" size={24} />
+  </View>
+</View>
 
-      {/* Logo Text "ENVOtix" */}
-      <Text style={styles.logoText}>
-        <Text style={styles.envo}>ENVO</Text>
-        <Text style={styles.tix}>tix</Text>
-      </Text>
+{/* Footer Section */}
+<View style={styles.footer}>
+  <View style={styles.footerTab}>
+    <Home color="#666" size={24} />
+    <Text style={styles.footerText}>Home</Text>
+  </View>
 
-      {/* Spacer */}
-      <View style={{ flex: 1 }} />
+  <View style={styles.footerTab}>
+    <Wallet color="#666" size={24} />
+    <Text style={styles.footerText}>Coins</Text>
+  </View>
 
-      {/* Bell Icon */}
-      <Icon name="notifications-outline" size={20} color="white" />
-
-      {/* Hamburger Menu */}
-      <Icon name="menu" size={24} color="white" style={{ marginLeft: 8 }} />
-    </View>
-  );
-};
+  <View style={styles.footerTab}>
+    <Store color="#666" size={24} />
+    <Text style={styles.footerText}>Shops</Text>
+  </View>
+</View>
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: '#F5F5F5',
+  },
+
+  header: { 
+    backgroundColor: '#4CAF50', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'green',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
+
   logo: {
-    width: 80,
-    height: 60,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
-  logoText: {
-    fontSize: 28,
-    color: 'white',
+
+  headerTextContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
-  envo: {
-    fontWeight: 'bold',
+
+  headerBaseText: {
+    flexDirection: 'row',
   },
-  tix: {
-    fontWeight: '400',
+
+  envoText: { 
+    color: 'green', 
+    fontSize: 22, 
+    fontWeight: 'bold' 
+  },
+
+  tixText: { 
+    color: 'black', 
+    fontSize: 22, 
+    fontWeight: 'bold' 
+  },
+
+  headerIcons: { 
+    flexDirection: 'row' 
+  },
+
+  footer: {
+    flexDirection: 'row',
+    height: 70,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#EEE',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+  },
+
+  footerTab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  footerText: {
+    fontSize: 12,
+    marginTop: 4,
+    color: '#666',
+    fontWeight: '500',
   },
 });
 
-export default CoinHeader;

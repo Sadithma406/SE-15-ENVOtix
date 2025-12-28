@@ -1,6 +1,6 @@
 import React from "react";
-import HomeScreen from "./src/screens/HomeScreen";
+import EditProfileScreen from "./src/screens/EditProfileScreen";
 
 export default function App() {
-  return <HomeScreen />;
+  return <EditProfileScreen />;
 }

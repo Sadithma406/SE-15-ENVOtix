@@ -1,61 +1,215 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-export default function HomeScreen() {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    // Temporary data (later replace with backend API)
-    const registeredUser = {
-      name: "Seniru Demitha",
-      email: "seniru@gmail.com",
-      address: "Colombo, Sri Lanka",
-      role: "Household User"
-    };
-
-    setUser(registeredUser);
-  }, []);
-
+export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome 👋</Text>
-
-      <View style={styles.card}>
-        <Text style={styles.label}>Name:</Text>
-        <Text>{user.name}</Text>
-
-        <Text style={styles.label}>Email:</Text>
-        <Text>{user.email}</Text>
-
-        <Text style={styles.label}>Address:</Text>
-        <Text>{user.address}</Text>
-
-        <Text style={styles.label}>Role:</Text>
-        <Text>{user.role}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      {/* ================= HEADER ================= */}
+      <View style={styles.header}>
+        <Image
+          source={require('../../assets/whiteLogoNoBg2.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerBaseText}>
+            <Text style={styles.envoText}>ENVO</Text>
+            <Text style={styles.tixText}>tix</Text>
+          </Text>
+        </View>
+        <View style={styles.headerIcons}>
+          <MaterialIcons name="notifications-none" size={24} color="black" style={{ marginRight: 15 }} />
+          <MaterialIcons name="menu" size={26} color="black" />
+        </View>
       </View>
-    </View>
+
+      {/* ================= BODY ================= */}
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* Banner */}
+        <View style={styles.banner}>
+          <View>
+            <Text style={styles.bannerTitle}>WASTE{'\n'}MANAGEMENT</Text>
+            <Text style={styles.bannerSub}>Track waste in real-time</Text>
+          </View>
+          <View style={styles.bannerIcon}>
+            <MaterialIcons name="delete-outline" size={55} color="#000" />
+          </View>
+        </View>
+
+        {/* Profile Card */}
+        <View style={styles.card}>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatar}>
+              <MaterialIcons name="person" size={30} color="#000" />
+            </View>
+            <View>
+              <Text style={styles.profileName}>Sanath Silva</Text>
+              <Text style={styles.profileSub}>Welcome back to Envotix!</Text>
+            </View>
+          </View>
+          <Text style={styles.info}>Contact no: 0712379876</Text>
+          <Text style={styles.info}>Email: sanath.s@gmail.com</Text>
+          <Text style={styles.info}>Bin number: B37890</Text>
+
+          {/* Navigation to Edit Profile */}
+          <TouchableOpacity
+            style={styles.editProfileButton}
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={styles.editProfileText}>Edit profile</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ================= ACTION CARDS ================= */}
+        <View style={styles.actionCard}>
+          <View style={styles.actionRow}>
+            <View>
+              <Text style={styles.actionTitle}>Monitor My Bin</Text>
+              <Text style={styles.actionSub}>Check fill level!</Text>
+              <Text style={styles.actionInfo}>Last Updated: 30 mins ago</Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={28} color="#666" />
+          </View>
+        </View>
+
+        <View style={styles.actionCard}>
+          <View style={styles.actionRow}>
+            <View>
+              <Text style={styles.actionTitle}>View QR Code</Text>
+              <Text style={styles.actionSub}>Open QR code to obtain rewards</Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={28} color="#666" />
+          </View>
+        </View>
+
+        <View style={styles.actionCard}>
+          <View style={styles.actionRow}>
+            <View>
+              <Text style={styles.actionTitle}>View Coins</Text>
+              <Text style={styles.actionSub}>Check the coins earned to get rewards</Text>
+            </View>
+            <MaterialIcons name="chevron-right" size={28} color="#666" />
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* ================= FOOTER ================= */}
+      <View style={styles.footer}>
+        <View style={styles.footerTab}>
+          <Ionicons name="home" size={24} color="#666" />
+          <Text style={styles.footerText}>Home</Text>
+        </View>
+        <View style={styles.footerTab}>
+          <Ionicons name="wallet" size={24} color="#666" />
+          <Text style={styles.footerText}>Coins</Text>
+        </View>
+        <View style={styles.footerTab}>
+          <Ionicons name="storefront" size={24} color="#666" />
+          <Text style={styles.footerText}>Shops</Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
+/* ================= STYLES ================= */
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f4f6f8"
+  safeArea: { flex: 1, backgroundColor: '#F5F5F5' },
+  logo: { width: 40, height: 40, borderRadius: 20 },
+  header: {
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 0,
+    marginHorizontal: -20,
+    paddingTop: 30,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20
+  headerTextContainer: { flex: 1, alignItems: 'center' },
+  headerBaseText: { fontSize: 22, fontWeight: 'bold' },
+  envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
+  tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
+  headerIcons: { flexDirection: 'row' },
+  content: { paddingBottom: 20 },
+  banner: {
+    backgroundColor: '#CDEECD',
+    margin: 15,
+    borderRadius: 14,
+    padding: 18,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
+  bannerTitle: { fontSize: 24, fontWeight: 'bold' },
+  bannerSub: { marginTop: 5, color: '#444', fontSize: 14 },
+  bannerIcon: { backgroundColor: '#A5D6A7', padding: 20, borderRadius: 12 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#FFF',
+    marginHorizontal: 15,
+    borderRadius: 14,
     padding: 15,
-    borderRadius: 8,
-    elevation: 3
+    elevation: 3,
   },
-  label: {
-    fontWeight: "bold",
-    marginTop: 10
-  }
+  profileHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  avatar: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#CDEECD',
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  profileName: { fontWeight: 'bold', fontSize: 16 },
+  profileSub: { fontSize: 13, color: '#666' },
+  info: { marginTop: 5, color: '#333', fontSize: 13 },
+  editProfileButton: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  editProfileText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  actionCard: {
+    backgroundColor: '#FFF',
+    marginHorizontal: 15,
+    marginTop: 14,
+    padding: 20,
+    borderRadius: 12,
+    elevation: 2,
+  },
+  actionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  actionTitle: { fontWeight: 'bold', fontSize: 16 },
+  actionSub: { fontSize: 13, color: '#666', marginTop: 2 },
+  actionInfo: { fontSize: 12, color: '#999', marginTop: 4 },
+  footer: {
+    flexDirection: 'row',
+    height: 70,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#EEE',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+  },
+  footerTab: { alignItems: 'center', justifyContent: 'center' },
+  footerText: { fontSize: 12, marginTop: 4, color: '#666', fontWeight: '500' },
 });

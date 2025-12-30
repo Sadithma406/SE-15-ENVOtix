@@ -1,5 +1,5 @@
-import LoginPage from './login_page';
+import SplashScreen from './splash';
 
 export default function App() {
-  return <LoginPage />;
+  return <SplashScreen />;
 }

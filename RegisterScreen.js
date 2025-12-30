@@ -12,15 +12,10 @@ import { Ionicons } from "@expo/vector-icons";
 export default function RegisterScreen() {
   return (
     <View style={styles.wrapper}>
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Create new account</Text>
-      </View>
 
       <ScrollView contentContainerStyle={styles.container}>
 
-        <Text style={styles.title}>Join ENVOTix</Text>
+        <Text style={styles.title}>Join ENVOtix</Text>
         <Text style={styles.subtitle}>
           Your journey to smarter waste management begins here. Create an
           account to monitor your bins and earn rewards.
@@ -61,17 +56,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    backgroundColor: "#6BBE45",
-    paddingVertical: 15,
-    alignItems: "center",
-  },
-  headerText: {
-    color: "#000",
-    fontSize: 18,
-    fontWeight: "bold",
+    backgroundColor: "#e7f1d4ff",
   },
   container: {
     padding: 20,
@@ -80,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 10,
+    marginTop: 50,
   },
   subtitle: {
     textAlign: "center",

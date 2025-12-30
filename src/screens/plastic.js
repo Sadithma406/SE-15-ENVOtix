@@ -6,7 +6,8 @@ import {
   ScrollView,
   Image,
   Platform, 
-  StatusBar
+  StatusBar,
+  TouchableOpacity
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';
@@ -36,7 +37,9 @@ const PlasticBinScreen = () => {
         </View>
         <View style={styles.headerIcons}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          <Menu color="black" size={24} />
+          <TouchableOpacity onPress={() => Navigation.navigate('sideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
         </View>
       </View>
 

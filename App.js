@@ -1,5 +1,6 @@
-import SplashScreen from './splash';
+import React from "react";
+import RegisterScreen from "./RegisterScreen";
 
 export default function App() {
-  return <SplashScreen />;
+  return <RegisterScreen />;
 }

@@ -1,19 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image} from 'react-native';
+import { View, Text, StyleSheet,Image, Touchable, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Home, Trash2, QrCode, Coins, Tag, Bell, User,Menu } from 'lucide-react-native';
 
-const CustomDrawer = () => {
+const CustomDrawer = ({navigation}) => {
   // List of items to display in the menu
   const menuItems = [
-    { label: 'Home', icon: Home },
-    { label: 'Monitor Bin', icon: Trash2 },
-    { label: 'QR Code', icon: QrCode },
-    { label: 'Coins Earned', icon: Coins },
-    { label: 'Redeem Shops', icon: Tag },
-    { label: 'Notifications', icon: Bell },
-    { label: 'View Profile', icon: User },
+    { label: 'Home', icon: Home, screen: 'Home' },
+    { label: 'Monitor Bin', icon: Trash2, screen: 'MonitorBin' },
+    { label: 'QR Code', icon: QrCode, screen: 'QRCode' },
+    { label: 'Coins Earned', icon: Coins, screen: 'Coins' },
+    { label: 'Redeem Shops', icon: Tag, screen: 'Shops' },
+    { label: 'Notifications', icon: Bell, screen: 'Notification' },
+    { label: 'View Profile', icon: User, screen: 'Profile' },
   ];
 
   return (
@@ -21,7 +21,7 @@ const CustomDrawer = () => {
     {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-    source={require('../../images/whiteLogoNoBg2.png')} 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
     style={styles.logo} 
     resizeMode="contain"
   />
@@ -32,18 +32,22 @@ const CustomDrawer = () => {
             </Text>
         </View>
         <View style={styles.headerIcons}>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Menu color="white" size={24} />
+        </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
           <View key={index} style={styles.menuItem}>
-            {/* The Text comes first because it is on the left of the icon */}
+          <TouchableOpacity style={styles.menuItem} key={index} onPress={() => navigation.navigate(item.screen)}>
             <Text style={styles.menuText}>{item.label}</Text>
-            {/* The Icon is on the far right */}
             <item.icon color="white" size={24} />
+          </TouchableOpacity>  
           </View>
         ))}
       </View>
@@ -87,9 +91,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'flex-end', // Pushes content to the right
     alignItems: 'center', 
-    marginBottom: 35 // Vertical gap between items
+    marginBottom: 17 // Vertical gap between items
   },
   menuText: { 
+    padding:0,
     color: 'white', 
     fontSize: 18, 
     fontWeight: '500', 

@@ -24,7 +24,7 @@ const GlassBinScreen = () => {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-    source={require('../../images/whiteLogoNoBg2.png')} 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
     style={styles.logo} 
     resizeMode="contain"
   />
@@ -46,7 +46,7 @@ const GlassBinScreen = () => {
         </View>
         <View style={styles.iconTitleSection}>
           <Image 
-            source={require('../../images/glass.png')} // Make sure this filename matches your asset
+            source={require('../../assets/glass.png')} // Make sure this filename matches your asset
             style={styles.glassImage} 
             resizeMode="contain"
           />

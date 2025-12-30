@@ -41,8 +41,8 @@ const CoinsScreen = () => {
             </Text>
         </View>
         <View style={styles.headerIcons}>
-          <Bell color="white" size={24} style={{ marginRight: 15 }} />
-          <Menu color="white" size={24} />
+          <Bell color="black" size={24} style={{ marginRight: 15 }} />
+          <Menu color="black" size={24} />
         </View>
       </View>
 

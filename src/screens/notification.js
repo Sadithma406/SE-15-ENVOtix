@@ -22,7 +22,7 @@ export default function Notification() {
         {/* Header */}
         <View style={styles.header}>
           <Image
-            source={require('../../images/whiteLogoNoBg2.png')}
+            source={require('../../assets/whiteLogoNoBg2.png')}
             style={styles.logo}
             resizeMode="contain"
           />

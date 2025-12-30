@@ -24,7 +24,7 @@ const OrganicBinScreen = () => {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-    source={require('../../images/whiteLogoNoBg2.png')} 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
     style={styles.logo} 
     resizeMode="contain"
   />
@@ -46,7 +46,7 @@ const OrganicBinScreen = () => {
         </View>
         <View style={styles.iconTitleSection}>
           <Image 
-            source={require('../../images/organic.png')} // Make sure this filename matches your asset
+            source={require('../../assets/organic.png')} // Make sure this filename matches your asset
             style={styles.recycleImage} 
             resizeMode="contain"
           />

@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
   Platform, 
-  StatusBar 
+  StatusBar
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';

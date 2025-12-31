@@ -6,13 +6,14 @@ import {
   ScrollView,
   Image,
   Platform, 
-  StatusBar 
+  StatusBar, 
+  TouchableOpacity
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const OrganicBinScreen = () => {
+const OrganicBinScreen = ({navigation}) => {
   // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
   const [fillLevel] = useState(90); 
 
@@ -24,7 +25,7 @@ const OrganicBinScreen = () => {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-    source={require('../../images/whiteLogoNoBg2.png')} 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
     style={styles.logo} 
     resizeMode="contain"
   />
@@ -35,18 +36,22 @@ const OrganicBinScreen = () => {
             </Text>
         </View>
         <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
           <Menu color="black" size={24} />
-        </View>
+        </TouchableOpacity>
       </View>
+    </View>
 
-        <View style={styles.subHeader}>
-            <ChevronLeft color="#333" size={24} />
-            <Text style={styles.subHeaderTitle}>Organic Bin</Text>
-        </View>
-        <View style={styles.iconTitleSection}>
-          <Image 
-            source={require('../../images/organic.png')} // Make sure this filename matches your asset
+    <View style={styles.subHeader}>
+      <ChevronLeft color="#333" size={24} />
+      <Text style={styles.subHeaderTitle}>Organic Bin</Text>
+    </View>
+    <View style={styles.iconTitleSection}>
+      <Image
+            source={require('../../assets/organic.png')} // Make sure this filename matches your asset
             style={styles.recycleImage} 
             resizeMode="contain"
           />
@@ -75,19 +80,25 @@ const OrganicBinScreen = () => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <View style={styles.footerTab}>
-          <Home color="#666" size={24} />
-          <Text style={styles.footerText}>Home</Text>
-        </View>
-        <View style={styles.footerTab}>
-          <Wallet color="#666" size={24} />
-          <Text style={styles.footerText}>Coins</Text>
-        </View>
-        <View style={styles.footerTab}>
-          <Store color="#666" size={24} />
-          <Text style={styles.footerText}>Shops</Text>
-        </View>
-      </View>
+              <View style={styles.footerTab}>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <Home color="#666" size={24} />
+                <Text style={styles.footerText}>Home</Text>
+              </TouchableOpacity>
+              </View>
+              <View style={styles.footerTab}>
+                <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+                  <Wallet color="#666" size={24} />
+                  <Text style={styles.footerText}>Coins</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.footerTab}>
+                <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+                  <Store color="#666" size={24} />
+                  <Text style={styles.footerText}>Shops</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
     </SafeAreaView>
   );
 };

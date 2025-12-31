@@ -6,13 +6,14 @@ import {
   ScrollView,
   Image,
   Platform, 
-  StatusBar 
+  StatusBar,
+  TouchableOpacity
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const PlasticBinScreen = () => {
+const PlasticBinScreen = ({ navigation }) => {
   // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
   const [fillLevel] = useState(80); 
 
@@ -24,7 +25,7 @@ const PlasticBinScreen = () => {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-    source={require('../../images/whiteLogoNoBg2.png')} 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
     style={styles.logo} 
     resizeMode="contain"
   />
@@ -35,8 +36,12 @@ const PlasticBinScreen = () => {
             </Text>
         </View>
         <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          <Menu color="black" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -46,7 +51,7 @@ const PlasticBinScreen = () => {
         </View>
         <View style={styles.iconTitleSection}>
           <Image 
-            source={require('../../images/plastic.png')} // Make sure this filename matches your asset
+            source={require('../../assets/plastic.png')} // Make sure this filename matches your asset
             style={styles.recycleImage} 
             resizeMode="contain"
           />
@@ -76,16 +81,22 @@ const PlasticBinScreen = () => {
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.footerTab}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Wallet color="#666" size={24} />
-          <Text style={styles.footerText}>Coins</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Store color="#666" size={24} />
-          <Text style={styles.footerText}>Shops</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

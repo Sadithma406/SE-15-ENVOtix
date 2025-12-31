@@ -56,7 +56,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#e7f1d4ff",
+    backgroundColor: "#ffffffff",
   },
   container: {
     padding: 20,

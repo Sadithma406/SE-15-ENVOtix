@@ -11,31 +11,39 @@ import {
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safeArea}>
+    <StatusBar backgroundColor="#4CAF50"/>
+     <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
+    
       {/* ================= HEADER ================= */}
       <View style={styles.header}>
-        <Image
-          source={require('../../assets/whiteLogoNoBg2.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <Image 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
+    style={styles.logo} 
+    resizeMode="contain"
+  />
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerBaseText}>
+            <Text style={styles.headerBaseText}>
             <Text style={styles.envoText}>ENVO</Text>
             <Text style={styles.tixText}>tix</Text>
-          </Text>
+            </Text>
         </View>
         <View style={styles.headerIcons}>
-          <MaterialIcons name="notifications-none" size={24} color="black" style={{ marginRight: 15 }} />
-          <MaterialIcons name="menu" size={26} color="black" />
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+          <Bell color="black" size={24} style={{ marginRight: 15 }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
         </View>
       </View>
 
+
       {/* ================= BODY ================= */}
-      <ScrollView contentContainerStyle={styles.content}>
         {/* Banner */}
         <View style={styles.banner}>
           <View>
@@ -134,15 +142,15 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F5F5F5' },
   logo: { width: 40, height: 40, borderRadius: 20 },
   header: {
-    backgroundColor: '#4CAF50',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: '#4CAF50', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 9, 
     alignItems: 'center',
-    marginTop: 0,
+    marginTop: -20, 
     marginHorizontal: -20,
-    paddingTop: 30,
+    paddingTop: 20,
   },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   headerBaseText: { fontSize: 22, fontWeight: 'bold' },

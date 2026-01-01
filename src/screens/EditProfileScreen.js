@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  StatusBar,
   Platform,
 } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -20,24 +21,33 @@ export default function EditProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+     <StatusBar backgroundColor="#4CAF50"/>
+        <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
+    
       {/* ================= HEADER ================= */}
-      <View style={styles.header}>
-        
-        <View style={styles.headerTextContainer}>
-          <Text style={styles.headerBaseText}>
-            <Text style={styles.envoText}>ENVO</Text>
-            <Text style={styles.tixText}>tix</Text>
-          </Text>
-          <Text style={styles.headerSubtitle}>Edit Profile</Text>
-        </View>
-        <View style={styles.headerIcons}>
-          <MaterialIcons name="notifications-none" size={24} color="black" style={{ marginRight: 15 }} />
-          <MaterialIcons name="menu" size={26} color="black" />
-        </View>
-      </View>
+     <View style={styles.header}>
+             <Image 
+         source={require('../../assets/whiteLogoNoBg2.png')} 
+         style={styles.logo} 
+         resizeMode="contain"
+       />
+             <View style={styles.headerTextContainer}>
+                 <Text style={styles.headerBaseText}>
+                 <Text style={styles.envoText}>ENVO</Text>
+                 <Text style={styles.tixText}>tix</Text>
+                 </Text>
+             </View>
+             <View style={styles.headerIcons}>
+               <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+                 <Bell color="black" size={24} style={{ marginRight: 15 }} />
+               </TouchableOpacity>
+               <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+                 <Menu color="black" size={24} />
+               </TouchableOpacity>
+             </View>
+           </View>
 
       {/* ================= BODY ================= */}
-      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.profileSection}>
         
           <Text style={styles.profileName}>{name}</Text>
@@ -106,32 +116,32 @@ export default function EditProfileScreen({ navigation }) {
         </TouchableOpacity>
 
         {/* Back to Home */}
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Home")}>
           <Text style={styles.backText}>Back to Home</Text>
         </TouchableOpacity>
       </ScrollView>
 
       {/* ================= FOOTER ================= */}
-      <View style={styles.footer}>
-        <View style={styles.footerTab}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Home color="#666" size={24} />
-          <Text style={styles.footerText}>Home</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
-            <Wallet color="#666" size={24} />
-            <Text style={styles.footerText}>Coins</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
-            <Store color="#666" size={24} />
-            <Text style={styles.footerText}>Shops</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+       <View style={styles.footer}>
+              <View style={styles.footerTab}>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <Home color="#666" size={24} />
+                <Text style={styles.footerText}>Home</Text>
+              </TouchableOpacity>
+              </View>
+              <View style={styles.footerTab}>
+                <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+                  <Wallet color="#666" size={24} />
+                  <Text style={styles.footerText}>Coins</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.footerTab}>
+                <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+                  <Store color="#666" size={24} />
+                  <Text style={styles.footerText}>Shops</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
     </SafeAreaView>
   );
 }
@@ -147,11 +157,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 9,
     alignItems: 'center',
     marginTop: 0,
     marginHorizontal: -20,
-    paddingTop: 30,
   },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   headerBaseText: { fontSize: 22, fontWeight: 'bold' },

@@ -46,7 +46,9 @@ const PlasticBinScreen = ({ navigation }) => {
       </View>
 
         <View style={styles.subHeader}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft color="#333" size={24} />
+            </TouchableOpacity>
             <Text style={styles.subHeaderTitle}>Plastic Bin</Text>
         </View>
         <View style={styles.iconTitleSection}>

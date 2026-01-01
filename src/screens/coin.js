@@ -26,7 +26,7 @@ const CoinsScreen = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       {/* Ensures the top system bar is the same green as the header */}
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
-
+    <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
@@ -50,12 +50,7 @@ const CoinsScreen = ({navigation}) => {
         </View>
       </View>
 
-
-      <ScrollView 
-        style={styles.container} 
-        contentContainerStyle={styles.scrollContent}
-      >
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <ChevronLeft color="#333" size={24} />
           <Text style={styles.subHeaderTitle}>My Coins</Text>
         </TouchableOpacity>
@@ -84,7 +79,7 @@ const CoinsScreen = ({navigation}) => {
           <Text style={styles.redeemSubtitle}>
             Exchange your earned EcoCoins for exciting discounts and offers at our partner shops.
           </Text>
-          <TouchableOpacity style={styles.redeemButton}>
+          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops')}>
             <Text style={styles.redeemButtonText}>View Redeem Shops</Text>
           </TouchableOpacity>
         </View>
@@ -133,12 +128,15 @@ const styles = StyleSheet.create({
   },
 
   header: { 
-    backgroundColor: '#4CAF50', 
+   backgroundColor: '#4CAF50', 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    paddingVertical: 12, 
+    paddingVertical: 9, 
     alignItems: 'center',
+    marginTop: -20, 
+    marginHorizontal: -20,
+    paddingTop: 20,
   },
   
   logo: { width: 40, height: 40 },
@@ -151,8 +149,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9F9F9' },
   scrollContent: { padding: 20 },
   
-  backButton: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  subHeaderTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 8, color: '#333' },
+  backButton: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10},
+  subHeaderTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 8, color: '#333'},
 
   balanceCard: {
     backgroundColor: 'white',

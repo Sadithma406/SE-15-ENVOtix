@@ -10,7 +10,7 @@ import {
   StatusBar,
   TouchableOpacity
 } from 'react-native';
-import { Bell, Menu, Home, Wallet, Store, Trash2, CheckCircle, Circle } from 'lucide-react-native';
+import { ChevronLeft, Bell, Menu, Home, Wallet, Store, Trash2, CheckCircle, Circle } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Notification({navigation}) {
@@ -47,7 +47,9 @@ export default function Notification({navigation}) {
         {/* Content */}
         <View style={styles.content}>
           <View style={styles.pageTitleRow}>
-            <Text style={styles.backArrow}>‹</Text>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <ChevronLeft color="#333" size={24} />
+            </TouchableOpacity>
             <Text style={styles.pageTitle}>Notifications</Text>
           </View>
 
@@ -133,11 +135,15 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    backgroundColor: '#4CAF50',
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: '#4CAF50', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 9, 
+    alignItems: 'center',
+    marginTop: -20, 
+    marginHorizontal: -20,
+    paddingTop: 20,
   },
 
   logo: {

@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import EditProfileScreen from "./src/screens/EditProfileScreen";
-
-export default function App() {
-  return <EditProfileScreen />;
-}
-=======
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -16,15 +8,20 @@ import CoinsScreen from './src/screens/coin';
 import OrganicBinScreen from './src/screens/organic';
 import Notification from './src/screens/notification';
 import GlassBinScreen from './src/screens/glass';
-import ShopScreen from './src/screens/RedeemShops/shopsDetails';
-import ShopDetailsScreen from './src/screens/RedeemShopsOfferDetails/RedeemShopsOfferDetails';
+import Shops from './src/screens/RedeemShops/shopsDetails';
+import ShopDetails from './src/screens/RedeemShopsOfferDetails/RedeemShopsOfferDetails';
+import LoginScreen from './src/screens/Login_Page';
+import RegisterScreen from './src/screens/RegisterScreen';
+import SplashScreen from './src/screens/Splash';
+import HomeScreen from './src/screens/HomeScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SideBar' screenOptions={{ headerShown: false }}
+      <Stack.Navigator initialRouteName='QR' screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Plastic" component={PlasticBinScreen} />
         <Stack.Screen name="SideBar" component={SideScreen} />
@@ -32,9 +29,14 @@ export default function App() {
         <Stack.Screen name="Organic" component={OrganicBinScreen} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="Glass" component={GlassBinScreen} />
-        <Stack.Screen name="Shops" component={ShopScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Shops" component={Shops} />
+        <Stack.Screen name="ShopDetails" component={ShopDetails} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Splash" component={SplashScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
->>>>>>> origin/main

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TextInput,
   TouchableOpacity,
@@ -11,7 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Home, Wallet, Store,Bell,Menu } from 'lucide-react-native';
 export default function EditProfileScreen({ navigation }) {
   const [name, setName] = useState('Sanath Silva');
   const [email, setEmail] = useState('sanath.s@yahoo.com');
@@ -114,16 +114,22 @@ export default function EditProfileScreen({ navigation }) {
       {/* ================= FOOTER ================= */}
       <View style={styles.footer}>
         <View style={styles.footerTab}>
-          <Ionicons name="home" size={24} color="#666" />
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Ionicons name="wallet" size={24} color="#666" />
-          <Text style={styles.footerText}>Coins</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Ionicons name="storefront" size={24} color="#666" />
-          <Text style={styles.footerText}>Shops</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

@@ -3,49 +3,50 @@ import {
     View,
     Text,
     StyleSheet,
-    SafeAreaView,
     TouchableOpacity,
     StatusBar as RNStatusBar,
     Platform,
+    Image,
 } from 'react-native';
+import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function QRCodePage() {
+
+export default function QRCodePage({navigation}) {
     // Sample QR code value - replace with actual user data
     const qrValue = 'ENVOtix-User-12345';
     const insets = useSafeAreaInsets();
 
     return (
         <View style={styles.container}>
-            <RNStatusBar barStyle="light-content" backgroundColor="#4CAF50" />
+            <RNStatusBar barStyle="light-content" backgroundColor="#4CAF50" translucent={false} />
 
             {/* Header */}
-            <View style={[styles.header, { paddingTop: Math.max(insets.top, Platform.OS === 'android' ? 8 : 0) }]}>
-                <View style={styles.headerLeft}>
-                    <View style={styles.logoContainer}>
-                        <Ionicons name="bulb" size={20} color="#fff" />
-                        <View style={styles.recycleRing}>
-                            <Ionicons name="reload" size={18} color="#fff" />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>
-                        <Text style={styles.headerTitleENVO}>ENVO</Text>
-                        <Text style={styles.headerTitleTix}>tix</Text>
-                    </Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Ionicons name="notifications-outline" size={24} color="#fff" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Ionicons name="menu" size={24} color="#fff" />
-                    </TouchableOpacity>
-                </View>
-            </View>
+             <View style={styles.header}>
+        <Image 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
+    style={styles.logo} 
+    resizeMode="contain"
+  />
+        <View style={styles.headerTextContainer}>
+            <Text style={styles.headerBaseText}>
+            <Text style={styles.envoText}>ENVO</Text>
+            <Text style={styles.tixText}>tix</Text>
+            </Text>
+        </View>
+        <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+          <Bell color="black" size={24} style={{ marginRight: 15 }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
 
             {/* Navigation Bar */}
             <View style={styles.navBar}>
@@ -86,29 +87,43 @@ export default function QRCodePage() {
             </View>
 
             {/* Bottom Navigation */}
-            <View style={styles.bottomNav}>
-                <TouchableOpacity style={styles.navItem}>
-                    <Ionicons name="home" size={26} color="#4CAF50" />
-                    <Text style={[styles.navLabel, styles.navLabelActive]}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navItem}>
-                    <FontAwesome5 name="wallet" size={24} color="#000" />
-                    <Text style={styles.navLabel}>Coins</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navItem}>
-                    <FontAwesome5 name="store" size={24} color="#000" />
-                    <Text style={styles.navLabel}>Shops</Text>
-                </TouchableOpacity>
-            </View>
+            <View style={styles.footer}>
+        <View style={styles.footerTab}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Home color="#666" size={24} />
+          <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
     },
+    logo: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+},
+headerTextContainer: {
+    flex: 1,
+},
     header: {
         backgroundColor: '#4CAF50',
         flexDirection: 'row',
@@ -264,28 +279,21 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-    bottomNav: {
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingBottom: Platform.OS === 'ios' ? 8 : 12,
-        borderTopWidth: 1,
-        borderTopColor: '#e0e0e0',
-    },
-    navItem: {
-        alignItems: 'center',
-        flex: 1,
-    },
-    navLabel: {
-        fontSize: 12,
-        color: '#000',
-        marginTop: 4,
-    },
-    navLabelActive: {
-        color: '#4CAF50',
-        fontWeight: '600',
-    },
+    footer: {
+    flexDirection: 'row',
+    height: 60,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+},
+footerTab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+footerText: {
+    fontSize: 12,
+    color: '#666',
+},
 });
 

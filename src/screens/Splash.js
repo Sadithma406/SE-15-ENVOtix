@@ -13,7 +13,7 @@ export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image
-        source={require("./assets/envotix-logo.png")}
+        source={require('../../assets/whiteLogoNoBg2.png')}
         style={styles.logo}
       />
 

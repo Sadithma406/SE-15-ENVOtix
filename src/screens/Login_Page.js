@@ -14,7 +14,7 @@ export default function LoginScreen({ navigation }) {
       
       {/* Logo */}
       <Image
-        source={require("./assets/envotix-logo.png")}
+        source={require("../../assets/whiteLogoNoBg2.png")}
         style={styles.logo}
       />
 

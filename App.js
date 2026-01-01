@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+import React from "react";
+import EditProfileScreen from "./src/screens/EditProfileScreen";
+
+export default function App() {
+  return <EditProfileScreen />;
+}
+=======
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -29,3 +37,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
+>>>>>>> origin/main

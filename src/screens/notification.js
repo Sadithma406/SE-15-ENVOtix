@@ -7,12 +7,13 @@ import {
   Image,
   ScrollView,
   Platform,
-  StatusBar
+  StatusBar,
+  TouchableOpacity
 } from 'react-native';
 import { Bell, Menu, Home, Wallet, Store, Trash2, CheckCircle, Circle } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Notification() {
+export default function Notification({navigation}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
@@ -21,24 +22,27 @@ export default function Notification() {
 
         {/* Header */}
         <View style={styles.header}>
-          <Image
-            source={require('../../assets/whiteLogoNoBg2.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-
-          <View style={styles.headerTextContainer}>
-            <Text>
-              <Text style={styles.envoText}>ENVO</Text>
-              <Text style={styles.tixText}>tix</Text>
+        <Image 
+    source={require('../../assets/whiteLogoNoBg2.png')} 
+    style={styles.logo} 
+    resizeMode="contain"
+  />
+        <View style={styles.headerTextContainer}>
+            <Text style={styles.headerBaseText}>
+            <Text style={styles.envoText}>ENVO</Text>
+            <Text style={styles.tixText}>tix</Text>
             </Text>
-          </View>
-
-          <View style={styles.headerIcons}>
-            <Bell size={24} color="#FFF" style={{ marginRight: 15 }} />  {/* White notification icon */}
-            <Menu size={24} color="black" />
-          </View>
         </View>
+        <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+          <Bell color="black" size={24} style={{ marginRight: 15 }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
 
         {/* Content */}
         <View style={styles.content}>
@@ -97,20 +101,24 @@ export default function Notification() {
       </ScrollView>
 
       {/* Footer */}
-      <View style={styles.footer}>
+        <View style={styles.footer}>
         <View style={styles.footerTab}>
-          <Home size={24} color="#666" />
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
         </View>
-
         <View style={styles.footerTab}>
-          <Wallet size={24} color="#666" />  {/* Coins icon stays grey on Notification page */}
-          <Text style={styles.footerText}>Coins</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
         </View>
-
         <View style={styles.footerTab}>
-          <Store size={24} color="#666" />
-          <Text style={styles.footerText}>Shops</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

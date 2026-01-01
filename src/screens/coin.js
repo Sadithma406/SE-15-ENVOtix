@@ -21,7 +21,7 @@ import {
   RotateCw
 } from 'lucide-react-native';
 
-const CoinsScreen = () => {
+const CoinsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Ensures the top system bar is the same green as the header */}
@@ -30,21 +30,26 @@ const CoinsScreen = () => {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-          source={require('../../assets/whiteLogoNoBg2.png')} // Verify this folder name (assets vs images)
-          style={styles.logo} 
-          resizeMode="contain"
-        />
+    source={require('../../assets/whiteLogoNoBg2.png')} 
+    style={styles.logo} 
+    resizeMode="contain"
+  />
         <View style={styles.headerTextContainer}>
             <Text style={styles.headerBaseText}>
-              <Text style={styles.envoText}>ENVO</Text>
-              <Text style={styles.tixText}>tix</Text>
+            <Text style={styles.envoText}>ENVO</Text>
+            <Text style={styles.tixText}>tix</Text>
             </Text>
         </View>
         <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          <Menu color="black" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
         </View>
       </View>
+
 
       <ScrollView 
         style={styles.container} 
@@ -86,19 +91,25 @@ const CoinsScreen = () => {
       </ScrollView>
 
       {/* Footer Section */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerTab}>
+        <View style={styles.footer}>
+        <View style={styles.footerTab}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerTab}>
-          <Wallet color="#4CAF50" size={24} />
-          <Text style={[styles.footerText, {color: '#4CAF50'}]}>Coins</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerTab}>
-          <Store color="#666" size={24} />
-          <Text style={styles.footerText}>Shops</Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -133,7 +144,7 @@ const styles = StyleSheet.create({
   logo: { width: 40, height: 40 },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   headerBaseText: { fontSize: 22, fontWeight: 'bold' },
-  envoText: { color: 'white' }, // ENVO looks better in white on green bg
+  envoText: { color: 'green' }, // ENVO looks better in white on green bg
   tixText: { color: 'black' },
   headerIcons: { flexDirection: 'row' },
 

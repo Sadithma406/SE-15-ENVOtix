@@ -7,10 +7,11 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  StatusBar
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
-
+import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const categories = ["All Shops", "Dining", "Fashion", "Beauty"];
 
 const shops = [
@@ -26,18 +27,37 @@ const shops = [
   { id: "10", title: "LIYO", discount: "20%", coins: "80 coins", tag: "Beauty" },
 ];
 
-export default function RedeemShopsScreen() {
+export default function RedeemShopsScreen({navigation}) {
   return (
-    <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Ionicons name="leaf-outline" size={20} color="#fff" />
-        <Text style={styles.appName}>ENVOTix</Text>
-        <Ionicons name="menu" size={22} color="#fff" />
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+        <StatusBar backgroundColor="#4CAF50"/>
+      <View style={styles.container}>
+        {/* Top Bar */}
+        <View style={styles.header}>
+          <Image
+            source={require('../../../assets/whiteLogoNoBg2.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerBaseText}>
+                  <Text style={styles.envoText}>ENVO</Text>
+                  <Text style={styles.tixText}>tix</Text>
+                  </Text>
+              </View>
+              <View style={styles.headerIcons}>
+              <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+                <Bell color="black" size={24} style={{ marginRight: 15 }} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+                  <Menu color="black" size={24} />
+                </TouchableOpacity>
+              </View>
+            </View>
+      
 
       {/* Title */}
-      <View style={styles.header}>
+      <View style={styles.topic}>
         <Ionicons name="chevron-back" size={22} />
         <Text style={styles.headerTitle}>Redeem Shops</Text>
       </View>
@@ -99,7 +119,7 @@ export default function RedeemShopsScreen() {
       />
 
       {/* Bottom Navigation */}
-      <View style={styles.footer}>
+        <View style={styles.footer}>
         <View style={styles.footerTab}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Home color="#666" size={24} />
@@ -120,6 +140,7 @@ export default function RedeemShopsScreen() {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -127,23 +148,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f4f6f8",
   },
-
-  topBar: {
-    height: 55,
-    backgroundColor: "#2ecc71",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
+ logo: {
+    width: 40,   // Adjust width as needed
+    height: 40,  // Adjust height as needed
+    borderRadius: 20, // Optional: makes it circular if the image is square
   },
-
-  appName: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: '#F5F5F5',
   },
-
-  header: {
+  header: { 
+    backgroundColor: '#4CAF50', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20,
+    paddingVertical: 9, 
+    alignItems: 'center',
+    marginTop: -20, 
+    marginHorizontal: -20,
+    paddingTop: 20,
+  },
+  envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
+  tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
+  headerIcons: { flexDirection: 'row' },
+  topic: {
     flexDirection: "row",
     alignItems: "center",
     padding: 14,
@@ -251,38 +279,23 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
-  bottomNav: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: 60,
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    justifyContent: "space-around",
+footer: {
+    flexDirection: 'row',
+    height: 70,
+    backgroundColor: 'white',
     borderTopWidth: 1,
-    borderColor: "#eee",
+    borderTopColor: '#EEE',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
-
-  navItem: {
-    alignItems: "center",
-    justifyContent: "center",
+  footerTab: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
-  navItemActive: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderTopWidth: 2,
-    borderTopColor: "#2ecc71",
-  },
-
-  navText: {
+  footerText: {
     fontSize: 12,
-    color: "#777",
-  },
-
-  navTextActive: {
-    fontSize: 12,
-    color: "#2ecc71",
-    fontWeight: "600",
-  },
+    marginTop: 4,
+    color: '#666',
+    fontWeight: '500',
+  }
 });

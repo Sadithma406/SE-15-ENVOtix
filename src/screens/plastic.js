@@ -13,7 +13,7 @@ import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-r
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const PlasticBinScreen = () => {
+const PlasticBinScreen = ({ navigation }) => {
   // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
   const [fillLevel] = useState(80); 
 
@@ -36,15 +36,19 @@ const PlasticBinScreen = () => {
             </Text>
         </View>
         <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          <TouchableOpacity onPress={() => Navigation.navigate('sideBar')}>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
             <Menu color="black" size={24} />
           </TouchableOpacity>
         </View>
       </View>
 
         <View style={styles.subHeader}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft color="#333" size={24} />
+            </TouchableOpacity>
             <Text style={styles.subHeaderTitle}>Plastic Bin</Text>
         </View>
         <View style={styles.iconTitleSection}>
@@ -79,16 +83,22 @@ const PlasticBinScreen = () => {
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.footerTab}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
+        </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Wallet color="#666" size={24} />
-          <Text style={styles.footerText}>Coins</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <Store color="#666" size={24} />
-          <Text style={styles.footerText}>Shops</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

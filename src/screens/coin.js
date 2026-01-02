@@ -21,36 +21,36 @@ import {
   RotateCw
 } from 'lucide-react-native';
 
-const CoinsScreen = () => {
+const CoinsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Ensures the top system bar is the same green as the header */}
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
-
+    <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
-          source={require('../../assets/whiteLogoNoBg2.png')} // Verify this folder name (assets vs images)
-          style={styles.logo} 
-          resizeMode="contain"
-        />
+    source={require('../../assets/whiteLogoNoBg2.png')} 
+    style={styles.logo} 
+    resizeMode="contain"
+  />
         <View style={styles.headerTextContainer}>
             <Text style={styles.headerBaseText}>
-              <Text style={styles.envoText}>ENVO</Text>
-              <Text style={styles.tixText}>tix</Text>
+            <Text style={styles.envoText}>ENVO</Text>
+            <Text style={styles.tixText}>tix</Text>
             </Text>
         </View>
         <View style={styles.headerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          <Menu color="black" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+            <Menu color="black" size={24} />
+          </TouchableOpacity>
         </View>
       </View>
 
-      <ScrollView 
-        style={styles.container} 
-        contentContainerStyle={styles.scrollContent}
-      >
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <ChevronLeft color="#333" size={24} />
           <Text style={styles.subHeaderTitle}>My Coins</Text>
         </TouchableOpacity>
@@ -79,26 +79,32 @@ const CoinsScreen = () => {
           <Text style={styles.redeemSubtitle}>
             Exchange your earned EcoCoins for exciting discounts and offers at our partner shops.
           </Text>
-          <TouchableOpacity style={styles.redeemButton}>
+          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops')}>
             <Text style={styles.redeemButtonText}>View Redeem Shops</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
 
       {/* Footer Section */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerTab}>
+        <View style={styles.footer}>
+        <View style={styles.footerTab}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerTab}>
-          <Wallet color="#4CAF50" size={24} />
-          <Text style={[styles.footerText, {color: '#4CAF50'}]}>Coins</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerTab}>
-          <Store color="#666" size={24} />
-          <Text style={styles.footerText}>Shops</Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+            <Wallet color="#666" size={24} />
+            <Text style={styles.footerText}>Coins</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footerTab}>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+            <Store color="#666" size={24} />
+            <Text style={styles.footerText}>Shops</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -122,26 +128,29 @@ const styles = StyleSheet.create({
   },
 
   header: { 
-    backgroundColor: '#4CAF50', 
+   backgroundColor: '#4CAF50', 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    paddingVertical: 12, 
+    paddingVertical: 9, 
     alignItems: 'center',
+    marginTop: -20, 
+    marginHorizontal: -20,
+    paddingTop: 20,
   },
   
   logo: { width: 40, height: 40 },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   headerBaseText: { fontSize: 22, fontWeight: 'bold' },
-  envoText: { color: 'white' }, // ENVO looks better in white on green bg
+  envoText: { color: 'green' }, // ENVO looks better in white on green bg
   tixText: { color: 'black' },
   headerIcons: { flexDirection: 'row' },
 
   container: { flex: 1, backgroundColor: '#F9F9F9' },
   scrollContent: { padding: 20 },
   
-  backButton: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  subHeaderTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 8, color: '#333' },
+  backButton: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 10},
+  subHeaderTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 8, color: '#333'},
 
   balanceCard: {
     backgroundColor: 'white',

@@ -9,7 +9,7 @@ const CustomDrawer = ({navigation}) => {
   const menuItems = [
     { label: 'Home', icon: Home, screen: 'Home' },
     { label: 'Monitor Bin', icon: Trash2, screen: 'MonitorBin' },
-    { label: 'QR Code', icon: QrCode, screen: 'QRCode' },
+    { label: 'QR Code', icon: QrCode, screen: 'QRPage' },
     { label: 'Coins Earned', icon: Coins, screen: 'Coins' },
     { label: 'Redeem Shops', icon: Tag, screen: 'Shops' },
     { label: 'Notifications', icon: Bell, screen: 'Notification' },

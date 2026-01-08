@@ -104,7 +104,12 @@ export default function RedeemShopsScreen({ navigation }) {
         {/* Shops Grid */}
         <View style={styles.grid}>
           {shops.map((item) => (
-            <View key={item.id} style={styles.card}>
+            <TouchableOpacity 
+      key={item.id} 
+      onPress={() => navigation.navigate("ShopDetails")}
+      style={styles.card} 
+    >
+            <View>
               <Image
                 source={{
                   uri: "https://images.unsplash.com/photo-1528605248644-14dd04022da1",
@@ -122,6 +127,7 @@ export default function RedeemShopsScreen({ navigation }) {
 
               <Text style={styles.coins}>{item.coins}</Text>
             </View>
+            </TouchableOpacity>
           ))}
         </View>
 
@@ -151,7 +157,7 @@ export default function RedeemShopsScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#F5F5F5",
   },
 
   scrollContent: {

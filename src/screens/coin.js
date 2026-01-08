@@ -95,7 +95,7 @@ const CoinsScreen = ({navigation}) => {
         </View>
         <View style={styles.footerTab}>
           <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
-            <Wallet color="#666" size={24} />
+            <Wallet color="#4CAF50" size={24} />
             <Text style={styles.footerText}>Coins</Text>
           </TouchableOpacity>
         </View>
@@ -124,7 +124,7 @@ const ActivityRow = ({ title, date, points }) => (
 const styles = StyleSheet.create({
   safeArea: { 
     flex: 1, 
-    backgroundColor: '#4CAF50' // Keep this green so the status bar matches header
+    backgroundColor: '#F5F5F5' // Keep this green so the status bar matches header
   },
 
   header: { 

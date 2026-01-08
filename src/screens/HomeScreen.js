@@ -81,6 +81,7 @@ export default function HomeScreen({ navigation }) {
 
         {/* ================= ACTION CARDS ================= */}
         <View style={styles.actionCard}>
+        <TouchableOpacity onPress={() => navigation.navigate('MonitorBin')}>
           <View style={styles.actionRow}>
             <View>
               <Text style={styles.actionTitle}>Monitor My Bin</Text>
@@ -89,9 +90,11 @@ export default function HomeScreen({ navigation }) {
             </View>
             <MaterialIcons name="chevron-right" size={28} color="#666" />
           </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.actionCard}>
+        <TouchableOpacity onPress={() => navigation.navigate('QRPage')}>
           <View style={styles.actionRow}>
             <View>
               <Text style={styles.actionTitle}>View QR Code</Text>
@@ -99,9 +102,11 @@ export default function HomeScreen({ navigation }) {
             </View>
             <MaterialIcons name="chevron-right" size={28} color="#666" />
           </View>
+        </TouchableOpacity>
         </View>
 
-        <View style={styles.actionCard}>
+      <View style={styles.actionCard}>
+        <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
           <View style={styles.actionRow}>
             <View>
               <Text style={styles.actionTitle}>View Coins</Text>
@@ -109,14 +114,15 @@ export default function HomeScreen({ navigation }) {
             </View>
             <MaterialIcons name="chevron-right" size={28} color="#666" />
           </View>
-        </View>
-      </ScrollView>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
 
       {/* ================= FOOTER ================= */}
       <View style={styles.footer}>
         <View style={styles.footerTab}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Home color="#666" size={24} />
+          <Home color="#4CAF50" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
         </View>

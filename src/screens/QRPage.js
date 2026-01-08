@@ -4,8 +4,9 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    StatusBar as RNStatusBar,
+    StatusBar,
     Platform,
+    ScrollView,
     Image,
 } from 'react-native';
 import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
@@ -21,9 +22,10 @@ export default function QRCodePage({navigation}) {
     const insets = useSafeAreaInsets();
 
     return (
-        <View style={styles.container}>
-            <RNStatusBar barStyle="light-content" backgroundColor="#4CAF50" translucent={false} />
-
+        <SafeAreaView style={styles.safeArea}>
+            <StatusBar backgroundColor="#4CAF50"/>
+            <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
+        
             {/* Header */}
              <View style={styles.header}>
         <Image 
@@ -50,7 +52,7 @@ export default function QRCodePage({navigation}) {
 
             {/* Navigation Bar */}
             <View style={styles.navBar}>
-                <TouchableOpacity style={styles.backButton}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="chevron-back" size={24} color="#000" />
                 </TouchableOpacity>
                 <Text style={styles.navTitle}>QR Code</Text>
@@ -80,12 +82,12 @@ export default function QRCodePage({navigation}) {
                 </View>
 
                 {/* View Earned Coins Button */}
-                <TouchableOpacity style={styles.coinsButton}>
+                <TouchableOpacity style={styles.coinsButton} onPress={() => navigation.navigate('Coins')}>
                     <FontAwesome5 name="store" size={18} color="#fff" style={styles.buttonIcon} />
                     <Text style={styles.coinsButtonText}>View Earned Coins</Text>
                 </TouchableOpacity>
             </View>
-
+            </ScrollView>
             {/* Bottom Navigation */}
             <View style={styles.footer}>
         <View style={styles.footerTab}>
@@ -107,7 +109,7 @@ export default function QRCodePage({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -121,82 +123,31 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 10,
 },
-headerTextContainer: {
-    flex: 1,
-},
-    header: {
-        backgroundColor: '#4CAF50',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingBottom: 14,
-        paddingTop: 0,
-        minHeight: 60,
-        width: '100%',
-        zIndex: 10,
-
-    },
-    headerLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        flex: 1,
-    },
-    logoContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-        marginTop: 10,
-    },
+   safeArea: { 
+    flex: 1, 
+    backgroundColor: '#F5F5F5',
+  },
+  header: { 
+    backgroundColor: '#4CAF50', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20,
+    paddingVertical: 9, 
+    alignItems: 'center',
+    marginTop: -20, 
+    marginHorizontal: -20,
+    paddingTop: 20,
+  },
+    envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
+  tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
+  headerIcons: { flexDirection: 'row' },  
     recycleRing: {
         position: 'absolute',
         width: 32,
         height: 32,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    headerCenter: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1,
-    },
-    headerTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        letterSpacing: 1,
 
-
-
-    },
-    headerTitleENVO: {
-        color: '#1B5E20', // Dark green
-    },
-    headerTitleTix: {
-        color: '#000', // Black
-    },
-    headerRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        gap: 12,
-        flex: 1,
-    },
-    iconButton: {
-        padding: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 40,
-        width: 40,
     },
     navBar: {
         backgroundColor: '#fff',
@@ -281,19 +232,23 @@ headerTextContainer: {
     },
     footer: {
     flexDirection: 'row',
-    height: 60,
-    backgroundColor: '#fff',
+    height: 70,
+    backgroundColor: 'white',
     borderTopWidth: 1,
-    borderTopColor: '#eee',
-},
-footerTab: {
-    flex: 1,
+    borderTopColor: '#EEE',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10, // Adjusts for iPhone notch
+  },
+  footerTab: {
     alignItems: 'center',
     justifyContent: 'center',
-},
-footerText: {
+  },
+  footerText: {
     fontSize: 12,
+    marginTop: 4,
     color: '#666',
-},
+    fontWeight: '500',
+  }
 });
 

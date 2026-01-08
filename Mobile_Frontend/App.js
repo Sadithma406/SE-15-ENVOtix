@@ -16,6 +16,7 @@ import SplashScreen from './src/screens/Splash';
 import HomeScreen from './src/screens/HomeScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import QRScreen from './src/screens/QRPage';
+import MonitorScreen from './src/screens/monitor';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,7 +38,8 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name = "QRPage" component={QRScreen} />
+        <Stack.Screen name="QRPage" component={QRScreen} />
+        <Stack.Screen name="MonitorBin" component={MonitorScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

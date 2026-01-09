@@ -28,14 +28,17 @@ export default function MonitorScreen({ navigation }) {
                         resizeMode="contain"
                     />
                     <View style={styles.headerTextContainer}>
-                        <Text style={styles.headerText}>ENVOtix</Text>
+                        <Text style={styles.headerBaseText}>
+                        <Text style={styles.envoText}>ENVO</Text>
+                        <Text style={styles.tixText}>tix</Text>
+                        </Text>
                     </View>
                     <View style={styles.headerIcons}>
                         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                            <Bell color="white" size={24} style={{ marginRight: 15 }} />
+                            <Bell color="black" size={24} style={{ marginRight: 15 }} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
-                            <Menu color="white" size={24} />
+                            <Menu color="black" size={24} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -120,8 +123,8 @@ export default function MonitorScreen({ navigation }) {
             <View style={styles.footer}>
                 <View style={styles.footerTab}>
                     <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                        <Home color="#4CAF50" size={24} />
-                        <Text style={[styles.footerText, styles.footerTextActive]}>Home</Text>
+                        <Home color="#666" size={24} />
+                        <Text style={styles.footerText}>Home</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.footerTab}>
@@ -171,11 +174,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    headerText: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: 'white',
-    },
+  envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
+  tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
     headerIcons: {
         flexDirection: 'row',
     },

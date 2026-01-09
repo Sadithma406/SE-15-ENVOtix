@@ -38,7 +38,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="QRPage" component={QRScreen} />
+        <Stack.Screen name = "QRPage" component={QRScreen} />
         <Stack.Screen name="MonitorBin" component={MonitorScreen} />
       </Stack.Navigator>
     </NavigationContainer>

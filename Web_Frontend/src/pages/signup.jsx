@@ -1,82 +1,82 @@
 import logo from '../assets/logoNoName.png';
 import { useState } from 'react';
 import BgImage from '../assets/bg.jpg';
-import {Eye, EyeOff} from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
-export default function Signup(){
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
+export default function Signup() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-    return(
-        <>
-       <div className="signup-bg" style={{ backgroundImage: `url(${BgImage})` }}> 
+  return (
+    <>
+      <div className="signup-bg" style={{ backgroundImage: `url(${BgImage})` }}>
 
-      <div className="signup-container">
-        {/* Logo */}
-        <div className="logo-section">
-          <img src={logo} className="logo" />
-          <h2 className="brand-name">ENVOtix</h2>
-        </div>
-
-        <h3 className="title">Create Your Account</h3>
-        <p className="subtitle">
-          Enter your details below to set up your new ENVOTIX account.
-        </p>
-
-        {/* Form */}
-        <form className="signup-form">
-          <label>Full Name</label>
-          <input type="text" placeholder="John Doe" />
-
-          <label>Email Address</label>
-          <input type="email" placeholder="john.doe@example.com" />
-
-          {/* Password Field */}
-          <label>Password</label>
-          <div className="password-wrapper">
-            <input
-              type={showPassword ? "text" : "password"}
-           
-            />
-
-            <span
-              className="toggle-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-            {showPassword? <EyeOff /> : <Eye />}
-            </span>
+        <div className="signup-container">
+          {/* Logo */}
+          <div className="logo-section">
+            <img src={logo} className="logo" />
+            <h2 className="brand-name">ENVOtix</h2>
           </div>
 
-          {/* Confirm Password */}
-          <label>Confirm Password</label>
-          <div className="password-wrapper">
-            <input
-              type={showConfirm ? "text" : "password"}
-              
-            />
-            <span
-              className="toggle-icon"
-              onClick={() => setShowConfirm(!showConfirm)} 
-            >
-            {showConfirm? <EyeOff /> : <Eye />}
-            </span>
-          </div>
-
-          <button className="signup-btn">Sign Up</button>
-
-          <p className="login-text">
-            Already have an account? Sign In
+          <h3 className="title">Create Your Account</h3>
+          <p className="subtitle">
+            Enter your details below to set up your new ENVOTIX account.
           </p>
-        </form>
 
-        <p className="terms">
-          By signing up, you agree to our{" "}
-          <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
-        </p>
+          {/* Form */}
+          <form className="signup-form">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Doe" />
+
+            <label>Email Address</label>
+            <input type="email" placeholder="john.doe@example.com" />
+
+            {/* Password Field */}
+            <label>Password</label>
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+
+              />
+
+              <span
+                className="toggle-icon"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </span>
+            </div>
+
+            {/* Confirm Password */}
+            <label>Confirm Password</label>
+            <div className="password-wrapper">
+              <input
+                type={showConfirm ? "text" : "password"}
+
+              />
+              <span
+                className="toggle-icon"
+                onClick={() => setShowConfirm(!showConfirm)}
+              >
+                {showConfirm ? <EyeOff /> : <Eye />}
+              </span>
+            </div>
+
+            <button className="signup-btn">Sign Up</button>
+
+            <p className="login-text">
+              Already have an account? Sign In
+            </p>
+          </form>
+
+          <p className="terms">
+            By signing up, you agree to our{" "}
+            <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
+          </p>
+        </div>
       </div>
-</div>
-  
-<style>{`
+
+      <style>{`
 /* Background */
 .signup-bg {
   background: url('../assets/bg.jpg') center/cover no-repeat;
@@ -214,6 +214,7 @@ export default function Signup(){
 .terms a {
   color: #1aad4f;
 }`}
-</style>
-   </>   
-   )};
+      </style>
+    </>
+  )
+};

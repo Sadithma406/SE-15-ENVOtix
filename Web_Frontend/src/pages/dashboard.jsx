@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Navigation } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const REFRESH_INTERVAL = 10000;
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [areaData, setAreaData] = useState([]);
   const [summary, setSummary] = useState({
     totalBins: 0,
@@ -51,9 +54,9 @@ export default function Dashboard() {
         <aside className="sidebar">
           <h2 className="logo">ENVotix</h2>
           <ul className="menu">
-            <li className="active">Dashboard Overview</li>
-            <li>Map View</li>
-            <li>Settings / Legend</li>
+            <li className="active" onClick={() =>navigate('/dashboard')}>Dashboard Overview</li>
+            <li onClick={() =>navigate('/mapview')}>Map View</li>
+            <li onClick={() =>navigate('/settings')}>Settings / Legend</li>
           </ul>
           <button className="logout">Logout</button>
         </aside>

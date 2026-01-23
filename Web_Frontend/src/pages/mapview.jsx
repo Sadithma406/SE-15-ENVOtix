@@ -1,4 +1,8 @@
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export default function MapView() {
+      const navigate = useNavigate();
     return (
         <>
             <div className="mapview-root">
@@ -15,17 +19,17 @@ export default function MapView() {
                     </div>
 
                     <nav className="sidebar-nav">
-                        <button className="nav-item">
+                        <button className="nav-item" onClick={() => navigate('/dashboard')}>
                             <span className="nav-icon">📊</span>
                             <span>Dashboard Overview</span>
                         </button>
 
-                        <button className="nav-item nav-item-active">
+                        <button className="nav-item nav-item-active" onClick={() => navigate('/mapview')}>
                             <span className="nav-icon">🗺️</span>
                             <span>Map View</span>
                         </button>
 
-                        <button className="nav-item">
+                        <button className="nav-item" onClick={() => navigate('/settings')}>
                             <span className="nav-icon">⚙️</span>
                             <span>Settings or Legend</span>
                         </button>

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import logo from "../assets/logoNoName.png";
+import { useNavigate } from "react-router-dom";
 
 
 function Settings() {
+  const navigate = useNavigate();
   const [percentage, setPercentage] = useState(80);
 
   return (
@@ -30,6 +32,7 @@ function Settings() {
               (e.currentTarget.style.backgroundColor =
                 "rgba(255,255,255,0.15)")
             }
+            onClick={() => {navigate('/dashboard')}}
           >
             Dashboard Overview
           </div>
@@ -44,11 +47,13 @@ function Settings() {
               (e.currentTarget.style.backgroundColor =
                 "rgba(255,255,255,0.15)")
             }
+            onClick={() => {navigate('/mapview')}}
           >
             Map View
           </div>
 
-          <div style={{ ...styles.navItem, ...styles.activeNav }}>
+          <div style={{ ...styles.navItem, ...styles.activeNav }} 
+          onClick={() => {navigate ('/settings')}}>
             Settings & Legend
           </div>
         </nav>

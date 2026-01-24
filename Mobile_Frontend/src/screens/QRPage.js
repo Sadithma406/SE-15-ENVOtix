@@ -25,7 +25,7 @@ export default function QRCodePage({navigation}) {
         <SafeAreaView style={styles.safeArea}>
             <StatusBar backgroundColor="#4CAF50"/>
             <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
-        
+            <View style={styles.headerpadding}>
             {/* Header */}
              <View style={styles.header}>
         <Image 
@@ -48,7 +48,7 @@ export default function QRCodePage({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-
+</View>
 
             {/* Navigation Bar */}
             <View style={styles.navBar}>
@@ -141,6 +141,9 @@ const styles = StyleSheet.create({
     envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerIcons: { flexDirection: 'row' },  
+  headerpadding:{
+    padding:20
+  },
     recycleRing: {
         position: 'absolute',
         width: 32,

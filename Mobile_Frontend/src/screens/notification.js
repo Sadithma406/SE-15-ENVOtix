@@ -16,41 +16,40 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Notification({navigation}) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
-
-      <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
-
-        {/* Header */}
-        <View style={styles.header}>
-        <Image 
-    source={require('../../assets/whiteLogoNoBg2.png')} 
-    style={styles.logo} 
-    resizeMode="contain"
-  />
-        <View style={styles.headerTextContainer}>
-            <Text style={styles.headerBaseText}>
-            <Text style={styles.envoText}>ENVO</Text>
-            <Text style={styles.tixText}>tix</Text>
-            </Text>
-        </View>
-        <View style={styles.headerIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-          <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
-            <Menu color="black" size={24} />
-          </TouchableOpacity>
-        </View>
+          {/* Ensures the top system bar is the same green as the header */}
+          <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
+        <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
+          <View style={styles.headerpadding}>
+          {/* 1. Header Section */}
+          <View style={styles.header}>
+            <Image 
+        source={require('../../assets/whiteLogoNoBg2.png')} 
+        style={styles.logo} 
+        resizeMode="contain"
+      />
+            <View style={styles.headerTextContainer}>
+                <Text style={styles.headerBaseText}>
+                <Text style={styles.envoText}>ENVO</Text>
+                <Text style={styles.tixText}>tix</Text>
+                </Text>
+            </View>
+            <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+              <Bell color="black" size={24} style={{ marginRight: 15 }} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+                <Menu color="black" size={24} />
+              </TouchableOpacity>
+            </View>
+          </View>
       </View>
-
-
         {/* Content */}
         <View style={styles.content}>
           <View style={styles.pageTitleRow}>
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-              <ChevronLeft color="#333" size={24} />
-            </TouchableOpacity>
-            <Text style={styles.pageTitle}>Notifications</Text>
+  <ChevronLeft color="#333" size={24} />
+</TouchableOpacity>
+<Text style={styles.subHeaderTitle}>Notifications</Text>
           </View>
 
           <View style={styles.card}>
@@ -144,6 +143,7 @@ const styles = StyleSheet.create({
     marginTop: -20, 
     marginHorizontal: -20,
     paddingTop: 20,
+    
   },
 
   logo: {
@@ -171,12 +171,14 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
   },
-
+  headerpadding:{
+    padding:20
+  },
   content: {
     flex: 1,
     padding: 16,
   },
-
+ subHeaderTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 8, color: '#333'},
   pageTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',

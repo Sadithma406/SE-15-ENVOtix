@@ -27,7 +27,7 @@ export default function RedeemOfferDetails({ navigation }) {
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: "#F5F5F5" }}>
-        
+        <View style={styles.headerpadding}>
         {/* Header */}
         <View style={styles.header}>
           <Image
@@ -52,7 +52,7 @@ export default function RedeemOfferDetails({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-
+</View>
         {/* Content */}
         <View style={styles.content}>
           {/* Page Title Row */}
@@ -172,7 +172,9 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: "row",
   },
-
+headerpadding:{
+  padding:20
+},
   content: {
     padding: 16,
   },

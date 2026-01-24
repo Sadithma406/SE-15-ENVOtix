@@ -20,6 +20,7 @@ export default function HomeScreen({ navigation }) {
      <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
     
       {/* ================= HEADER ================= */}
+      <View style={styles.headerpadding}>
       <View style={styles.header}>
         <Image 
     source={require('../../assets/whiteLogoNoBg2.png')} 
@@ -42,7 +43,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-
+</View>
       {/* ================= BODY ================= */}
         {/* Banner */}
         <View style={styles.banner}>
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
   envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerIcons: { flexDirection: 'row' },
+  headerpadding:{padding:20},
   content: { paddingBottom: 20 },
   banner: {
     backgroundColor: '#CDEECD',

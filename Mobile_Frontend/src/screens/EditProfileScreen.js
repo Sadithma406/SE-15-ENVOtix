@@ -159,8 +159,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 9,
     alignItems: 'center',
-    marginTop: 0,
+    marginTop: -20,
     marginHorizontal: -20,
+    paddingTop:20,
+    marginBottom:20,
   },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   headerBaseText: { fontSize: 22, fontWeight: 'bold' },
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerSubtitle: { fontSize: 14, color: '#fff', marginTop: 4 },
   headerIcons: { flexDirection: 'row' },
-
+  scrollContent:{padding:20},
   /* BODY */
   content: { padding: 20, paddingBottom: 100 },
   profileSection: { alignItems: 'center', marginBottom: 20 },

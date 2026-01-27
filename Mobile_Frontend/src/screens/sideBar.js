@@ -13,11 +13,12 @@ const CustomDrawer = ({navigation}) => {
     { label: 'Coins Earned', icon: Coins, screen: 'Coins' },
     { label: 'Redeem Shops', icon: Tag, screen: 'Shops' },
     { label: 'Notifications', icon: Bell, screen: 'Notification' },
-    { label: 'View Profile', icon: User, screen: 'Profile' },
+    { label: 'View Profile', icon: User, screen: 'EditProfile' },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
+    <View style={styles.headerPadding}>
     {/* 1. Header Section */}
       <View style={styles.header}>
         <Image 
@@ -40,7 +41,7 @@ const CustomDrawer = ({navigation}) => {
         </TouchableOpacity>
         </View>
       </View>
-
+</View>
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
           <View key={index} style={styles.menuItem}>
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerIcons: { flexDirection: 'row' },   
+  headerPadding:{paddingTop:20},
   container: { 
     flex: 1, 
     backgroundColor: '#4CAF50' // The theme green color

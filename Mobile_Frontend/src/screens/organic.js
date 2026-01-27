@@ -89,7 +89,7 @@ const OrganicBinScreen = ({navigation}) => {
            <View style={styles.gaugeContainer}>
               <CircularGauge percentage={fillLevel} />
            </View>
-           <Text style={styles.updateText}> {lastUpdated || 'Waiting for update...'}</Text>
+           <Text style={styles.updateText}> {lastUpdated || 'fetching data...'}</Text>
         </View>
 
         {/* 3. Tips Card */}

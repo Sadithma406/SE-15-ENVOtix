@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { 
   View, 
   Text, 
@@ -15,7 +15,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OrganicBinScreen = ({navigation}) => {
   // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
-  const [fillLevel] = useState(90); 
+  const [fillLevel,setFillLevel] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  useEffect(() => {
+    const fetchBinData = async () => {
+      try {
+        // Replace with your laptop's IP address if testing on a real phone
+        const response = await fetch('http://192.168.1.194:8082/api/bins/B21938cis9');
+        const data = await response.json();
+        
+        if (data && data.organic) {
+          setFillLevel(data.organic.fill_level); // Set the gauge value
+          setLastUpdated(`Last updated: ${new Date(data.organic.last_updated).toLocaleTimeString()}`);
+        }
+      } catch (error) {
+        console.error("Error fetching bin data:", error);
+        setLastUpdated("Offline - Check Connection");
+      }
+    };
+
+    fetchBinData()
+    const interval = setInterval(fetchBinData, 30000);
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array means this effect runs once on mount
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -66,7 +89,7 @@ const OrganicBinScreen = ({navigation}) => {
            <View style={styles.gaugeContainer}>
               <CircularGauge percentage={fillLevel} />
            </View>
-           <Text style={styles.updateText}>Last updated: 1 hour ago</Text>
+           <Text style={styles.updateText}> {lastUpdated || 'Waiting for update...'}</Text>
         </View>
 
         {/* 3. Tips Card */}

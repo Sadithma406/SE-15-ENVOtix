@@ -13,5 +13,5 @@ const SegregateBinSchema = new mongoose.Schema({
     glass: CompartmentSchema
 });
 
-// The first argument is the name of your COLLECTION in MongoDB Atlas
+// The first argument is the name of your COLLECTION IN MongoDB Atlas
 module.exports = mongoose.model("SegregateBin", SegregateBinSchema,"segregate_bins");

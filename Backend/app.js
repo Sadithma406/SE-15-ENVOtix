@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const binRoutes = require('./routes/segregateRoute');
+const shopRoutes = require('./routes/shopRoute');
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ mongoose.connect(mongoUrl)
     .catch(err => console.error("Connection Error:", err));
 
 app.use('/api/bins', binRoutes); 
+app.use('/api/shops',shopRoutes);
 
 const PORT = 8082;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

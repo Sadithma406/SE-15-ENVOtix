@@ -2,11 +2,43 @@ import logo from '../assets/logoNoName.png';
 import { useState } from 'react';
 import BgImage from '../assets/bg.jpg';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
+  // Handle Form Submission
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    // Basic Validation
+    if (formData.password !== formData.confirmPassword) {
+      return alert("Passwords do not match!");
+    }
+
+    try {
+      // POST request to your Node.js backend
+      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+
+      alert(response.data.message); // "Sign-up successful!"
+      // Optional: navigation.navigate('Login') or redirect to Login page
+    } catch (err) {
+      // Catch the "Access restricted" error from your backend
+      const errorMsg = err.response?.data?.message || "Something went wrong";
+      alert(errorMsg);
+    }
+  };
   return (
     <>
       <div className="signup-bg" style={{ backgroundImage: `url(${BgImage})` }}>
@@ -24,19 +56,30 @@ export default function Signup() {
           </p>
 
           {/* Form */}
-          <form className="signup-form">
+          <form className="signup-form" onSubmit={handleSignup}>
             <label>Full Name</label>
-            <input type="text" placeholder="John Doe" />
+            <input 
+              type="text" 
+              placeholder="John Doe" 
+              required
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+            />
 
             <label>Email Address</label>
-            <input type="email" placeholder="john.doe@example.com" />
+            <input 
+              type="email" 
+              placeholder="john.doe@example.com" 
+              required
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+            />
 
             {/* Password Field */}
             <label>Password</label>
             <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
-
+                required
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
 
               <span
@@ -52,7 +95,8 @@ export default function Signup() {
             <div className="password-wrapper">
               <input
                 type={showConfirm ? "text" : "password"}
-
+                required
+                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} 
               />
               <span
                 className="toggle-icon"
@@ -62,7 +106,7 @@ export default function Signup() {
               </span>
             </div>
 
-            <button className="signup-btn">Sign Up</button>
+            <button className="signup-btn" type="submit">Sign Up</button>
 
             <p className="login-text">
               Already have an account? Sign In

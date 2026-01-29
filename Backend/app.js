@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const binRoutes = require('./routes/segregateRoute');
+const mcUsers = require('./routes/mcUserRoute');
 
 const app = express();
 app.use(cors());
@@ -14,7 +15,6 @@ mongoose.connect(mongoUrl)
     .then(() => console.log("ENVOtix Database Connected"))
     .catch(err => console.error("Connection Error:", err));
 
-app.use('/api/bins', binRoutes); 
-
-const PORT = 8082;
+app.use('/api/auth', mcUsers);
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

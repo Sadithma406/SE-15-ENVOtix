@@ -12,7 +12,7 @@ app.use(express.json());
 const mongoUrl = "mongodb+srv://sadithma20242193_db_user:himandiIIT20242193@cluster0.cjexidk.mongodb.net/Data_Envotix?appName=cluster0";
 
 mongoose.connect(mongoUrl)
-    .then(() => console.log("ENVOtix Database Connected"))
+.then(() => console.log("ENVOtix Database Connected"))
     .catch(err => console.error("Connection Error:", err));
 
 app.use('/api/bins', binRoutes); 

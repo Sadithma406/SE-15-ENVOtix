@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Shop = require("../models/shop");
+const Shop = require("../models/Shop");
 
 // GET all shops
 router.get("/", async (req, res) => {
@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET shop by ID
 router.get("/:id", async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);

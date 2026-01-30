@@ -1,5 +1,5 @@
 import logo from '../assets/logoNoName.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BgImage from '../assets/bg.jpg';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
@@ -14,48 +14,70 @@ export default function Signup() {
     confirmPassword: ''
   });
 
-  // Handle Form Submission
+  const [error, setError] = useState({ 
+    email: '',
+    password: '',
+    general: ''
+  });
+
+  // --- REAL-TIME VALIDATION LOGIC ---
+  useEffect(() => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    
+    let passwordError = "";
+
+    // 1. Check complexity only if user has started typing
+    if (formData.password.length > 0 && !passwordRegex.test(formData.password)) {
+      passwordError = "Password needs 8+ chars, a letter, a number, and a symbol.";
+    } 
+    // 2. Check if passwords match
+    else if (formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword) {
+      passwordError = "Passwords do not match.";
+    }
+
+    setError(prev => ({ ...prev, password: passwordError }));
+  }, [formData.password, formData.confirmPassword]);
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    // Basic Validation
-    if (formData.password !== formData.confirmPassword) {
-      return alert("Passwords do not match!");
-    }
+    // Prevent submission if there are active real-time errors
+    if (error.password) return;
+
+    // Reset other errors
+    setError(prev => ({ ...prev, email: '', general: '' }));
 
     try {
-      // POST request to your Node.js backend
       const response = await axios.post('http://localhost:5000/api/auth/signup', {
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
 
-      alert(response.data.message); // "Sign-up successful!"
-      // Optional: navigation.navigate('Login') or redirect to Login page
+      alert(response.data.message);
     } catch (err) {
-      // Catch the "Access restricted" error from your backend
       const errorMsg = err.response?.data?.message || "Something went wrong";
-      alert(errorMsg);
+      
+      if (err.response?.status === 403 || errorMsg.toLowerCase().includes("email")) {
+        setError(prev => ({ ...prev, email: errorMsg }));
+      } else {
+        setError(prev => ({ ...prev, general: errorMsg }));
+      }
     }
   };
+
   return (
     <>
       <div className="signup-bg" style={{ backgroundImage: `url(${BgImage})` }}>
-
         <div className="signup-container">
-          {/* Logo */}
           <div className="logo-section">
-            <img src={logo} className="logo" />
+            <img src={logo} className="logo" alt="logo" />
             <h2 className="brand-name">ENVOtix</h2>
           </div>
 
           <h3 className="title">Create Your Account</h3>
-          <p className="subtitle">
-            Enter your details below to set up your new ENVOTIX account.
-          </p>
+          <p className="subtitle">Enter your details below to set up your account.</p>
 
-          {/* Form */}
           <form className="signup-form" onSubmit={handleSignup}>
             <label>Full Name</label>
             <input 
@@ -68,54 +90,49 @@ export default function Signup() {
             <label>Email Address</label>
             <input 
               type="email" 
+              className={error.email ? "input-error" : ""}
               placeholder="john.doe@example.com" 
               required
               onChange={(e) => setFormData({...formData, email: e.target.value})}
             />
+            {error.email && <p className='error-message'>{error.email}</p>}
 
-            {/* Password Field */}
             <label>Password</label>
             <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
+                className={error.password ? "input-error" : ""}
                 required
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
-
-              <span
-                className="toggle-icon"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff /> : <Eye />}
+              <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </span>
             </div>
 
-            {/* Confirm Password */}
             <label>Confirm Password</label>
             <div className="password-wrapper">
               <input
                 type={showConfirm ? "text" : "password"}
+                className={error.password ? "input-error" : ""}
                 required
                 onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} 
               />
-              <span
-                className="toggle-icon"
-                onClick={() => setShowConfirm(!showConfirm)}
-              >
-                {showConfirm ? <EyeOff /> : <Eye />}
+              <span className="toggle-icon" onClick={() => setShowConfirm(!showConfirm)}>
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </span>
             </div>
+            
+            {/* The error message below will update as the user types */}
+            {error.password && <p className='error-message'>{error.password}</p>}
+            {error.general && <p className='error-message' style={{textAlign: 'center'}}>{error.general}</p>}
 
             <button className="signup-btn" type="submit">Sign Up</button>
-
-            <p className="login-text">
-              Already have an account? Sign In
-            </p>
+            <p className="login-text">Already have an account? <a href="/login">Sign In</a></p>
           </form>
 
           <p className="terms">
-            By signing up, you agree to our{" "}
-            <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
+            By signing up, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
           </p>
         </div>
       </div>
@@ -254,11 +271,22 @@ export default function Signup() {
   font-size: 12px;
   color: #555;
 }
+.error-message {
+  color: #d93025; /* Red color */
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+  display: block;
+}
+
+.input-error {
+  border: 1px solid #d93025 !important;
+}
 
 .terms a {
   color: #1aad4f;
 }`}
       </style>
     </>
-  )
-};
+  );
+}

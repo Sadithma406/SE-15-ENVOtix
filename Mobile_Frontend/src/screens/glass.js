@@ -21,7 +21,7 @@ const GlassBinScreen = ({navigation}) => {
   useEffect(()=>{
     const fetchBinData =async ()=>{
       try{
-        const response = await fetch ('http://192.168.1.194:8082/api/bins/B21938cis9');
+        const response = await fetch ('http://localhost:8082/api/bins/B21938cis9');
         const data = await response.json();
 
         if (data && data.glass){

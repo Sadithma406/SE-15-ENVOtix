@@ -22,7 +22,7 @@ const PlasticBinScreen = ({ navigation }) => {
       const fetchBinData = async () => {
         try {
           // Replace with your laptop's IP address if testing on a real phone
-          const response = await fetch('http://192.168.1.194:8082/api/bins/B21938cis9');
+          const response = await fetch('http://localhost:8082/api/bins/B21938cis9');
           const data = await response.json();
           
           if (data && data.plastic) {

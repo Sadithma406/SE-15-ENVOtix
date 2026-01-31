@@ -1,15 +1,5 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  StatusBar,
-  Platform,
-} from "react-native";
+import React ,{useEffect,useState} from "react";
+import {View,Text,StyleSheet,ScrollView,Image,TouchableOpacity,TextInput,StatusBar,Platform,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ChevronLeft,
@@ -23,16 +13,26 @@ import { Ionicons } from "@expo/vector-icons";
 
 const categories = ["All Shops", "Dining", "Fashion", "Beauty"];
 
-const shops = [
-  { id: "1", discount: "10%", coins: "80 coins", tag: "Dining" },
-  { id: "2", discount: "15%", coins: "90 coins", tag: "Grocery" },
-  { id: "3", discount: "10%", coins: "80 coins", tag: "Beauty" },
-  { id: "4", discount: "20%", coins: "100 coins", tag: "Dining" },
-  { id: "5", discount: "15%", coins: "90 coins", tag: "Fashion" },
-  { id: "6", discount: "20%", coins: "120 coins", tag: "Fashion" },
-];
+
 
 export default function RedeemShopsScreen({ navigation }) {
+  const[shops,setShops] = useState([]);
+  const[loading,setLoading] = useState(true);
+
+  useEffect(() => {
+  fetch("http://192.168.1.14:8082/api/shops")
+    .then(res => res.json())
+    .then(data => {
+      setShops(data);
+      setLoading(false);
+    })
+    .catch(err => {
+      console.log("Error fetching shops:", err);
+      setLoading(false);
+    });
+}, []);
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
@@ -102,11 +102,13 @@ export default function RedeemShopsScreen({ navigation }) {
         </View>
 
         {/* Shops Grid */}
+        {loading && <Text>Loading shops...</Text>}
+
         <View style={styles.grid}>
           {shops.map((item) => (
             <TouchableOpacity 
-      key={item.id} 
-      onPress={() => navigation.navigate("ShopDetails")}
+      key={item._id} 
+      onPress={() => navigation.navigate("ShopDetails",{shop:item})}
       style={styles.card} 
     >
             <View>
@@ -118,15 +120,18 @@ export default function RedeemShopsScreen({ navigation }) {
               />
 
               <View style={styles.discountBadge}>
-                <Text style={styles.discountText}>{item.discount}</Text>
+                <Text style={styles.discountText}>Status:{item.status}</Text>
               </View>
 
               <View style={styles.tag}>
-                <Text style={styles.tagText}>{item.tag}</Text>
+                <Text style={styles.tagText}>Name:{item.location}</Text>
               </View>
 
-              <Text style={styles.coins}>{item.coins}</Text>
+              <Text style={styles.coins}>{item.name}</Text>
+              
+              <Text style={sstyles.coins}>Contact:{item.contact}</Text>
             </View>
+
             </TouchableOpacity>
           ))}
         </View>

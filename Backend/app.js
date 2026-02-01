@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ensure /Data_Envotix is in the string
+// connecting with the Data_Envotix database in MongoDB Atlas
 const mongoUrl = "mongodb+srv://sadithma20242193_db_user:himandiIIT20242193@cluster0.cjexidk.mongodb.net/Data_Envotix?appName=cluster0";
 
 mongoose.connect(mongoUrl)
@@ -20,5 +20,5 @@ app.use('/api/bins', binRoutes);
 app.use('/api/shops',shopRoutes);
 app.use('/api/auth',mcUsers);
 
-const PORT = 8082;
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

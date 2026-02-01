@@ -20,22 +20,23 @@ export default function Signup() {
     general: ''
   });
 
-  // --- REAL-TIME VALIDATION LOGIC ---
-  useEffect(() => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  //password validation
+useEffect(() => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*?#&]{8,}$/;
     
-    let passwordError = "";
+    let currentPasswordError = "";
 
     // 1. Check complexity only if user has started typing
     if (formData.password.length > 0 && !passwordRegex.test(formData.password)) {
-      passwordError = "Password needs 8+ chars, a letter, a number, and a symbol.";
+      currentPasswordError = "Password must be 8+ chars, including letters, numbers, and symbols.";
     } 
     // 2. Check if passwords match
     else if (formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword) {
-      passwordError = "Passwords do not match.";
+      currentPasswordError = "Passwords do not match.";
     }
 
-    setError(prev => ({ ...prev, password: passwordError }));
+    // Set the state correctly
+    setError(prev => ({ ...prev, password: currentPasswordError }));
   }, [formData.password, formData.confirmPassword]);
 
   const handleSignup = async (e) => {

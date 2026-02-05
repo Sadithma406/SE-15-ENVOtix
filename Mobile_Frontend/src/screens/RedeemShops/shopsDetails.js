@@ -20,16 +20,10 @@ export default function RedeemShopsScreen({ navigation }) {
   const[loading,setLoading] = useState(true);
 
   useEffect(() => {
-  fetch("http://192.168.1.14:8082/api/shops")
+  fetch("http://192.168.1.14:5000/api/shops")
     .then(res => res.json())
-    .then(data => {
-      setShops(data);
-      setLoading(false);
-    })
-    .catch(err => {
-      console.log("Error fetching shops:", err);
-      setLoading(false);
-    });
+    .then(data => setShops(data))
+    .catch(err => console.log( err));
 }, []);
 
 
@@ -129,7 +123,7 @@ export default function RedeemShopsScreen({ navigation }) {
 
               <Text style={styles.coins}>{item.name}</Text>
               
-              <Text style={sstyles.coins}>Contact:{item.contact}</Text>
+              <Text style={styles.coins}>Contact:{item.contact}</Text>
             </View>
 
             </TouchableOpacity>

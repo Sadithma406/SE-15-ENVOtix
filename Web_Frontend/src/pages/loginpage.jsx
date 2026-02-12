@@ -1,26 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setMessage("Please enter email and password");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(data.message || "Login failed");
+        setLoading(false);
+        return;
+      }
+
+      // ✅ SUCCESS
+      setMessage("Login successful ✅");
+      console.log("Logged user:", data.user);
+
+      // later:
+      // localStorage.setItem("user", JSON.stringify(data.user));
+      // navigate("/dashboard");
+
+    } catch (error) {
+      console.error("Login error:", error); 
+      setMessage("Cannot connect to server");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        {/* Logo & Title */}
+        {/* Logo */}
         <div style={styles.logoSection}>
-          <img
-            src="/logo.png" // replace with your logo
-            alt="Envotix Logo"
-            style={styles.logo}
-          />
+          <img src="/logo.png" alt="Envotix Logo" style={styles.logo} />
           <h2 style={styles.title}>Welcome to Envotix!</h2>
         </div>
+
+        {/* Message */}
+        {message && (
+          <p style={{ textAlign: "center", color: "red", marginBottom: 10 }}>
+            {message}
+          </p>
+        )}
 
         {/* Email */}
         <div style={styles.formGroup}>
           <label style={styles.label}>Email</label>
           <input
             type="email"
-            placeholder="example@mc.gov.lk"
+            placeholder="example@municipalcouncil.lk"
             style={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -31,29 +86,14 @@ export default function LoginPage() {
             type="password"
             placeholder="Type your password here"
             style={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
-
-        {/* Links */}
-        <div style={styles.links}>
-          <a href="#" style={styles.link}>Create Account</a>
-          <a href="#" style={styles.link}>Forgot Password?</a>
         </div>
 
         {/* Login Button */}
-        <button style={styles.loginBtn}>Login</button>
-
-        {/* Divider */}
-        <div style={styles.divider}>OR</div>
-
-        {/* Google Login */}
-        <button style={styles.googleBtn}>
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            style={{ width: 18 }}
-          />
-          Log in with Google
+        <button style={styles.loginBtn} onClick={handleLogin} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </button>
       </div>
     </div>
@@ -102,17 +142,6 @@ const styles = {
     padding: "10px 12px",
     borderRadius: 8,
     border: "1px solid #ccc",
-    outline: "none",
-  },
-  links: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: 13,
-    marginBottom: 20,
-  },
-  link: {
-    color: "#2e7d32",
-    textDecoration: "none",
   },
   loginBtn: {
     width: "100%",
@@ -122,24 +151,6 @@ const styles = {
     border: "none",
     borderRadius: 8,
     fontSize: 15,
-    cursor: "pointer",
-  },
-  divider: {
-    textAlign: "center",
-    margin: "18px 0",
-    color: "#999",
-    fontSize: 13,
-  },
-  googleBtn: {
-    width: "100%",
-    padding: 10,
-    border: "1px solid #ccc",
-    borderRadius: 8,
-    background: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
     cursor: "pointer",
   },
 };

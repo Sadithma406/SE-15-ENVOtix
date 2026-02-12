@@ -4,6 +4,7 @@ const cors = require('cors');
 const binRoutes = require('./routes/segregateRoute');
 const shopRoutes = require('./routes/shopRoute');
 const mcUsers = require('./routes/mcUserRoute');
+const loginRoute = require('./routes/loginRoute');
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ mongoose.connect(mongoUrl)
 app.use('/api/bins', binRoutes); 
 app.use('/api/shops',shopRoutes);
 app.use('/api/auth',mcUsers);
+app.use('/api',loginRoute);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -7,137 +7,157 @@ import {
   Image,
   Platform, 
   StatusBar,
-  TouchableOpacity 
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
-import { ChevronLeft, Bell, Menu, Lightbulb,Home, Wallet, Store } from 'lucide-react-native';
+import { ChevronLeft, Bell, Menu, Lightbulb, Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const GlassBinScreen = ({navigation}) => {
-  // IoT PLACEHOLDER: This value will eventually come from your Node.js backend
-  const [fillLevel,setFillLevel] = useState(0);
-  const[lastUpdated,setLastUpdated] = useState('');
+const GlassBinScreen = ({ navigation, route }) => {
+  // 1. Catch the userId passed from the previous screen
+  const userId = route?.params?.userId;
 
-  useEffect(()=>{
-    const fetchBinData =async ()=>{
-      try{
-        const response = await fetch ('http://localhost:8082/api/bins/B21938cis9');
-        const data = await response.json();
+  const [fillLevel, setFillLevel] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState('Fetching...');
+  const [loading, setLoading] = useState(true);
 
-        if (data && data.glass){
-          setFillLevel(data.glass.fill_level)
-          setLastUpdated(`Last updated: ${new Date(data.glass.last_updated).toLocaleTimeString()}`);
-        }
+  useEffect(() => {
+    const fetchAllData = async () => {
+      if (!userId) {
+        setLastUpdated("No User ID found");
+        setLoading(false);
+        return;
       }
-      catch(error){
+
+      try {
+        setLoading(true);
+        // 2. First, get the user's RFID from the User collection
+        const userResponse = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const userData = await userResponse.json();
+
+        if (userData && userData.RFID) {
+          const userRFID = userData.RFID; // This matches "B21938cis9" dynamically
+
+          // 3. Use the dynamic RFID to fetch bin data
+          const binResponse = await fetch(`http://localhost:5000/api/bins/${userRFID}`);
+          const binData = await binResponse.json();
+
+          if (binData && binData.glass) {
+            setFillLevel(binData.glass.fill_level);
+            setLastUpdated(`Last updated: ${new Date(binData.glass.last_updated).toLocaleTimeString()}`);
+          }
+        }
+      } catch (error) {
         console.error("Error fetching bin data:", error);
         setLastUpdated("Offline - Check Connection");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchBinData();
-    const interval = setInterval(fetchBinData,30000);
-    return () => clearInterval(interval);
 
-  },[]);
+    fetchAllData();
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(fetchAllData, 30000);
+    return () => clearInterval(interval);
+  }, [userId]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-    <StatusBar backgroundColor="#4CAF50"/>
-    <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
+      <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
+      <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
 
-      {/* 1. Header Section */}
-      <View style={styles.header}>
-        <Image 
-    source={require('../../assets/whiteLogoNoBg2.png')} 
-    style={styles.logo} 
-    resizeMode="contain"
-  />
-        <View style={styles.headerTextContainer}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Image 
+            source={require('../../assets/whiteLogoNoBg2.png')} 
+            style={styles.logo} 
+            resizeMode="contain"
+          />
+          <View style={styles.headerTextContainer}>
             <Text style={styles.headerBaseText}>
-            <Text style={styles.envoText}>ENVO</Text>
-            <Text style={styles.tixText}>tix</Text>
+              <Text style={styles.envoText}>ENVO</Text>
+              <Text style={styles.tixText}>tix</Text>
             </Text>
+          </View>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={() => navigation.navigate('Notification', { userId })}>
+              <Bell color="black" size={24} style={{ marginRight: 15 }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('SideBar', { userId })}>
+              <Menu color="black" size={24} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
-            <Menu color="black" size={24} />
-          </TouchableOpacity>
-        </View>
-      </View>
 
         <View style={styles.subHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft color="#333" size={24} />
-            </TouchableOpacity>
-            <Text style={styles.subHeaderTitle}>Glass Bin</Text>
+          </TouchableOpacity>
+          <Text style={styles.subHeaderTitle}>Glass Bin</Text>
         </View>
+
         <View style={styles.iconTitleSection}>
           <Image 
-            source={require('../../assets/glass.png')} // Make sure this filename matches your asset
+            source={require('../../assets/glass.png')} 
             style={styles.glassImage} 
             resizeMode="contain"
           />
           <Text style={styles.iconSectionText}>Glass Bin</Text>
         </View> 
 
-
-        {/* 2. Main Gauge Card */}
+        {/* Main Gauge Card */}
         <View style={styles.mainCard}>
-           <View style={styles.gaugeContainer}>
-              <CircularGauge percentage={fillLevel} />
-           </View>
-           <Text style={styles.updateText}>{lastUpdated || 'fetching data...'}</Text>
+          {loading ? (
+            <View style={styles.gaugeContainer}>
+              <ActivityIndicator size="large" color="#4CAF50" />
+            </View>
+          ) : (
+            <>
+              <View style={styles.gaugeContainer}>
+                <CircularGauge percentage={fillLevel} />
+              </View>
+              <Text style={styles.updateText}>{lastUpdated}</Text>
+            </>
+          )}
         </View>
 
-        {/* 3. Tips Card */}
+        {/* Tips Card */}
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
             <Lightbulb color="#4CAF50" size={20} />
             <Text style={styles.tipsTitle}>Glass Recycling Tips</Text>
           </View>
-           <Text style={styles.tipItem}>• Rinse glass bottles and jars before placing them in recycling.</Text>
-            <Text style={styles.tipItem}>• Throwing glass carelessly causes injuries and long-lasting environmental damage.</Text>
-            <Text style={styles.tipItem}>• Reuse glass containers for storage instead of discarding.</Text>
-            <Text style={styles.tipItem}>• Improper glass disposal harms wildlife, sanitation workers, and public safety.</Text>
+          <Text style={styles.tipItem}>• Rinse glass bottles and jars before placing them in recycling.</Text>
+          <Text style={styles.tipItem}>• Throwing glass carelessly causes injuries and environmental damage.</Text>
+          <Text style={styles.tipItem}>• Reuse glass containers for storage instead of discarding.</Text>
+          <Text style={styles.tipItem}>• Improper glass disposal harms wildlife and public safety.</Text>
         </View>
       </ScrollView>
+
+      {/* Footer Section */}
       <View style={styles.footer}>
-        <View style={styles.footerTab}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate('Home', { userId })}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
-        </View>
-        <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
-            <Wallet color="#666" size={24} />
-            <Text style={styles.footerText}>Coins</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
-            <Store color="#666" size={24} />
-            <Text style={styles.footerText}>Shops</Text>
-          </TouchableOpacity>
-        </View>
+        
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate('Coins', { userId })}>
+          <Wallet color="#666" size={24} />
+          <Text style={styles.footerText}>Coins</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate('Shops', { userId })}>
+          <Store color="#666" size={24} />
+          <Text style={styles.footerText}>Shops</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-    logo: {
-    width: 40,   // Adjust width as needed
-    height: 40,  // Adjust height as needed
-    borderRadius: 20, // Optional: makes it circular if the image is square
-  },
-  safeArea: { 
-    flex: 1, 
-    backgroundColor: '#F5F5F5',
-  },
+  safeArea: { flex: 1, backgroundColor: '#F5F5F5' },
   header: { 
     backgroundColor: '#4CAF50', 
     flexDirection: 'row', 
@@ -149,64 +169,27 @@ const styles = StyleSheet.create({
     marginHorizontal: -20,
     paddingTop: 20,
   },
+  logo: { width: 40, height: 40, borderRadius: 20 },
+  headerTextContainer: { flex: 1, alignItems: 'center' },
   envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerIcons: { flexDirection: 'row' },
-  subHeader: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginBottom: 25,
-    marginTop: 20 
-  },
-  subHeaderTitle: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    marginLeft: 10, 
-    color: '#333' 
-  },
-  glassImage: {
-  width: 55,
-  height: 55,
-  marginRight:2,
-},
-iconTitleSection: { 
-  flexDirection: 'row', 
-  alignItems: 'center', 
-  marginBottom: 10,
-},
-iconSectionText: { 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#333' 
-  },
+  subHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 25, marginTop: 20 },
+  subHeaderTitle: { fontSize: 22, fontWeight: 'bold', marginLeft: 10, color: '#333' },
+  glassImage: { width: 55, height: 55, marginRight: 2 },
+  iconTitleSection: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  iconSectionText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   scrollContent: { padding: 20 },
-  screenTitle: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, color: '#000' },
- // In plastic.js - Update these styles
-mainCard: { 
-  backgroundColor: 'white', 
-  borderRadius: 25, 
-  paddingTop: 20,
-  paddingBottom: 30, // Added padding at the bottom to push text away
-  alignItems: 'center',
-  elevation: 3,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 10,
-  marginHorizontal: 5,
-},
-gaugeContainer: { 
-  height: 230, // Fixed height for the gauge area
-  justifyContent: 'center', 
-  alignItems: 'center',
-  marginBottom: 40, // Creates space before "Last updated"
-},
-updateText: { 
-  color: '#666', 
-  fontSize: 14,
-  fontWeight: '500',
-  textAlign: 'center', // Ensures it stays centered
-},
+  mainCard: { 
+    backgroundColor: 'white', 
+    borderRadius: 25, 
+    paddingTop: 20,
+    paddingBottom: 30,
+    alignItems: 'center',
+    elevation: 3,
+  },
+  gaugeContainer: { height: 230, justifyContent: 'center', alignItems: 'center', marginBottom: 40 },
+  updateText: { color: '#666', fontSize: 14, fontWeight: '500', textAlign: 'center' },
   tipsHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: 50 },
   tipsTitle: { marginLeft: 10, fontWeight: 'bold', fontSize: 16, color: '#333' },
   tipItem: { color: '#555', marginBottom: 10, lineHeight: 22, fontSize: 14 },
@@ -218,18 +201,10 @@ updateText: {
     borderTopColor: '#EEE',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10, // Adjusts for iPhone notch
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
-  footerTab: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footerText: {
-    fontSize: 12,
-    marginTop: 4,
-    color: '#666',
-    fontWeight: '500',
-  }
+  footerTab: { alignItems: 'center', justifyContent: 'center' },
+  footerText: { fontSize: 12, marginTop: 4, color: '#666', fontWeight: '500' }
 });
 
 export default GlassBinScreen;

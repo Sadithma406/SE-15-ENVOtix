@@ -4,7 +4,9 @@ const cors = require('cors');
 const binRoutes = require('./routes/segregateRoute');
 const shopRoutes = require('./routes/shopRoute');
 const mcUsers = require('./routes/mcUserRoute');
-const loginRoute = require('./routes/loginRoute');
+const userRoutes = require('./routes/userRoute');
+const notificationRoutes = require('./routes/notificationRoute');
+const lanebinRoutes = require('./routes/laneRoute');
 
 const app = express();
 app.use(cors());
@@ -18,9 +20,11 @@ mongoose.connect(mongoUrl)
     .catch(err => console.error("Connection Error:", err));
 
 app.use('/api/bins', binRoutes); 
-app.use('/api/shops',shopRoutes);
-app.use('/api/auth',mcUsers);
-app.use('/api',loginRoute);
+app.use('/api/shops', shopRoutes);
+app.use('/api/auth', mcUsers);
+app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/lanebins', lanebinRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

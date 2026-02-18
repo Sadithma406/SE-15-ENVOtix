@@ -13,17 +13,33 @@ import { Ionicons } from "@expo/vector-icons";
 
 const categories = ["All Shops", "Dining", "Fashion", "Beauty"];
 
+const shopImages = {
+  "697850a1ce96a5fa56d84249": require("../../../assets/ecomart1.jpeg"),
+  "69785208ce96a5fa56d8424d": require("../../../assets/cityfoodhub2.jpeg"),
+  "69785330ce96a5fa56d8424f": require("../../../assets/spicehub3.jpeg"),
+  "69785567ce96a5fa56d84253": require("../../../assets/budgetbasket4.jpeg"),
+  "697aec1d59a2fb2374e18c1e": require("../../../assets/japanesecusine5.jpeg"),
+};
 
 
-export default function RedeemShopsScreen({ navigation }) {
+
+export default function Shops({ navigation }) {
+  
   const[shops,setShops] = useState([]);
   const[loading,setLoading] = useState(true);
 
   useEffect(() => {
-  fetch("http://192.168.1.14:5000/api/shops")
-    .then(res => res.json())
-    .then(data => setShops(data))
-    .catch(err => console.log( err));
+  fetch("http://localhost:5000/api/shops")
+    .then((res )=> res.json())
+    .then((data) => {
+      setShops(data);
+      setLoading(false); 
+    })
+    
+    .catch(err => {console.log( err);
+       console.log("ERROR:", err);
+    setLoading(false);
+  });
 }, []);
 
 
@@ -106,23 +122,22 @@ export default function RedeemShopsScreen({ navigation }) {
       style={styles.card} 
     >
             <View>
+              {shopImages[item._id]&&(
               <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1528605248644-14dd04022da1",
-                }}
+                source={shopImages[item._id]}
                 style={styles.cardImage}
               />
+              )}
+
+              <Text style={styles.coins}>Name: {item.name}</Text>
 
               <View style={styles.discountBadge}>
                 <Text style={styles.discountText}>Status:{item.status}</Text>
               </View>
 
               <View style={styles.tag}>
-                <Text style={styles.tagText}>Name:{item.location}</Text>
+                <Text style={styles.tagText}>Location:{item.location}</Text>
               </View>
-
-              <Text style={styles.coins}>{item.name}</Text>
-              
               <Text style={styles.coins}>Contact:{item.contact}</Text>
             </View>
 

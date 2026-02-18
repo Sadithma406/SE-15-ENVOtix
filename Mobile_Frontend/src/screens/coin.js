@@ -24,7 +24,7 @@ import {
 
 const CoinsScreen = ({ navigation, route }) => {
   // 1. Get the userId passed from LoginScreen params
-  const { userId } = route.params;
+  const  userId  = route?.params?.userId;
 
   // 2. State for dynamic data
   const [balance, setBalance] = useState(0);
@@ -36,6 +36,11 @@ const CoinsScreen = ({ navigation, route }) => {
     try {
       setIsLoading(true);
       // Replace with your laptop's IP if testing on a physical phone (e.g., 192.168.x.x)
+if(!userId){
+  console.log("No userId provided");
+  setIsLoading(false);
+  return;
+}      
 const response = await fetch(`http://localhost:5000/api/users/${userId}`);
 const data = await response.json();
 

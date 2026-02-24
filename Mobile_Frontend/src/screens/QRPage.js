@@ -16,9 +16,9 @@ import QRCode from 'react-native-qrcode-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-export default function QRCodePage({navigation}) {
-    // Sample QR code value - replace with actual user data
-    const qrValue = 'ENVOtix-User-12345';
+export default function SmartCardPage({navigation,route}) {
+    const userId = route?.params?.userId;
+    const cardValue = 'ENVOtix-User-12345';
     const insets = useSafeAreaInsets();
 
     return (
@@ -40,10 +40,10 @@ export default function QRCodePage({navigation}) {
             </Text>
         </View>
         <View style={styles.headerIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification', { userId })}>
           <Bell color="black" size={24} style={{ marginRight: 15 }} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SideBar', { userId })}>
             <Menu color="black" size={24} />
           </TouchableOpacity>
         </View>
@@ -55,34 +55,34 @@ export default function QRCodePage({navigation}) {
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="chevron-back" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.navTitle}>QR Code</Text>
+                <Text style={styles.navTitle}>Smart Card</Text>
             </View>
 
             {/* Main Content */}
             <View style={styles.content}>
-                {/* QR Code Card */}
-                <View style={styles.qrCard}>
-                    <Text style={styles.qrCardTitle}>My Enovotix QR Code</Text>
-                    <Text style={styles.qrCardInstruction}>
-                        Scan this code to manage your waste{'\n'}and earn coins, EcoUser!
+                <View style={styles.smartCard}>
+                    <Text style={styles.smartCardTitle}>My Enovotix Smart Card</Text>
+                    <Text style={styles.smartCardInstruction}>
+                        Tap your card to earn EcoCoins{'\n'}at any Lane bin after disposal.
                     </Text>
 
-                    <View style={styles.qrCodeContainer}>
-                        <QRCode
-                            value={qrValue}
-                            size={220}
-                            color="#000"
-                            backgroundColor="#fff"
-                        />
-                    </View>
+                 <View style={styles.cardContainer}>
+    <Image
+        source={require('../../assets/smartCard.png')} 
+        style={{ width: 320, height: 320 }}
+        resizeMode="contain"
+    />
+</View>
 
-                    <Text style={styles.qrCardFooter}>
-                        Present this code at any lane bin after{'\n'}disposing of waste
+                    <Text style={styles.smartCardFooter}>
+                       Dispose your waste correctly.{"\n"}
+When the scanner activates, tap your smart card on the bin{"\n"}
+to automatically add coins to your account, EcoUser.
                     </Text>
                 </View>
 
                 {/* View Earned Coins Button */}
-                <TouchableOpacity style={styles.coinsButton} onPress={() => navigation.navigate('Coins')}>
+                <TouchableOpacity style={styles.coinsButton} onPress={() => navigation.navigate('Coins' , {userId})}>
                     <FontAwesome5 name="store" size={18} color="#fff" style={styles.buttonIcon} />
                     <Text style={styles.coinsButtonText}>View Earned Coins</Text>
                 </TouchableOpacity>
@@ -91,19 +91,19 @@ export default function QRCodePage({navigation}) {
             {/* Bottom Navigation */}
             <View style={styles.footer}>
         <View style={styles.footerTab}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home', { userId })}>
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins', { userId })}>
             <Wallet color="#666" size={24} />
             <Text style={styles.footerText}>Coins</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops', { userId })}>
             <Store color="#666" size={24} />
             <Text style={styles.footerText}>Shops</Text>
           </TouchableOpacity>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
     },
-    qrCard: {
+    smartCard: {
         backgroundColor: '#fff',
         borderRadius: 12,
         padding: 24,
@@ -190,26 +190,26 @@ const styles = StyleSheet.create({
         elevation: 3,
         marginBottom: 20,
     },
-    qrCardTitle: {
+    smartCardTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#000',
         marginBottom: 12,
     },
-    qrCardInstruction: {
+    smartCardInstruction: {
         fontSize: 14,
         color: '#000',
         textAlign: 'center',
         marginBottom: 24,
         lineHeight: 20,
     },
-    qrCodeContainer: {
+    cardContainer: {
         padding: 16,
         backgroundColor: '#fff',
         borderRadius: 8,
         marginBottom: 24,
     },
-    qrCardFooter: {
+    smartCardFooter: {
         fontSize: 14,
         color: '#000',
         textAlign: 'center',
@@ -254,4 +254,3 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   }
 });
-

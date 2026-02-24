@@ -21,7 +21,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function RedeemOfferDetails({ navigation }) {
+export default function RedeemOfferDetails({ navigation ,route}) {
+  const userId = route?.params?.userId;
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
@@ -44,10 +45,10 @@ export default function RedeemOfferDetails({ navigation }) {
           </View>
 
           <View style={styles.headerIcons}>
-            <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Notification",{userId})}>
               <Bell color="black" size={24} style={{ marginRight: 15 }} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("SideBar")}>
+            <TouchableOpacity onPress={() => navigation.navigate("SideBar",{userId})}>
               <Menu color="black" size={24} />
             </TouchableOpacity>
           </View>
@@ -110,17 +111,17 @@ export default function RedeemOfferDetails({ navigation }) {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Home",{userId})}>
           <Home size={24} color="#666" />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Coins")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Coins",{userId})}>
           <Wallet size={24} color="#666" />
           <Text style={styles.footerText}>Coins</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Shops")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Shops",{userId})}>
           <Store size={24} color="#4CAF50" />
           <Text style={[styles.footerText, { color: "#4CAF50" }]}>Shops</Text>
         </TouchableOpacity>

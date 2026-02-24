@@ -23,8 +23,10 @@ const shopImages = {
 
 
 
-export default function Shops({ navigation }) {
-  
+export default function Shops({ navigation,route }) {
+
+  const userId = route?.params?.userId;
+
   const[shops,setShops] = useState([]);
   const[loading,setLoading] = useState(true);
 
@@ -65,10 +67,10 @@ export default function Shops({ navigation }) {
           </View>
 
           <View style={styles.headerIcons}>
-            <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Notification",{userId})}>
               <Bell size={24} color="black" style={{ marginRight: 15 }} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("SideBar")}>
+            <TouchableOpacity onPress={() => navigation.navigate("SideBar",{userId})}>
               <Menu size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -149,17 +151,17 @@ export default function Shops({ navigation }) {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Home",{userId})}>
           <Home size={24} color="#666" />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Coins")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Coins",{userId})}>
           <Wallet size={24} color="#666" />
           <Text style={styles.footerText}>Coins</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Shops")}>
+        <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate("Shops",{userId})}>
           <Store size={24} color="#4CAF50" />
           <Text style={[styles.footerText, { color: "#4CAF50" }]}>Shops</Text>
         </TouchableOpacity>

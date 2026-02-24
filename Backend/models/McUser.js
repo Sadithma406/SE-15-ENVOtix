@@ -7,5 +7,5 @@ const MCUserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Use 'mcUsers' as the explicit collection name
+// Use 'mcUsers' as the explicit collection name at macbook
 module.exports = mongoose.model('MCUser', MCUserSchema, 'mcUsers');

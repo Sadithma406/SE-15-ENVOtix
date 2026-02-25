@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BgImage from "../assets/bg.jpg";
+import Logo from"../assets/logoNoName.png";
+
 
 export default function LoginPage() {
+  const navigate = useNavigate(); //  navigation hook
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -16,7 +22,7 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,8 +42,15 @@ export default function LoginPage() {
       }
 
       // ✅ SUCCESS
-      setMessage("Login successful ✅");
-      console.log("Logged user:", data.user);
+
+      console.log("Login successful ✅", data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // navigate AFTER a tiny delay to ensure state updates
+      setTimeout(() => navigate("/dashboard"), 50);
+
+      //setMessage("Login successful ");
+      //console.log("Logged user:", data.user);
 
       // later:
       // localStorage.setItem("user", JSON.stringify(data.user));
@@ -56,7 +69,7 @@ export default function LoginPage() {
       <div style={styles.card}>
         {/* Logo */}
         <div style={styles.logoSection}>
-          <img src="/logo.png" alt="Envotix Logo" style={styles.logo} />
+          <img src={Logo} alt="Envotix Logo" style={styles.logo} />
           <h2 style={styles.title}>Welcome to Envotix!</h2>
         </div>
 
@@ -106,7 +119,10 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #4caf50, #2e7d32)",
+    backgroundImage: `url(${BgImage})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
     fontFamily: "Arial, sans-serif",
   },
   card: {

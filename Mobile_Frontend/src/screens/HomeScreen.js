@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,45 +7,84 @@ import {
   Image,
   Platform,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
+  // 1. Get the userId passed from LoginScreen params
+  const userId = route?.params?.userId;
+
+  // 2. Setup state for user details
+  const [userData, setUserData] = useState({
+    name: "User",
+    email: "...",
+    contact_number: "...",
+    RFID: "..."
+  });
+  const [loading, setLoading] = useState(true);
+
+  // 3. Fetch real user data from backend
+useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userId) return;
+      try {
+        setLoading(true);
+        // Replace localhost with your IP if on a real phone
+        const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const data = await response.json();
+
+        if (data) {
+          setUserData({
+            name: data.name,
+            email: data.email,
+            contact_number: data.contact_number, 
+            RFID: data.RFID                   
+          });
+        }
+      } catch (error) {
+        console.error("Home fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, [userId]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
-    <StatusBar backgroundColor="#4CAF50"/>
-     <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
-    
-      {/* ================= HEADER ================= */}
-      <View style={styles.headerpadding}>
-      <View style={styles.header}>
-        <Image 
-    source={require('../../assets/whiteLogoNoBg2.png')} 
-    style={styles.logo} 
-    resizeMode="contain"
-  />
-        <View style={styles.headerTextContainer}>
-            <Text style={styles.headerBaseText}>
-            <Text style={styles.envoText}>ENVO</Text>
-            <Text style={styles.tixText}>tix</Text>
-            </Text>
-        </View>
-        <View style={styles.headerIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-          <Bell color="black" size={24} style={{ marginRight: 15 }} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('SideBar')}>
-            <Menu color="black" size={24} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <StatusBar backgroundColor="#4CAF50" />
+      <ScrollView contentContainerStyle={styles.scrollContent} style={{ backgroundColor: '#F5F5F5' }}>
 
-</View>
-      {/* ================= BODY ================= */}
-        {/* Banner */}
+        {/* ================= HEADER ================= */}
+        <View style={styles.headerpadding}>
+          <View style={styles.header}>
+            <Image
+              source={require('../../assets/whiteLogoNoBg2.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.headerBaseText}>
+                <Text style={styles.envoText}>ENVO</Text>
+                <Text style={styles.tixText}>tix</Text>
+              </Text>
+            </View>
+            <View style={styles.headerIcons}>
+              <TouchableOpacity onPress={() => navigation.navigate('Notification',{ userId: userId })}>
+                <Bell color="black" size={24} style={{ marginRight: 15 }} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('SideBar', { userId })}>
+                <Menu color="black" size={24} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* ================= BODY ================= */}
         <View style={styles.banner}>
           <View>
             <Text style={styles.bannerTitle}>WASTE{'\n'}MANAGEMENT</Text>
@@ -56,85 +95,90 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Profile Card */}
+        {/* Profile Card - Using Dynamic Database Data */}
         <View style={styles.card}>
-          <View style={styles.profileHeader}>
-            <View style={styles.avatar}>
-              <MaterialIcons name="person" size={30} color="#000" />
-            </View>
-            <View>
-              <Text style={styles.profileName}>Sanath Silva</Text>
-              <Text style={styles.profileSub}>Welcome back to Envotix!</Text>
-            </View>
-          </View>
-          <Text style={styles.info}>Contact no: 0712379876</Text>
-          <Text style={styles.info}>Email: sanath.s@gmail.com</Text>
-          <Text style={styles.info}>Bin number: B37890</Text>
+          {loading ? (
+            <ActivityIndicator color="#4CAF50" size="large" />
+          ) : (
+            <>
+              <View style={styles.profileHeader}>
+                <View style={styles.avatar}>
+                  <MaterialIcons name="person" size={30} color="#000" />
+                </View>
+                <View>
+                  <Text style={styles.profileName}>{userData.name}</Text>
+                  <Text style={styles.profileSub}>Welcome back to Envotix!</Text>
+                </View>
+              </View>
+              <Text style={styles.info}>Contact no: {userData.contact_number}</Text>
+              <Text style={styles.info}>Email: {userData.email}</Text>
+              <Text style={styles.info}>Bin number: {userData.RFID}</Text>
 
-          {/* Navigation to Edit Profile */}
-          <TouchableOpacity
-            style={styles.editProfileButton}
-            onPress={() => navigation.navigate('EditProfile')}
-          >
-            <Text style={styles.editProfileText}>Edit profile</Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.editProfileButton}
+                onPress={() => navigation.navigate('EditProfile', { userId })}
+              >
+                <Text style={styles.editProfileText}>Edit profile</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         {/* ================= ACTION CARDS ================= */}
         <View style={styles.actionCard}>
-        <TouchableOpacity onPress={() => navigation.navigate('MonitorBin')}>
-          <View style={styles.actionRow}>
-            <View>
-              <Text style={styles.actionTitle}>Monitor My Bin</Text>
-              <Text style={styles.actionSub}>Check fill level!</Text>
-              <Text style={styles.actionInfo}>Last Updated: 30 mins ago</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('MonitorBin', { userId })}>
+            <View style={styles.actionRow}>
+              <View>
+                <Text style={styles.actionTitle}>Monitor My Bin</Text>
+                <Text style={styles.actionSub}>Check fill level!</Text>
+                <Text style={styles.actionInfo}>Last Updated: Live</Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={28} color="#666" />
             </View>
-            <MaterialIcons name="chevron-right" size={28} color="#666" />
-          </View>
           </TouchableOpacity>
         </View>
 
         <View style={styles.actionCard}>
-        <TouchableOpacity onPress={() => navigation.navigate('QRPage')}>
-          <View style={styles.actionRow}>
-            <View>
-              <Text style={styles.actionTitle}>View QR Code</Text>
-              <Text style={styles.actionSub}>Open QR code to obtain rewards</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('QRPage', { userId })}>
+            <View style={styles.actionRow}>
+              <View>
+                <Text style={styles.actionTitle}>View Smart Card</Text>
+                <Text style={styles.actionSub}>Tap your card to obtain rewards</Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={28} color="#666" />
             </View>
-            <MaterialIcons name="chevron-right" size={28} color="#666" />
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
 
-      <View style={styles.actionCard}>
-        <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
-          <View style={styles.actionRow}>
-            <View>
-              <Text style={styles.actionTitle}>View Coins</Text>
-              <Text style={styles.actionSub}>Check the coins earned to get rewards</Text>
+        <View style={styles.actionCard}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins', { userId })}>
+            <View style={styles.actionRow}>
+              <View>
+                <Text style={styles.actionTitle}>View Coins</Text>
+                <Text style={styles.actionSub}>Check the coins earned to get rewards</Text>
+              </View>
+              <MaterialIcons name="chevron-right" size={28} color="#666" />
             </View>
-            <MaterialIcons name="chevron-right" size={28} color="#666" />
-          </View>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
 
       {/* ================= FOOTER ================= */}
       <View style={styles.footer}>
         <View style={styles.footerTab}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Home color="#4CAF50" size={24} />
-          <Text style={styles.footerText}>Home</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Home', { userId })}>
+            <Home color="#4CAF50" size={24} />
+            <Text style={styles.footerText}>Home</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Coins')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Coins', { userId })}>
             <Wallet color="#666" size={24} />
             <Text style={styles.footerText}>Coins</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footerTab}>
-          <TouchableOpacity onPress={() => navigation.navigate('Shops')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Shops', { userId })}>
             <Store color="#666" size={24} />
             <Text style={styles.footerText}>Shops</Text>
           </TouchableOpacity>
@@ -149,13 +193,13 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F5F5F5' },
   logo: { width: 40, height: 40, borderRadius: 20 },
   header: {
-    backgroundColor: '#4CAF50', 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 9, 
+    paddingVertical: 9,
     alignItems: 'center',
-    marginTop: -20, 
+    marginTop: -20,
     marginHorizontal: -20,
     paddingTop: 20,
   },
@@ -164,7 +208,7 @@ const styles = StyleSheet.create({
   envoText: { color: 'green', fontSize: 22, fontWeight: 'bold' },
   tixText: { color: 'black', fontSize: 22, fontWeight: 'bold' },
   headerIcons: { flexDirection: 'row' },
-  headerpadding:{padding:20},
+  headerpadding: { padding: 20 },
   content: { paddingBottom: 20 },
   banner: {
     backgroundColor: '#CDEECD',
@@ -201,7 +245,7 @@ const styles = StyleSheet.create({
   editProfileButton: {
     alignSelf: 'flex-end',
     marginTop: 10,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#6BBE45',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,

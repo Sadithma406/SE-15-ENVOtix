@@ -7,11 +7,12 @@ const mcUsers = require('./routes/mcUserRoute');
 const userRoutes = require('./routes/userRoute');
 const notificationRoutes = require('./routes/notificationRoute');
 const lanebinRoutes = require('./routes/laneRoute');
+const initMQTT = require('./services/mqttService');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+initMQTT();
 // connecting with the Data_Envotix database in MongoDB Atlas
 const mongoUrl = "mongodb+srv://sadithma20242193_db_user:himandiIIT20242193@cluster0.cjexidk.mongodb.net/Data_Envotix?appName=cluster0";
 

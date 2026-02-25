@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 
-// 1. POST - For creating a new user
+// 2 POST - For creating a new user
 router.post('/register', async (req, res) => {
     try {
         const { name, email, contactNumber, address, RFID, password } = req.body;

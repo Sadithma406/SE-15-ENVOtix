@@ -35,7 +35,7 @@ const CoinsScreen = ({ navigation, route }) => {
   const fetchUserData = async () => {
     try {
       setIsLoading(true);
-      // Replace with your laptop's IP if testing on a physical phone (e.g., 192.168.x.x)
+      
 if(!userId){
   console.log("No userId provided");
   setIsLoading(false);

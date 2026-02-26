@@ -12,23 +12,18 @@ const initMQTT = () => {
     client.on('message', async (topic, message) => {
         try {
             const data = JSON.parse(message.toString());
-            
-            // Logic for Ultrasonic Sensor
-            let newStatus = 'active';
-            if (data.fillLevel >= 90) newStatus = 'full';
-            else if (data.fillLevel >= 70) newStatus = 'warning';
 
+            // 🔹 Directly update MongoDB with the raw numeric distance
             await LaneBin.findByIdAndUpdate(data.binId, {
                 $set: {
-                    fillLevel: data.fillLevel,
-                    status: newStatus,
+                    fillLevel: data.fillLevel, 
                     lastUpdated: new Date()
                 }
             });
             
-            console.log(`Sensor Update: Bin ${data.binId} is at ${data.fillLevel}%`);
+            console.log(`Updated: Bin ${data.binId} level is now ${data.fillLevel} cm`);
         } catch (err) {
-            console.error("MQTT Service Error:", err);
+            console.error("Database Update Error:", err);
         }
     });
 };

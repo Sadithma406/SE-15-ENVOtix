@@ -1,143 +1,282 @@
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import axios from "axios";
+import "leaflet/dist/leaflet.css";
+
+// Fix for default marker icons in React Leaflet
+// This prevents the default marker icon from being broken
+if (L.Icon.Default.prototype._getIconUrl) {
+  delete L.Icon.Default.prototype._getIconUrl;
+}
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+});
 
 export default function MapView() {
-      const navigate = useNavigate();
-    return (
-        <>
-            <div className="mapview-root">
-                {/* Sidebar */}
-                <aside className="mapview-sidebar">
-                    <div className="sidebar-header">
-                        <div className="logo-circle">
-                            <span className="logo-letter">E</span>
-                        </div>
-                        <div className="sidebar-brand">
-                            <span className="brand-title">ENVOtix</span>
-                            <span className="brand-subtitle">smart waste management</span>
-                        </div>
-                    </div>
+  const navigate = useNavigate();
+  const [selectedBin, setSelectedBin] = useState(null);
+  const [bins, setBins] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-                    <nav className="sidebar-nav">
-                        <button className="nav-item" onClick={() => navigate('/dashboard')}>
-                            <span className="nav-icon">📊</span>
-                            <span>Dashboard Overview</span>
-                        </button>
+  // Fetch bins from MongoDB via API
+  useEffect(() => {
+    const fetchBins = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/bins");
+        setBins(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching bins:", error);
+        // Fallback to sample data if API fails
+        setBins([
+          {
+            _id: "101",
+            bin_id: "101",
+            name: "Bin Cluster 101",
+            location: "Downtown Eco Plaza",
+            coordinates: { lat: 6.8792, lng: 79.8853 },
+            fillLevels: { organic: 86, plastic: 68, glass: 42 }
+          }
+        ]);
+        setLoading(false);
+      }
+    };
+    fetchBins();
+  }, []);
 
-                        <button className="nav-item nav-item-active" onClick={() => navigate('/mapview')}>
-                            <span className="nav-icon">🗺️</span>
-                            <span>Map View</span>
-                        </button>
+  // Helper function to determine fill level color
+  const getFillLevel = (percentage) => {
+    if (percentage >= 70) return "high";
+    if (percentage >= 40) return "medium";
+    return "low";
+  };
 
-                        <button className="nav-item" onClick={() => navigate('/settings')}>
-                            <span className="nav-icon">⚙️</span>
-                            <span>Settings or Legend</span>
-                        </button>
-                    </nav>
+  // Create custom bin icon with colored dots
+  const createBinIcon = (bin) => {
+    const dots = [
+      getFillLevel(bin.fillLevels?.organic || 0),
+      getFillLevel(bin.fillLevels?.plastic || 0),
+      getFillLevel(bin.fillLevels?.glass || 0)
+    ];
 
-                    <div className="sidebar-footer">
-                        <button className="logout-btn">Logout</button>
-                        <p className="sidebar-copy">© ENVOtix smart waste management</p>
-                    </div>
-                </aside>
+    const colors = {
+      low: "#43a047",
+      medium: "#ffb300",
+      high: "#e53935"
+    };
 
-                {/* Main Content */}
-                <main className="mapview-main">
-                    {/* Top Bar */}
-                    <header className="mapview-topbar">
-                        <h1 className="topbar-title">Waste Management Dashboard</h1>
+    // Create SVG icon with colored dots
+    const svgIcon = `
+      <svg width="40" height="50" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 0C9 0 0 9 0 20c0 11 9 20 20 20s20-9 20-20C40 9 31 0 20 0z" fill="#28a745" stroke="#fff" stroke-width="2"/>
+        <circle cx="20" cy="12" r="3" fill="${colors[dots[0]]}"/>
+        <circle cx="20" cy="20" r="3" fill="${colors[dots[1]]}"/>
+        <circle cx="20" cy="28" r="3" fill="${colors[dots[2]]}"/>
+      </svg>
+    `;
 
-                        <div className="topbar-right">
-                            <div className="topbar-search">
-                                <span className="search-icon">🔍</span>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    className="search-input"
-                                />
-                            </div>
+    return L.divIcon({
+      className: "custom-bin-icon",
+      html: svgIcon,
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -50]
+    });
+  };
 
-                            <div className="profile-avatar">
-                                <span className="avatar-initial">A</span>
-                            </div>
-                        </div>
-                    </header>
+  const handleBinClick = (bin) => {
+    setSelectedBin(selectedBin?._id === bin._id ? null : bin);
+  };
 
-                    {/* Map Container */}
-                    <section className="mapview-map-wrapper">
-                        {/* Search box above map */}
-                        <div className="map-search-bar">
-                            <span className="search-icon">🔍</span>
-                            <input
-                                type="text"
-                                placeholder="Search by location to view bin status"
-                            />
-                        </div>
+  // Default center (Maharagama, Sri Lanka)
+  const defaultCenter = [6.8792, 79.8853];
+  const defaultZoom = 14;
 
-                        <div className="map-area">
-                            {/* Placeholder Google Maps iframe.
-                  Replace src with your real Google Maps URL / integration later. */}
-                            <iframe
-                                title="Map"
-                                className="map-iframe"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.868555560173!2d79.926!3d6.846!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae250b1b8b1fd77%3A0x7e3e3d!2sMaharagama!5e0!3m2!1sen!2slk!4v1700000000000"
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
-                            ></iframe>
+  return (
+    <>
+      <div className="mapview-root">
+        {/* Sidebar */}
+        <aside className="mapview-sidebar">
+          <div className="sidebar-header">
+            <div className="logo-circle">
+              <span className="logo-letter">E</span>
+            </div>
+            <div className="sidebar-brand">
+              <span className="brand-title">ENVOtix</span>
+              <span className="brand-subtitle">smart waste management</span>
+            </div>
+          </div>
 
-                            {/* Bin Cluster Card */}
-                            <div className="bin-cluster-card">
-                                <h3 className="cluster-title">Bin Cluster 101</h3>
-                                <p className="cluster-location">Downtown Eco Plaza</p>
+          <nav className="sidebar-nav">
+            <button className="nav-item" onClick={() => navigate('/dashboard')}>
+              <span className="nav-icon">📊</span>
+              <span>Dashboard Overview</span>
+            </button>
 
-                                <div className="cluster-row">
-                                    <span>Organic</span>
-                                    <span>86%</span>
-                                </div>
-                                <div className="progress-bar">
-                                    <div className="progress-fill high"></div>
-                                </div>
+            <button className="nav-item nav-item-active" onClick={() => navigate('/mapview')}>
+              <span className="nav-icon">🗺️</span>
+              <span>Map View</span>
+            </button>
 
-                                <div className="cluster-row">
-                                    <span>Plastic</span>
-                                    <span>68%</span>
-                                </div>
-                                <div className="progress-bar">
-                                    <div className="progress-fill medium"></div>
-                                </div>
+            <button className="nav-item" onClick={() => navigate('/settings')}>
+              <span className="nav-icon">⚙️</span>
+              <span>Settings or Legend</span>
+            </button>
+          </nav>
 
-                                <div className="cluster-row">
-                                    <span>Glass</span>
-                                    <span>42%</span>
-                                </div>
-                                <div className="progress-bar">
-                                    <div className="progress-fill low"></div>
-                                </div>
-                            </div>
+          <div className="sidebar-footer">
+            <button className="logout-btn">Logout</button>
+            <p className="sidebar-copy">© ENVOtix smart waste management</p>
+          </div>
+        </aside>
 
-                            {/* Bin Fill Legend */}
-                            <div className="bin-legend-card">
-                                <h4>Bin Fill Legend</h4>
-                                <div className="legend-item">
-                                    <span className="legend-dot low"></span>
-                                    <span>Low Fill Level</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot medium"></span>
-                                    <span>Medium Fill Level</span>
-                                </div>
-                                <div className="legend-item">
-                                    <span className="legend-dot high"></span>
-                                    <span>High Fill Level</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </main>
+        {/* Main Content */}
+        <main className="mapview-main">
+          {/* Top Bar */}
+          <header className="mapview-topbar">
+            <h1 className="topbar-title">Waste Management Dashboard</h1>
+
+            <div className="topbar-right">
+              <div className="topbar-search">
+                <span className="search-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="search-input"
+                />
+              </div>
+
+              <div className="profile-avatar">
+                <span className="avatar-initial">A</span>
+              </div>
+            </div>
+          </header>
+
+          {/* Map Container */}
+          <section className="mapview-map-wrapper">
+            {/* Search box above map */}
+            <div className="map-search-bar">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Search by location to view bin status"
+              />
             </div>
 
-            {/* Page-specific styles */}
-            <style>{`
+            <div className="map-area">
+              {loading ? (
+                <div className="loading-spinner">Loading bins...</div>
+              ) : (
+                <MapContainer
+                  center={defaultCenter}
+                  zoom={defaultZoom}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+
+                  {bins.map((bin) => {
+                    if (!bin.coordinates || !bin.coordinates.lat || !bin.coordinates.lng) {
+                      return null;
+                    }
+                    return (
+                      <Marker
+                        key={bin._id || bin.bin_id}
+                        position={[bin.coordinates.lat, bin.coordinates.lng]}
+                        icon={createBinIcon(bin)}
+                        eventHandlers={{
+                          click: () => handleBinClick(bin)
+                        }}
+                      >
+                        <Popup>
+                          <div style={{ textAlign: "center" }}>
+                            <strong>{bin.name || `Bin ${bin.bin_id}`}</strong>
+                            <br />
+                            <small>{bin.location || "Unknown Location"}</small>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MapContainer>
+              )}
+
+              {/* Bin Cluster Card - Shows when bin is clicked */}
+              {selectedBin && (
+                <div className="bin-cluster-card">
+                  <button
+                    className="close-btn"
+                    onClick={() => setSelectedBin(null)}
+                  >
+                    ×
+                  </button>
+                  <h3 className="cluster-title">{selectedBin.name || `Bin Cluster ${selectedBin.bin_id}`}</h3>
+                  <p className="cluster-location">{selectedBin.location || "Unknown Location"}</p>
+
+                  <div className="cluster-row">
+                    <span>🍃 Organic</span>
+                    <span>{selectedBin.fillLevels?.organic || 0}%</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div
+                      className={`progress-fill ${getFillLevel(selectedBin.fillLevels?.organic || 0)}`}
+                      style={{ width: `${selectedBin.fillLevels?.organic || 0}%` }}
+                    ></div>
+                  </div>
+
+                  <div className="cluster-row">
+                    <span>♻️ Plastic</span>
+                    <span>{selectedBin.fillLevels?.plastic || 0}%</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div
+                      className={`progress-fill ${getFillLevel(selectedBin.fillLevels?.plastic || 0)}`}
+                      style={{ width: `${selectedBin.fillLevels?.plastic || 0}%` }}
+                    ></div>
+                  </div>
+
+                  <div className="cluster-row">
+                    <span>🍶 Glass</span>
+                    <span>{selectedBin.fillLevels?.glass || 0}%</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div
+                      className={`progress-fill ${getFillLevel(selectedBin.fillLevels?.glass || 0)}`}
+                      style={{ width: `${selectedBin.fillLevels?.glass || 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Bin Fill Legend */}
+              <div className="bin-legend-card">
+                <h4>Bin Fill Legend</h4>
+                <div className="legend-item">
+                  <span className="legend-dot low"></span>
+                  <span>Low Fill Level</span>
+                </div>
+                <div className="legend-item">
+                  <span className="legend-dot medium"></span>
+                  <span>Medium Fill Level</span>
+                </div>
+                <div className="legend-item">
+                  <span className="legend-dot high"></span>
+                  <span>High Fill Level</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      {/* Page-specific styles */}
+      <style>{`
         .mapview-root {
           display: flex;
           height: 100vh;
@@ -336,10 +475,13 @@ export default function MapView() {
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        .map-iframe {
-          border: 0;
-          width: 100%;
+        .loading-spinner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           height: 100%;
+          font-size: 16px;
+          color: #666;
         }
 
         .bin-cluster-card {
@@ -351,6 +493,26 @@ export default function MapView() {
           border-radius: 12px;
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
           width: 260px;
+          z-index: 1000;
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 8px;
+          right: 12px;
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+          color: #666;
+          line-height: 1;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+        }
+
+        .close-btn:hover {
+          color: #000;
         }
 
         .cluster-title {
@@ -383,20 +545,18 @@ export default function MapView() {
         .progress-fill {
           height: 100%;
           border-radius: 999px;
+          transition: width 0.3s ease;
         }
 
         .progress-fill.high {
-          width: 86%;
           background-color: #e53935;
         }
 
         .progress-fill.medium {
-          width: 68%;
           background-color: #ffb300;
         }
 
         .progress-fill.low {
-          width: 42%;
           background-color: #43a047;
         }
 
@@ -410,6 +570,7 @@ export default function MapView() {
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
           min-width: 170px;
           font-size: 13px;
+          z-index: 1000;
         }
 
         .bin-legend-card h4 {
@@ -443,6 +604,11 @@ export default function MapView() {
           background-color: #e53935;
         }
 
+        .custom-bin-icon {
+          background: transparent;
+          border: none;
+        }
+
         @media (max-width: 900px) {
           .mapview-root {
             flex-direction: column;
@@ -464,7 +630,6 @@ export default function MapView() {
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
-

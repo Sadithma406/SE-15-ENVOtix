@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BgImage from "../assets/bg.jpg";
-import Logo from"../assets/logoNoName.png";
+import Logo from "../assets/logoNoName.png";
 
 
 export default function LoginPage() {
@@ -22,7 +22,7 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:5005/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function LoginPage() {
       // navigate("/dashboard");
 
     } catch (error) {
-      console.error("Login error:", error); 
+      console.error("Login error:", error);
       setMessage("Cannot connect to server");
     } finally {
       setLoading(false);

@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  
+
   // State for raw database data
   const [bins, setBins] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,8 +26,8 @@ export default function Dashboard() {
 
   const fetchBinData = async () => {
     try {
-      // Ensure your backend is running on port 5000
-      const response = await axios.get("http://localhost:5000/api/lanebins");
+      // Ensure your backend is running on port 5005
+      const response = await axios.get("http://localhost:5005/api/lanebins");
       const data = response.data;
       setBins(data);
       calculateAnalytics(data);
@@ -48,7 +48,7 @@ export default function Dashboard() {
     const getDonutData = (typeArray) => {
       const total = typeArray.length;
       if (total === 0) return { high: 0, medium: 0, low: 0 };
-      
+
       const high = typeArray.filter(b => b.fillLevel >= 85).length;
       const medium = typeArray.filter(b => b.fillLevel >= 50 && b.fillLevel < 85).length;
       const low = typeArray.filter(b => b.fillLevel < 50).length;
@@ -152,7 +152,7 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh'}}>Loading Analytics...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading Analytics...</div>;
   }
 
   return (

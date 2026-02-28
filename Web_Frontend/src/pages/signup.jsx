@@ -14,22 +14,22 @@ export default function Signup() {
     confirmPassword: ''
   });
 
-  const [error, setError] = useState({ 
+  const [error, setError] = useState({
     email: '',
     password: '',
     general: ''
   });
 
   //password validation
-useEffect(() => {
+  useEffect(() => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*?#&]{8,}$/;
-    
+
     let currentPasswordError = "";
 
     // 1. Check complexity only if user has started typing
     if (formData.password.length > 0 && !passwordRegex.test(formData.password)) {
       currentPasswordError = "Password must be 8+ chars, including letters, numbers, and symbols.";
-    } 
+    }
     // 2. Check if passwords match
     else if (formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword) {
       currentPasswordError = "Passwords do not match.";
@@ -49,7 +49,7 @@ useEffect(() => {
     setError(prev => ({ ...prev, email: '', general: '' }));
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+      const response = await axios.post('http://localhost:5005/api/auth/signup', {
         name: formData.name,
         email: formData.email,
         password: formData.password
@@ -58,7 +58,7 @@ useEffect(() => {
       alert(response.data.message);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Something went wrong";
-      
+
       if (err.response?.status === 403 || errorMsg.toLowerCase().includes("email")) {
         setError(prev => ({ ...prev, email: errorMsg }));
       } else {
@@ -81,20 +81,20 @@ useEffect(() => {
 
           <form className="signup-form" onSubmit={handleSignup}>
             <label>Full Name</label>
-            <input 
-              type="text" 
-              placeholder="John Doe" 
+            <input
+              type="text"
+              placeholder="John Doe"
               required
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
 
             <label>Email Address</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               className={error.email ? "input-error" : ""}
-              placeholder="john.doe@example.com" 
+              placeholder="john.doe@example.com"
               required
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
             {error.email && <p className='error-message'>{error.email}</p>}
 
@@ -104,7 +104,7 @@ useEffect(() => {
                 type={showPassword ? "text" : "password"}
                 className={error.password ? "input-error" : ""}
                 required
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
               <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -117,16 +117,16 @@ useEffect(() => {
                 type={showConfirm ? "text" : "password"}
                 className={error.password ? "input-error" : ""}
                 required
-                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} 
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               />
               <span className="toggle-icon" onClick={() => setShowConfirm(!showConfirm)}>
                 {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </span>
             </div>
-            
+
             {/* The error message below will update as the user types */}
             {error.password && <p className='error-message'>{error.password}</p>}
-            {error.general && <p className='error-message' style={{textAlign: 'center'}}>{error.general}</p>}
+            {error.general && <p className='error-message' style={{ textAlign: 'center' }}>{error.general}</p>}
 
             <button className="signup-btn" type="submit">Sign Up</button>
             <p className="login-text">Already have an account? <a href="/login">Sign In</a></p>

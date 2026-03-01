@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useCallback} from 'react';
 import { 
     View, 
     Text, 
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, ChevronRight, Home, Wallet, Store } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MonitorScreen({ navigation, route }) {
     // 1. Catch the userId passed from HomeScreen/Login
@@ -61,11 +62,19 @@ export default function MonitorScreen({ navigation, route }) {
         }
     };
 
-    useEffect(() => {
-        fetchBinLevels();
-        const interval = setInterval(fetchBinLevels, 30000);
-        return () => clearInterval(interval);
-    }, [userId]);
+    // Use useFocusEffect to refetch data every time the screen comes into focus
+    useFocusEffect(
+        useCallback(() => {
+            console.log("MonitorScreen focused, userId:", userId);
+            fetchBinLevels();
+            
+            // Set up interval for periodic refresh
+            const interval = setInterval(fetchBinLevels, 30000);
+            
+            // Cleanup interval when screen loses focus
+            return () => clearInterval(interval);
+        }, [userId])
+    );
 
     return (
         <SafeAreaView style={styles.safeArea}>

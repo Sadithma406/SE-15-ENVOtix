@@ -26,8 +26,8 @@ export default function Dashboard() {
 
   const fetchBinData = async () => {
     try {
-      // Ensure your backend is running on port 5005
-      const response = await axios.get("http://localhost:5005/api/lanebins");
+      // Ensure your backend is running on port 5000
+      const response = await axios.get("http://localhost:5000/api/lanebins");
       const data = response.data;
       setBins(data);
       calculateAnalytics(data);

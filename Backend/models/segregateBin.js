@@ -7,12 +7,6 @@ const CompartmentSchema = new mongoose.Schema({
 
 const SegregateBinSchema = new mongoose.Schema({
     bin_id: { type: String, required: true, unique: true },
-    name: { type: String, default: "" },
-    location: { type: String, default: "" },
-    coordinates: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true }
-    },
     status: String,
     organic: CompartmentSchema,
     plastic: CompartmentSchema,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { ChevronLeft, Bell, Menu, Home, Wallet, Store, Trash2, CheckCircle, Circle } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Notification({ navigation, route }) {
   // 1. CATCH the userId passed from the previous screen (e.g., Home or Login)
@@ -57,9 +58,13 @@ const fetchNotifications = async () => {
   }
 };
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [userId]);
+  // Use useFocusEffect to refetch data every time the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      console.log("NotificationScreen focused, userId:", userId);
+      fetchNotifications();
+    }, [userId])
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>

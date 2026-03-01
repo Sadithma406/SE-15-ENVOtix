@@ -26,7 +26,7 @@ export default function MapView() {
   useEffect(() => {
     const fetchBins = async () => {
       try {
-        const response = await axios.get("http://localhost:5005/api/bins");
+        const response = await axios.get("http://localhost:5000/api/bins");
         setBins(response.data);
         setLoading(false);
       } catch (error) {

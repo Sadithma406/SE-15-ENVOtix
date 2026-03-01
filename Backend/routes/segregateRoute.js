@@ -2,26 +2,11 @@ const express = require('express');
 const router = express.Router();
 const SegregateBin = require('../models/segregateBin'); // Import the blueprint
 
-// @route   GET /api/bins
-// @desc    Get all bins for map view
+// Logic to GET ALL bins (for debugging)
 router.get("/", async (req, res) => {
     try {
-        const bins = await SegregateBin.find();
-        // Transform data to match frontend expectations
-        const formattedBins = bins.map(bin => ({
-            _id: bin._id,
-            bin_id: bin.bin_id,
-            name: bin.name || `Bin Cluster ${bin.bin_id}`,
-            location: bin.location || "Unknown Location",
-            coordinates: bin.coordinates || { lat: 6.8792, lng: 79.8853 },
-            fillLevels: {
-                organic: bin.organic?.fill_level || 0,
-                plastic: bin.plastic?.fill_level || 0,
-                glass: bin.glass?.fill_level || 0
-            },
-            status: bin.status || "active"
-        }));
-        res.status(200).json(formattedBins);
+        const allBins = await SegregateBin.find();
+        res.status(200).json(allBins);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

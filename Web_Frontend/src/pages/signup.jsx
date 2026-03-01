@@ -1,12 +1,33 @@
 import logo from '../assets/logoNoName.png';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import BgImage from '../assets/bg.jpg';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 
+// Helper function to decode JWT token
+const decodeJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+};
+
 export default function Signup() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,7 +35,7 @@ export default function Signup() {
     confirmPassword: ''
   });
 
-  const [error, setError] = useState({
+  const [error, setError] = useState({ 
     email: '',
     password: '',
     general: ''
@@ -23,13 +44,13 @@ export default function Signup() {
   //password validation
   useEffect(() => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*?#&]{8,}$/;
-
+    
     let currentPasswordError = "";
 
     // 1. Check complexity only if user has started typing
     if (formData.password.length > 0 && !passwordRegex.test(formData.password)) {
       currentPasswordError = "Password must be 8+ chars, including letters, numbers, and symbols.";
-    }
+    } 
     // 2. Check if passwords match
     else if (formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword) {
       currentPasswordError = "Passwords do not match.";
@@ -47,6 +68,7 @@ export default function Signup() {
 
     // Reset other errors
     setError(prev => ({ ...prev, email: '', general: '' }));
+    setSuccessMessage('');
 
     try {
       const response = await axios.post('http://localhost:5000/api/auth/signup', {
@@ -55,16 +77,56 @@ export default function Signup() {
         password: formData.password
       });
 
-      alert(response.data.message);
+      setSuccessMessage('Signed up successfully!');
+      
+      // Navigate to login page after 2 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Something went wrong";
-
+      
       if (err.response?.status === 403 || errorMsg.toLowerCase().includes("email")) {
         setError(prev => ({ ...prev, email: errorMsg }));
       } else {
         setError(prev => ({ ...prev, general: errorMsg }));
       }
     }
+  };
+
+  // Handle Google Sign-In Success
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const decoded = decodeJwt(credentialResponse.credential);
+      
+      if (!decoded) {
+        setError(prev => ({ ...prev, general: "Failed to decode Google credentials" }));
+        return;
+      }
+      
+      // Send Google user data to backend
+      const response = await axios.post('http://localhost:5000/api/auth/google-signup', {
+        name: decoded.name,
+        email: decoded.email,
+        googleId: decoded.sub,
+        picture: decoded.picture
+      });
+
+      setSuccessMessage('Signed up successfully with Google!');
+      
+      // Navigate to login page after 2 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "Google sign-up failed";
+      setError(prev => ({ ...prev, general: errorMsg }));
+    }
+  };
+
+  // Handle Google Sign-In Error
+  const handleGoogleError = () => {
+    setError(prev => ({ ...prev, general: "Google sign-up failed. Please try again." }));
   };
 
   return (
@@ -81,20 +143,20 @@ export default function Signup() {
 
           <form className="signup-form" onSubmit={handleSignup}>
             <label>Full Name</label>
-            <input
-              type="text"
-              placeholder="John Doe"
+            <input 
+              type="text" 
+              placeholder="John Doe" 
               required
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
             />
 
             <label>Email Address</label>
-            <input
-              type="email"
+            <input 
+              type="email" 
               className={error.email ? "input-error" : ""}
-              placeholder="john.doe@example.com"
+              placeholder="john.doe@example.com" 
               required
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
             />
             {error.email && <p className='error-message'>{error.email}</p>}
 
@@ -104,7 +166,7 @@ export default function Signup() {
                 type={showPassword ? "text" : "password"}
                 className={error.password ? "input-error" : ""}
                 required
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
               <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -117,18 +179,36 @@ export default function Signup() {
                 type={showConfirm ? "text" : "password"}
                 className={error.password ? "input-error" : ""}
                 required
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} 
               />
               <span className="toggle-icon" onClick={() => setShowConfirm(!showConfirm)}>
                 {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </span>
             </div>
-
+            
             {/* The error message below will update as the user types */}
             {error.password && <p className='error-message'>{error.password}</p>}
-            {error.general && <p className='error-message' style={{ textAlign: 'center' }}>{error.general}</p>}
+            {error.general && <p className='error-message' style={{textAlign: 'center'}}>{error.general}</p>}
+            {successMessage && <p className='success-message'>{successMessage}</p>}
 
             <button className="signup-btn" type="submit">Sign Up</button>
+
+            <div className="divider">
+              <span>or</span>
+            </div>
+
+            <div className="google-btn-wrapper">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                theme="outline"
+                size="large"
+                text="signup_with"
+                shape="rectangular"
+                width="100%"
+              />
+            </div>
+
             <p className="login-text">Already have an account? <a href="/login">Sign In</a></p>
           </form>
 
@@ -282,6 +362,44 @@ export default function Signup() {
 
 .input-error {
   border: 1px solid #d93025 !important;
+}
+
+.success-message {
+  color: #1aad4f;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 600;
+  text-align: center;
+  display: block;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.divider span {
+  padding: 0 15px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Google Button */
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 .terms a {

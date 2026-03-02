@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
 
 // Fix for default marker icons in React Leaflet
-// This prevents the default marker icon from being broken
 if (L.Icon.Default.prototype._getIconUrl) {
   delete L.Icon.Default.prototype._getIconUrl;
 }
@@ -16,21 +15,67 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
+// Component to recenter map when bins load - MUST be outside main component
+function RecenterMap({ bins }) {
+  const map = useMap();
+  useEffect(() => {
+    if (bins && bins.length > 0 && bins[0].coordinates) {
+      map.setView([bins[0].coordinates.lat, bins[0].coordinates.lng], 13);
+    }
+  }, [bins, map]);
+  return null;
+}
+
 export default function MapView() {
   const navigate = useNavigate();
   const [selectedBin, setSelectedBin] = useState(null);
   const [bins, setBins] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch bins from MongoDB via API
+  // Fetch bins from MongoDB via API (lane_bins collection)
   useEffect(() => {
     const fetchBins = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/bins");
-        setBins(response.data);
+        setError(null);
+        const response = await axios.get("http://localhost:5000/api/lanebins");
+        const rawData = response.data;
+
+        if (!Array.isArray(rawData)) {
+          console.error("API did not return an array:", rawData);
+          throw new Error("Invalid data format");
+        }
+
+        // Group bins by laneName and location to create clusters
+        const groupedBins = {};
+        rawData.forEach((bin) => {
+          if (!bin.location || !bin.location.latitude || !bin.location.longitude) {
+            return;
+          }
+
+          const key = `${bin.laneName}-${bin.location.latitude}-${bin.location.longitude}`;
+          if (!groupedBins[key]) {
+            groupedBins[key] = {
+              _id: bin._id,
+              bin_id: bin._id,
+              name: bin.laneName,
+              location: bin.laneName,
+              coordinates: { lat: bin.location.latitude, lng: bin.location.longitude },
+              fillLevels: { organic: 0, plastic: 0, glass: 0 },
+              lastUpdated: bin.lastUpdated,
+            };
+          }
+          const binType = bin.binType.toLowerCase();
+          groupedBins[key].fillLevels[binType] = Math.min(bin.fillLevel || 0, 100);
+        });
+
+        const binsArray = Object.values(groupedBins);
+        console.log("Processed bins:", binsArray);
+        setBins(binsArray);
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching bins:", error);
+      } catch (err) {
+        console.error("Error fetching bins:", err);
+        setError(err.message);
         // Fallback to sample data if API fails
         setBins([
           {
@@ -39,14 +84,24 @@ export default function MapView() {
             name: "Bin Cluster 101",
             location: "Downtown Eco Plaza",
             coordinates: { lat: 6.8792, lng: 79.8853 },
-            fillLevels: { organic: 86, plastic: 68, glass: 42 }
-          }
+            fillLevels: { organic: 86, plastic: 68, glass: 42 },
+          },
         ]);
         setLoading(false);
       }
     };
     fetchBins();
   }, []);
+
+  // Show error state
+  if (error && bins.length === 0) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" }}>
+        <p style={{ color: "red", marginBottom: "10px" }}>Error loading map data: {error}</p>
+        <p>Make sure your backend server is running on port 5000</p>
+      </div>
+    );
+  }
 
   // Helper function to determine fill level color
   const getFillLevel = (percentage) => {
@@ -60,31 +115,43 @@ export default function MapView() {
     const dots = [
       getFillLevel(bin.fillLevels?.organic || 0),
       getFillLevel(bin.fillLevels?.plastic || 0),
-      getFillLevel(bin.fillLevels?.glass || 0)
+      getFillLevel(bin.fillLevels?.glass || 0),
     ];
 
     const colors = {
       low: "#43a047",
       medium: "#ffb300",
-      high: "#e53935"
-    };
-
-    // Create SVG icon with colored dots
-    const svgIcon = `
-      <svg width="40" height="50" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 0C9 0 0 9 0 20c0 11 9 20 20 20s20-9 20-20C40 9 31 0 20 0z" fill="#28a745" stroke="#fff" stroke-width="2"/>
-        <circle cx="20" cy="12" r="3" fill="${colors[dots[0]]}"/>
-        <circle cx="20" cy="20" r="3" fill="${colors[dots[1]]}"/>
-        <circle cx="20" cy="28" r="3" fill="${colors[dots[2]]}"/>
+      high: "#e53935",
+    };    const svgIcon = `
+      <svg width="44" height="60" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pin shape background -->
+        <path d="M22 0C10 0 0 10 0 22c0 12 22 38 22 38s22-26 22-38C44 10 34 0 22 0z" fill="#28a745" stroke="#fff" stroke-width="2"/>
+        
+        <!-- Trash bin icon (black) -->
+        <g transform="translate(11, 8)">
+          <!-- Bin lid -->
+          <rect x="0" y="0" width="22" height="3" rx="1" fill="#1a1a1a"/>
+          <!-- Lid handle -->
+          <rect x="8" y="-2" width="6" height="3" rx="1" fill="#1a1a1a"/>
+          <!-- Bin body -->
+          <path d="M2 4 L4 22 L18 22 L20 4 Z" fill="#1a1a1a"/>
+          <!-- Bin lines -->
+          <line x1="7" y1="7" x2="7" y2="19" stroke="#28a745" stroke-width="1.5"/>
+          <line x1="11" y1="7" x2="11" y2="19" stroke="#28a745" stroke-width="1.5"/>
+          <line x1="15" y1="7" x2="15" y2="19" stroke="#28a745" stroke-width="1.5"/>
+        </g>
+        
+        <!-- Three colored dots underneath -->
+        <circle cx="12" cy="48" r="4" fill="${colors[dots[0]]}" stroke="#fff" stroke-width="1"/>
+        <circle cx="22" cy="48" r="4" fill="${colors[dots[1]]}" stroke="#fff" stroke-width="1"/>
+        <circle cx="32" cy="48" r="4" fill="${colors[dots[2]]}" stroke="#fff" stroke-width="1"/>
       </svg>
-    `;
-
-    return L.divIcon({
+    `;    return L.divIcon({
       className: "custom-bin-icon",
       html: svgIcon,
-      iconSize: [40, 50],
-      iconAnchor: [20, 50],
-      popupAnchor: [0, -50]
+      iconSize: [44, 60],
+      iconAnchor: [22, 60],
+      popupAnchor: [0, -60],
     });
   };
 
@@ -92,9 +159,9 @@ export default function MapView() {
     setSelectedBin(selectedBin?._id === bin._id ? null : bin);
   };
 
-  // Default center (Maharagama, Sri Lanka)
-  const defaultCenter = [6.8792, 79.8853];
-  const defaultZoom = 14;
+  // Default center (Sri Lanka - Colombo area)
+  const defaultCenter = [6.9271, 79.8612];
+  const defaultZoom = 12;
 
   return (
     <>
@@ -112,17 +179,17 @@ export default function MapView() {
           </div>
 
           <nav className="sidebar-nav">
-            <button className="nav-item" onClick={() => navigate('/dashboard')}>
+            <button className="nav-item" onClick={() => navigate("/dashboard")}>
               <span className="nav-icon">📊</span>
               <span>Dashboard Overview</span>
             </button>
 
-            <button className="nav-item nav-item-active" onClick={() => navigate('/mapview')}>
+            <button className="nav-item nav-item-active" onClick={() => navigate("/mapview")}>
               <span className="nav-icon">🗺️</span>
               <span>Map View</span>
             </button>
 
-            <button className="nav-item" onClick={() => navigate('/settings')}>
+            <button className="nav-item" onClick={() => navigate("/settings")}>
               <span className="nav-icon">⚙️</span>
               <span>Settings or Legend</span>
             </button>
@@ -130,7 +197,7 @@ export default function MapView() {
 
           <div className="sidebar-footer">
             <button className="logout-btn">Logout</button>
-            <p className="sidebar-copy">© ENVOtix smart waste management</p>
+            <p className="sidebar-copy">©️ ENVOtix smart waste management</p>
           </div>
         </aside>
 
@@ -143,11 +210,7 @@ export default function MapView() {
             <div className="topbar-right">
               <div className="topbar-search">
                 <span className="search-icon">🔍</span>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="search-input"
-                />
+                <input type="text" placeholder="Search..." className="search-input" />
               </div>
 
               <div className="profile-avatar">
@@ -158,20 +221,12 @@ export default function MapView() {
 
           {/* Map Container */}
           <section className="mapview-map-wrapper">
-            {/* Search box above map */}
-            <div className="map-search-bar">
-              <span className="search-icon">🔍</span>
-              <input
-                type="text"
-                placeholder="Search by location to view bin status"
-              />
-            </div>
-
             <div className="map-area">
               {loading ? (
                 <div className="loading-spinner">Loading bins...</div>
               ) : (
                 <MapContainer
+                  key="envotix-map"
                   center={defaultCenter}
                   zoom={defaultZoom}
                   style={{ height: "100%", width: "100%" }}
@@ -180,6 +235,8 @@ export default function MapView() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   />
+
+                  <RecenterMap bins={bins} />
 
                   {bins.map((bin) => {
                     if (!bin.coordinates || !bin.coordinates.lat || !bin.coordinates.lng) {
@@ -191,7 +248,7 @@ export default function MapView() {
                         position={[bin.coordinates.lat, bin.coordinates.lng]}
                         icon={createBinIcon(bin)}
                         eventHandlers={{
-                          click: () => handleBinClick(bin)
+                          click: () => handleBinClick(bin),
                         }}
                       >
                         <Popup>
@@ -210,10 +267,7 @@ export default function MapView() {
               {/* Bin Cluster Card - Shows when bin is clicked */}
               {selectedBin && (
                 <div className="bin-cluster-card">
-                  <button
-                    className="close-btn"
-                    onClick={() => setSelectedBin(null)}
-                  >
+                  <button className="close-btn" onClick={() => setSelectedBin(null)}>
                     ×
                   </button>
                   <h3 className="cluster-title">{selectedBin.name || `Bin Cluster ${selectedBin.bin_id}`}</h3>
@@ -275,7 +329,6 @@ export default function MapView() {
         </main>
       </div>
 
-      {/* Page-specific styles */}
       <style>{`
         .mapview-root {
           display: flex;
@@ -447,6 +500,8 @@ export default function MapView() {
           flex: 1;
           padding: 20px 26px 24px;
           background-color: #f5f5f5;
+          display: flex;
+          flex-direction: column;
         }
 
         .map-search-bar {
@@ -469,7 +524,8 @@ export default function MapView() {
 
         .map-area {
           position: relative;
-          height: calc(100% - 40px);
+          flex: 1;
+          min-height: 500px;
           border-radius: 10px;
           overflow: hidden;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -482,12 +538,13 @@ export default function MapView() {
           height: 100%;
           font-size: 16px;
           color: #666;
+          background: #e8e8e8;
         }
 
         .bin-cluster-card {
           position: absolute;
-          left: 5%;
-          top: 18%;
+          left: 20px;
+          top: 20px;
           background-color: #ffffff;
           padding: 16px 18px;
           border-radius: 12px;
@@ -562,8 +619,8 @@ export default function MapView() {
 
         .bin-legend-card {
           position: absolute;
-          right: 3%;
-          top: 16%;
+          right: 20px;
+          top: 20px;
           background-color: #ffffff;
           padding: 12px 16px;
           border-radius: 10px;
@@ -609,6 +666,12 @@ export default function MapView() {
           border: none;
         }
 
+        /* Leaflet container fix */
+        .leaflet-container {
+          height: 100%;
+          width: 100%;
+        }
+
         @media (max-width: 900px) {
           .mapview-root {
             flex-direction: column;
@@ -627,6 +690,18 @@ export default function MapView() {
 
           .mapview-main {
             height: calc(100vh - 120px);
+          }
+
+          .bin-cluster-card {
+            left: 10px;
+            top: 10px;
+            width: 220px;
+          }
+
+          .bin-legend-card {
+            right: 10px;
+            top: auto;
+            bottom: 10px;
           }
         }
       `}</style>

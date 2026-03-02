@@ -20,3 +20,19 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+/* Leaflet Map Fixes */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Ensure map tiles are visible */
+.leaflet-tile-pane {
+  z-index: 1;
+}
+
+.leaflet-pane {
+  z-index: 1;
+}

@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 
+// GET all users (for debugging/admin)
+router.get('/', async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // 2 POST - For creating a new user
 router.post('/register', async (req, res) => {
     try {

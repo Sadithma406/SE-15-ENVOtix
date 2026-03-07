@@ -10,6 +10,7 @@ import {
   ScrollView
 } from "react-native";
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -39,12 +40,10 @@ export default function LoginScreen({ navigation }) {
       hasError = true;
     }
 
-    if (hasError) return;
-
-    setLoading(true);
+    if (hasError) return;    setLoading(true);
     try {
       // Use your local IP if testing on a real phone (e.g., http://192.168.x.x:5000)
-      const response = await axios.post('http://localhost:5000/api/users/login', {
+      const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
         email: email.trim().toLowerCase(),
         password: password
       });

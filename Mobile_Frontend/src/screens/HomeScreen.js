@@ -13,6 +13,7 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import API_BASE_URL from '../config/api';
 
 export default function HomeScreen({ navigation, route }) {
   // 1. Get the userId passed from LoginScreen params
@@ -34,7 +35,7 @@ useEffect(() => {
       try {
         setLoading(true);
         // Replace localhost with your IP if on a real phone
-        const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
         const data = await response.json();
 
         if (data) {

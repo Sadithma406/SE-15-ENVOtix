@@ -12,6 +12,7 @@ import {
 import { ChevronLeft, Bell, Menu, ChevronRight, Home, Wallet, Store } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import API_BASE_URL from '../config/api';
 
 export default function MonitorScreen({ navigation, route }) {
     // 1. Catch the userId passed from HomeScreen/Login
@@ -28,12 +29,12 @@ export default function MonitorScreen({ navigation, route }) {
 
         try {
             // First: Fetch user profile to get their specific RFID
-            const userResponse = await fetch(`http://localhost:5000/api/users/${userId}`);
+            const userResponse = await fetch(`${API_BASE_URL}/api/users/${userId}`);
             const userData = await userResponse.json();
 
             if (userData && userData.RFID) {
                 // Second: Fetch bin levels using the dynamic RFID
-                const response = await fetch(`http://localhost:5000/api/bins/${userData.RFID}`); 
+                const response = await fetch(`${API_BASE_URL}/api/bins/${userData.RFID}`); 
                 const binData = await response.json();
 
                 if (binData) {

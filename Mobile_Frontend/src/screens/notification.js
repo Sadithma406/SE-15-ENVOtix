@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, Bell, Menu, Home, Wallet, Store, Trash2, CheckCircle, Circle } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import API_BASE_URL from '../config/api';
 
 export default function Notification({ navigation, route }) {
   // 1. CATCH the userId passed from the previous screen (e.g., Home or Login)
@@ -37,7 +38,7 @@ const fetchNotifications = async () => {
     
     // 2. Fetch notifications for Laknidu
     // Use your laptop's IP address (e.g. 192.168.x.x) if using a real phone!
-    const response = await fetch(`http://localhost:5000/api/notifications/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/api/notifications/${userId}`);
     
     if (!response.ok) throw new Error("Server responded with an error");
 

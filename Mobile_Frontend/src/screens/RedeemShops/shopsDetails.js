@@ -10,6 +10,7 @@ import {
   Store,
 } from "lucide-react-native";
 import { Ionicons } from "@expo/vector-icons";
+import API_BASE_URL from '../../config/api';
 
 const categories = ["All Shops", "Dining", "Fashion", "Beauty"];
 
@@ -31,7 +32,7 @@ export default function Shops({ navigation,route }) {
   const[loading,setLoading] = useState(true);
 
   useEffect(() => {
-  fetch("http://localhost:5000/api/shops")
+  fetch(`${API_BASE_URL}/api/shops`)
     .then((res )=> res.json())
     .then((data) => {
       setShops(data);
@@ -120,7 +121,7 @@ export default function Shops({ navigation,route }) {
           {shops.map((item) => (
             <TouchableOpacity 
       key={item._id} 
-      onPress={() => navigation.navigate("ShopDetails",{shop:item})}
+      onPress={() => navigation.navigate("ShopDetails",{shop:item, userId})}
       style={styles.card} 
     >
             <View>

@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, Bell, Menu, Lightbulb, Home, Wallet, Store } from 'lucide-react-native';
 import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import API_BASE_URL from '../config/api';
 
 const GlassBinScreen = ({ navigation, route }) => {
   // 1. Catch the userId passed from the previous screen
@@ -33,14 +34,14 @@ const GlassBinScreen = ({ navigation, route }) => {
       try {
         setLoading(true);
         // 2. First, get the user's RFID from the User collection
-        const userResponse = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const userResponse = await fetch(`${API_BASE_URL}/api/users/${userId}`);
         const userData = await userResponse.json();
 
         if (userData && userData.RFID) {
           const userRFID = userData.RFID; // This matches "B21938cis9" dynamically
 
           // 3. Use the dynamic RFID to fetch bin data
-          const binResponse = await fetch(`http://localhost:5000/api/bins/${userRFID}`);
+          const binResponse = await fetch(`${API_BASE_URL}/api/bins/${userRFID}`);
           const binData = await binResponse.json();
 
           if (binData && binData.glass) {

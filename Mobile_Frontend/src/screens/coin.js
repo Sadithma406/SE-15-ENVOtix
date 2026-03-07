@@ -21,6 +21,7 @@ import {
   Store, 
   RotateCw
 } from 'lucide-react-native';
+import API_BASE_URL from '../config/api';
 
 const CoinsScreen = ({ navigation, route }) => {
   // 1. Get the userId passed from LoginScreen params
@@ -41,7 +42,7 @@ if(!userId){
   setIsLoading(false);
   return;
 }      
-const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
 const data = await response.json();
 
 if (data) {
@@ -128,8 +129,7 @@ if (data) {
           <Text style={styles.redeemTitle}>Ready to redeem your coins?</Text>
           <Text style={styles.redeemSubtitle}>
             Exchange your earned EcoCoins for exciting discounts and offers at our partner shops.
-          </Text>
-          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops')}>
+          </Text>          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops', { userId })}>
             <Text style={styles.redeemButtonText}>View Redeem Shops</Text>
           </TouchableOpacity>
         </View>

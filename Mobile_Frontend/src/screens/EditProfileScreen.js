@@ -14,6 +14,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Home, Wallet, Store, Bell, Menu } from 'lucide-react-native';
+import API_BASE_URL from '../config/api';
 
 export default function EditProfileScreen({ navigation, route }) {
   // 1. Catch the userId passed from the SideBar or Home
@@ -41,7 +42,7 @@ export default function EditProfileScreen({ navigation, route }) {
 
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
         const data = await response.json();
 
         if (data) {
@@ -66,7 +67,7 @@ export default function EditProfileScreen({ navigation, route }) {
   const handleSaveChanges = async () => {
     setStatusMsg({ text: 'Saving...', color: '#4CAF50' });
     try {
-      const response = await fetch(`http://localhost:5000/api/users/update/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/update/${userId}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

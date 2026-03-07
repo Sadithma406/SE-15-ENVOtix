@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import PlasticBinScreen from './src/screens/plastic';
 import SideScreen from './src/screens/sideBar';
@@ -22,25 +23,26 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Plastic" component={PlasticBinScreen} />
-        <Stack.Screen name="SideBar" component={SideScreen} />
-        <Stack.Screen name="Coins" component={CoinsScreen} />
-        <Stack.Screen name="Organic" component={OrganicBinScreen} />
-        <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Glass" component={GlassBinScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-        <Stack.Screen name="Shops" component={Shops} />
-        <Stack.Screen name="ShopDetails" component={ShopDetails} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name = "QRPage" component={QRScreen} />
-        <Stack.Screen name="MonitorBin" component={MonitorScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Plastic" component={PlasticBinScreen} />
+          <Stack.Screen name="SideBar" component={SideScreen} />
+          <Stack.Screen name="Coins" component={CoinsScreen} />
+          <Stack.Screen name="Organic" component={OrganicBinScreen} />
+          <Stack.Screen name="Notification" component={Notification} />
+          <Stack.Screen name="Glass" component={GlassBinScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="Shops" component={Shops} />
+          <Stack.Screen name="ShopDetails" component={ShopDetails} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="QRPage" component={QRScreen} />
+          <Stack.Screen name="MonitorBin" component={MonitorScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

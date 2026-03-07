@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 export default function RegisterScreen({ navigation }) {
   const [formData, setFormData] = useState({
@@ -56,11 +57,9 @@ export default function RegisterScreen({ navigation }) {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
-    }
-
-    try {
+    }    try {
       // Use computer IP if on physical device
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post(`${API_BASE_URL}/api/users/register`, {
         name, email, contactNumber, address, RFID, password
       });
 

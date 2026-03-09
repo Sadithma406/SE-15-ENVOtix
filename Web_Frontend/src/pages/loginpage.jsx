@@ -52,9 +52,7 @@ export default function LoginPage() {
       //setMessage("Login successful ");
       //console.log("Logged user:", data.user);
 
-      // later:
-      // localStorage.setItem("user", JSON.stringify(data.user));
-      // navigate("/dashboard");
+      
 
     } catch (error) {
       console.error("Login error:", error);

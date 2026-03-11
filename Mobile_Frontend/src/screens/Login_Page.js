@@ -59,6 +59,9 @@ export default function LoginScreen({ navigation }) {
       const message = error.response?.data?.message;
 
       // 2. Backend Error Mapping (No more alerts)
+      // ha ha
+      // hu uh
+      // hellow
       if (status === 404) {
         setEmailError("No user account found");
       } else if (status === 401) {

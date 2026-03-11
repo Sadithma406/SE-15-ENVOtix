@@ -27,7 +27,7 @@ const CoinsScreen = ({ navigation, route }) => {
   
   const  userId  = route?.params?.userId;
 
-  // 2. State for dynamic data
+
   const [balance, setBalance] = useState(0);
   const [lastUpdated, setLastUpdated] = useState('Loading...');
   const [isLoading, setIsLoading] = useState(true);

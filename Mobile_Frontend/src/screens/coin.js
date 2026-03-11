@@ -24,7 +24,7 @@ import {
 import API_BASE_URL from '../config/api';
 
 const CoinsScreen = ({ navigation, route }) => {
-  // 1. Get the userId passed from LoginScreen params
+  
   const  userId  = route?.params?.userId;
 
   // 2. State for dynamic data

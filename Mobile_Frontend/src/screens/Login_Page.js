@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
 
     let hasError = false;
 
-    // 1. Frontend Empty Field Validation
+    // 1. Frontend Empty Field Validation added
     if (!email.trim()) {
       setEmailError("Email is required");
       hasError = true;

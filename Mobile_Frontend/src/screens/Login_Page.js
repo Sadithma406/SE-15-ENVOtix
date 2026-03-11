@@ -23,7 +23,7 @@ export default function LoginScreen({ navigation }) {
   const [generalError, setGeneralError] = useState("");
 
   const handleLogin = async () => {
-    // Reset all error states before validation
+   
     setEmailError("");
     setPasswordError("");
     setGeneralError("");

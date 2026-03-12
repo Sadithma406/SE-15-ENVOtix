@@ -129,7 +129,7 @@ if (data) {
           <Text style={styles.redeemTitle}>Ready to redeem your coins?</Text>
           <Text style={styles.redeemSubtitle}>
             Exchange your earned EcoCoins for exciting discounts and offers at our partner shops.
-          </Text>          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops', { userId })}>
+          </Text><TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops', { userId })}>
             <Text style={styles.redeemButtonText}>View Redeem Shops</Text>
           </TouchableOpacity>
         </View>

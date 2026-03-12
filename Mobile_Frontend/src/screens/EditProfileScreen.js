@@ -255,4 +255,4 @@ const styles = StyleSheet.create({
   },
   footerTab: { alignItems: 'center', justifyContent: 'center' },
   footerText: { fontSize: 12, marginTop: 4, color: '#666', fontWeight: '500' },
-});
+});              

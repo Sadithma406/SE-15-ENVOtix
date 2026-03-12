@@ -120,10 +120,10 @@ if (data) {
 
         <Text style={styles.sectionTitle}>Recent Activity</Text>
         
-        <ActivityRow title="Waste added to the plastic bin" date="2025-11-01" points="+15" />
+        <ActivityRow title="Waste added to the plastic bin" date="2025-11-22" points="+15" />
         <ActivityRow title="Waste added to the organic bin" date="2025-10-24" points="+25" />
-        <ActivityRow title="Waste added to the glass bin" date="2025-10-20" points="+10" />
-        <ActivityRow title="Waste added to the organic bin" date="2025-10-16" points="+30" />
+        <ActivityRow title="Waste added to the glass bin" date="2025-10-24" points="+10" />
+        <ActivityRow title="Waste added to the organic bin" date="2025-10-17" points="+30" />
 
         <View style={styles.redeemSection}>
           <Text style={styles.redeemTitle}>Ready to redeem your coins?</Text>

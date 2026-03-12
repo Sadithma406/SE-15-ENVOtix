@@ -32,7 +32,7 @@ const CoinsScreen = ({ navigation, route }) => {
   const [lastUpdated, setLastUpdated] = useState('Loading...');
   const [isLoading, setIsLoading] = useState(true);
 
-  // 3. Fetch function using dynamic userId
+  
   const fetchUserData = async () => {
     try {
       setIsLoading(true);

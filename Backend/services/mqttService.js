@@ -16,11 +16,12 @@ const initMQTT = () => {
         client.subscribe('envotix/lane/updates');
         client.subscribe('envotix/user/rfidTap');
         client.subscribe('envotix/lane/location');
-    });
-
-    client.on('message', async (topic, message) => {
+    });    client.on('message', async (topic, message) => {
         try {
             const data = JSON.parse(message.toString());
+            
+            // DEBUG: Log all incoming messages
+            console.log(`[${topic}]`, data);
 
             // ROUTE 1: FILL LEVEL
             if (topic === 'envotix/lane/updates') {
@@ -33,9 +34,14 @@ const initMQTT = () => {
                 }
                 lastKnownFillLevel = fillLevel;
 
+                // Calculate status based on fill level
+                let status = 'active';
+                if (fillLevel >= 90) status = 'full';
+                else if (fillLevel >= 70) status = 'warning';
+
                 await LaneBin.findByIdAndUpdate(
                     binId, 
-                    { $set: { fillLevel: fillLevel, lastUpdated: new Date() } },
+                    { $set: { fillLevel: fillLevel, status: status, lastUpdated: new Date() } },
                     { new: true }
                 );
             }
@@ -58,39 +64,22 @@ const initMQTT = () => {
                 );
             }
 
-            // ROUTE 3: RFID REWARDS - Award coins based on fill level increase
+            // ROUTE 3: RFID REWARDS - Award 1 coin per tap (TEST MODE)
             if (topic === 'envotix/user/rfidTap') {
                 const { rfidTag } = data;
                 if (!rfidTag) return;
 
-                const bin = await LaneBin.findById(NUGEGODA_ORGANIC_BIN_ID);
-                if (!bin) return;
-
-                const currentLevel = bin.fillLevel;
-                const userLastLevel = userLastRewardedLevel[rfidTag] ?? currentLevel;
-                const difference = Math.max(0, currentLevel - userLastLevel);
-                
-                if (difference > 0) {
-                    const totalCoins = difference * 2;
-                    const userResult = await User.findOneAndUpdate(
-                        { RFID: rfidTag },
-                        { 
-                            $inc: { coin_balance: totalCoins },
-                            $set: { coin_last_updated: new Date() } 
-                        },
-                        { new: true }
-                    );
-                    
-                    if (userResult) {
-                        console.log(`${totalCoins} coins → ${userResult.name} (${userResult.coin_balance} total)`);
-                    }
-                }
-                
-                // Always update user's last rewarded level
-                userLastRewardedLevel[rfidTag] = currentLevel;
+                await User.findOneAndUpdate(
+                    { RFID: rfidTag },
+                    { 
+                        $inc: { coin_balance: 1 },
+                        $set: { coin_last_updated: new Date() } 
+                    },
+                    { new: true }
+                );
             }
         } catch (err) {
-            console.error("MQTT Error:", err.message);
+            // Silent error handling
         }
     });
 };

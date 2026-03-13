@@ -25,7 +25,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Splash' screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='Notification' screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Plastic" component={PlasticBinScreen} />
           <Stack.Screen name="SideBar" component={SideScreen} />
           <Stack.Screen name="Coins" component={CoinsScreen} />

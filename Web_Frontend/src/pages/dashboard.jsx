@@ -181,10 +181,24 @@ export default function Dashboard() {
               <span>Settings or Legend</span>
             </button>
           </nav>
-          <div className="sidebar-footer">
-            <button className="logout-btn">Logout</button>
-            <p className="sidebar-copy">©️ ENVOtix smart waste management</p>
+        <div className="sidebar-footer">
+
+          <div
+            className="logout"
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.3)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.15)")
+            }
+            onClick={() => navigate("/")}
+          >
+            Logout
           </div>
+
+          <p className="sidebar-copy">©️ ENVOtix smart waste management</p>
+
+        </div>
         </aside>
 
         {/* MAIN */}
@@ -247,7 +261,25 @@ export default function Dashboard() {
         .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 999px; border: none; background: transparent; color: inherit; font-size: 14px; cursor: pointer; text-align: left; }
         .nav-item-active { background: rgba(0, 0, 0, 0.25); }
         .sidebar-footer { margin-top: auto; }
-        .logout-btn { border: none; background: transparent; color: #fff; font-size: 14px; cursor: pointer; }
+                .logout{
+          margin-top:auto;
+          padding:10px 12px;
+          border-radius:6px;
+          background-color:rgba(0,0,0,0.15);
+          cursor:pointer;
+          font-weight:600;
+        }
+
+        .logout:hover{
+          background-color:rgba(0,0,0,0.3);
+        }
+
+        .sidebar-copy {
+          font-size: 11px;
+          margin-top:10px;
+          opacity: 0.9;
+        }
+
         .dashboard-main { flex: 1; display: flex; flex-direction: column; }
         .dashboard-topbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; background: #28a745; color: #fff; }
         .topbar-title {

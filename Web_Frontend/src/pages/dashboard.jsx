@@ -105,12 +105,12 @@ export default function Dashboard() {
   /* ========== AREA WISE COMPONENT ========== */
   function AreaWiseFillLevels() {
     const data = [
-      { province: "Central Province", organic: 120, plastic: 80, glass: 48 },
-      { province: "North Central Province", organic: 65, plastic: 105, glass: 70 },
-      { province: "Southern Province", organic: 140, plastic: 60, glass: 40 },
-      { province: "Eastern Province", organic: 100, plastic: 90, glass: 68 },
-      { province: "Western Province", organic: 85, plastic: 110, glass: 75 },
-      { province: "Uva Province", organic: 110, plastic: 65, glass: 42 },
+      { province: "Colomno", organic: 60, plastic: 70, glass: 48 },
+      { province: "City 1", organic: 0, plastic: 0, glass: 0 },
+      { province: "City 2", organic: 0, plastic: 0, glass: 0 },
+      { province: "City 3", organic: 0, plastic: 0, glass: 0 },
+      { province: "City 4", organic: 0, plastic: 0, glass: 0 },
+      { province: "City 5", organic: 0, plastic: 0, glass: 0 },
     ];
     const maxValue = Math.max(...data.flatMap((d) => [d.organic, d.plastic, d.glass]));
     const barMaxHeight = 200;

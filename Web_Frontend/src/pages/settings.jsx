@@ -14,7 +14,6 @@ function Settings() {
           <div style={styles.logoContainer}>
             <img src={logo} alt="Envotix logo" style={styles.logoImage} />
             <div style={styles.brand}>
-              {/* ENVO (Black) tix (White) */}
               <div style={styles.brandTitle}>
                 <span style={{ color: "#000" }}>ENVO</span>
                 <span style={{ color: "#fff" }}>tix</span>
@@ -71,10 +70,6 @@ function Settings() {
         <header style={styles.topbar}>
           <h1 style={styles.title}>Settings & Legend</h1>
           <div style={styles.topRight}>
-            <div style={styles.search}>
-              <span>🔍</span>
-              <input type="text" placeholder="Search..." style={styles.searchInput} />
-            </div>
             <div style={styles.avatar}>A</div>
           </div>
         </header>
@@ -130,9 +125,24 @@ function Settings() {
             </label>
           </section>
 
+          {/* ACTION BUTTONS */}
           <div style={styles.buttonRow}>
-            <button style={styles.cancelBtn}>Cancel</button>
-            <button style={styles.saveBtn}>Save Changes</button>
+            <button 
+              style={styles.cancelBtn}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f0f0")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
+              onClick={() => navigate("/dashboard")}
+            >
+              Cancel
+            </button>
+            <button 
+              style={styles.saveBtn}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#256629")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2e7d32")}
+              onClick={() => alert("Changes saved successfully!")}
+            >
+              Save Changes
+            </button>
           </div>
         </main>
       </div>
@@ -141,60 +151,216 @@ function Settings() {
 }
 
 const styles = {
-  layout: { display: "flex", height: "100vh", width: "100vw", fontFamily: "system-ui", background: "#f5f5f5", overflow: "hidden" },
-  sidebar: { width: "260px", background: "#28a745", color: "white", display: "flex", flexDirection: "column", padding: "20px", flexShrink: 0 },
-  rightContainer: { flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" },
-
-  sidebarHeader: { marginBottom: "40px" },
-  logoContainer: { display: "flex", alignItems: "center", gap: "10px" },
-  logoImage: { width: "40px", height: "40px", objectFit: "contain" },
-  brand: { display: "flex", flexDirection: "column" },
-  brandTitle: { fontSize: "22px", fontWeight: 800, letterSpacing: "0.5px" }, // Font weight එක වැඩිකලා ලස්සනට පේන්න
-  brandSubtitle: { fontSize: "11px", opacity: 0.9, color: "white" },
-
-  nav: { display: "flex", flexDirection: "column", gap: "12px" },
-  navItem: { 
-    border: "none", 
-    background: "rgba(255,255,255,0.1)", 
-    color: "white", 
-    padding: "12px 16px", 
-    borderRadius: "10px", 
-    textAlign: "left", 
-    cursor: "pointer", 
-    width: "100%", 
+  layout: {
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    fontFamily: "system-ui",
+    background: "#f5f5f5",
+    overflow: "hidden"
+  },
+  sidebar: {
+    width: "260px",
+    background: "#28a745",
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+    padding: "20px",
+    flexShrink: 0
+  },
+  rightContainer: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden"
+  },
+  sidebarHeader: {
+    marginBottom: "40px"
+  },
+  logoContainer: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px"
+  },
+  logoImage: {
+    width: "40px",
+    height: "40px",
+    objectFit: "contain"
+  },
+  brand: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  brandTitle: {
+    fontSize: "22px",
+    fontWeight: 800,
+    letterSpacing: "0.5px"
+  },
+  brandSubtitle: {
+    fontSize: "11px",
+    opacity: 0.9,
+    color: "white"
+  },
+  nav: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px"
+  },
+  navItem: {
+    border: "none",
+    background: "rgba(255,255,255,0.1)",
+    color: "white",
+    padding: "12px 16px",
+    borderRadius: "10px",
+    textAlign: "left",
+    cursor: "pointer",
+    width: "100%",
     fontSize: "15px",
     display: "block",
-    transition: "background 0.3s ease" 
+    transition: "background 0.3s ease"
   },
-  active: { background: "rgba(0,0,0,0.3)", fontWeight: "700", borderLeft: "4px solid white" },
-
-  sidebarFooter: { marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" },
-  copyright: { fontSize: "11px", opacity: 0.8 },
-
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 28px", background: "#28a745", color: "white" },
-  main: { flex: 1, display: "flex", flexDirection: "column", padding: "25px", overflowY: "auto" },
-
-  title: { fontSize: "28px", margin: 0 },
-  topRight: { display: "flex", alignItems: "center", gap: "15px" },
-  search: { display: "flex", alignItems: "center", gap: "6px", background: "white", padding: "6px 15px", borderRadius: "999px" },
-  searchInput: { border: "none", outline: "none", color: "#333", width: "120px" },
-  avatar: { width: "34px", height: "34px", borderRadius: "50%", background: "white", color: "#28a745", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600 },
-
-  subtitle: { fontSize: "15px", color: "#444", marginBottom: "22px" },
-  card: { background: "white", padding: "20px", borderRadius: "10px", marginBottom: "20px", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" },
-  cardTitle: { fontSize: "19px", marginBottom: "12px", marginTop: 0 },
-  text: { fontSize: "15px", marginBottom: "6px" },
-  label: { display: "block", fontSize: "15px", margin: "10px 0" },
-  select: { marginLeft: "10px", padding: "6px", borderRadius: "5px" },
-  range: { width: "100%", margin: "10px 0" },
-  buttonRow: { display: "flex", justifyContent: "flex-end", gap: "12px" },
-  cancelBtn: { padding: "9px 18px", background: "#fff", border: "1px solid #cfcfcf", borderRadius: "6px", cursor: "pointer", fontWeight: "600", color: "#333" },
-  saveBtn: { padding: "9px 18px", background: "#2e7d32", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: "600" },
-
-  greenDot: { width: 10, height: 10, background: "#43a047", borderRadius: "50%", display: "inline-block", marginRight: 8 },
-  yellowDot: { width: 10, height: 10, background: "#ffb300", borderRadius: "50%", display: "inline-block", marginRight: 8 },
-  redDot: { width: 10, height: 10, background: "#e53935", borderRadius: "50%", display: "inline-block", marginRight: 8 },
-  smallText: { fontSize: "12px", color: "#666" },
+  active: {
+    background: "rgba(0,0,0,0.3)",
+    fontWeight: "700",
+    borderLeft: "4px solid white"
+  },
+  sidebarFooter: {
+    marginTop: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px"
+  },
+  copyright: {
+    fontSize: "11px",
+    opacity: 0.8
+  },
+  topbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "18px 28px",
+    background: "#28a745",
+    color: "white"
+  },
+  main: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    padding: "25px",
+    overflowY: "auto"
+  },
+  title: {
+    fontSize: "28px",
+    margin: 0
+  },
+  topRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: "15px"
+  },
+  avatar: {
+    width: "34px",
+    height: "34px",
+    borderRadius: "50%",
+    background: "white",
+    color: "#28a745",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 600
+  },
+  subtitle: {
+    fontSize: "15px",
+    color: "#444",
+    marginBottom: "22px"
+  },
+  card: {
+    background: "white",
+    padding: "20px",
+    borderRadius: "10px",
+    marginBottom: "20px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+  },
+  cardTitle: {
+    fontSize: "19px",
+    marginBottom: "12px",
+    marginTop: 0
+  },
+  text: {
+    fontSize: "15px",
+    marginBottom: "6px"
+  },
+  label: {
+    display: "block",
+    fontSize: "15px",
+    margin: "10px 0"
+  },
+  select: {
+    marginLeft: "10px",
+    padding: "6px",
+    borderRadius: "5px",
+    cursor: "pointer"
+  },
+  range: {
+    width: "100%",
+    margin: "10px 0",
+    cursor: "pointer"
+  },
+  buttonRow: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "12px",
+    marginTop: "10px",
+    paddingBottom: "20px"
+  },
+  cancelBtn: {
+    padding: "10px 20px",
+    background: "#fff",
+    border: "1px solid #cfcfcf",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "600",
+    color: "#333",
+    transition: "background 0.2s ease"
+  },
+  saveBtn: {
+    padding: "10px 20px",
+    background: "#2e7d32",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "600",
+    transition: "background 0.2s ease"
+  },
+  greenDot: {
+    width: 10,
+    height: 10,
+    background: "#43a047",
+    borderRadius: "50%",
+    display: "inline-block",
+    marginRight: 8
+  },
+  yellowDot: {
+    width: 10,
+    height: 10,
+    background: "#ffb300",
+    borderRadius: "50%",
+    display: "inline-block",
+    marginRight: 8
+  },
+  redDot: {
+    width: 10,
+    height: 10,
+    background: "#e53935",
+    borderRadius: "50%",
+    display: "inline-block",
+    marginRight: 8
+  },
+  smallText: {
+    fontSize: "12px",
+    color: "#666"
+  }
 };
 
 export default Settings;

@@ -156,10 +156,7 @@ export default function MapView() {
         <header style={styles.topbar}>
           <h1 style={styles.title}>Map View</h1>
           <div style={styles.topRight}>
-            <div style={styles.search}>
-              <span>🔍</span>
-              <input type="text" placeholder="Search bins..." style={styles.searchInput} />
-            </div>
+            {/* Search bar removed */}
             <div style={styles.avatar}>A</div>
           </div>
         </header>
@@ -215,35 +212,168 @@ export default function MapView() {
 }
 
 const styles = {
-  layout: { display: "flex", height: "100vh", width: "100vw", background: "#f5f5f5", overflow: "hidden", fontFamily: "system-ui" },
-  sidebar: { width: "260px", background: "#28a745", color: "white", display: "flex", flexDirection: "column", padding: "20px", flexShrink: 0 },
-  sidebarHeader: { marginBottom: "40px" },
-  logoContainer: { display: "flex", alignItems: "center", gap: "10px" },
-  logoImage: { width: "40px", height: "40px", objectFit: "contain" },
-  brand: { display: "flex", flexDirection: "column" },
-  brandTitle: { fontSize: "22px", fontWeight: 800 },
-  brandSubtitle: { fontSize: "11px", opacity: 0.9 },
-  nav: { display: "flex", flexDirection: "column", gap: "12px" },
-  navItem: { border: "none", background: "rgba(255,255,255,0.1)", color: "white", padding: "12px 16px", borderRadius: "10px", textAlign: "left", cursor: "pointer", fontSize: "15px", width: "100%", transition: "background 0.3s ease" },
-  active: { background: "rgba(0,0,0,0.3)", fontWeight: "700", borderLeft: "4px solid white" },
-  sidebarFooter: { marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" },
-  logoutBtn: { backgroundColor: "rgba(255,255,255,0.15)", fontWeight: "600" },
-  copyright: { fontSize: "11px", opacity: 0.8 },
-  
-  rightContainer: { flex: 1, display: "flex", flexDirection: "column" },
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 28px", background: "#28a745", color: "white" },
-  title: { fontSize: "24px", margin: 0, fontWeight: "600" },
-  topRight: { display: "flex", alignItems: "center", gap: "15px" },
-  search: { display: "flex", alignItems: "center", gap: "8px", background: "white", padding: "6px 15px", borderRadius: "99px" },
-  searchInput: { border: "none", outline: "none", width: "150px" },
-  avatar: { width: "34px", height: "34px", borderRadius: "50%", background: "white", color: "#28a745", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 },
-  
-  main: { flex: 1, padding: "20px", position: "relative" },
-  mapWrapper: { height: "100%", width: "100%", borderRadius: "15px", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.1)", position: "relative" },
-  loading: { height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#eee" },
-  
-  clusterCard: { position: "absolute", top: 20, left: 20, zIndex: 1000, background: "white", padding: "20px", borderRadius: "12px", width: "260px", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" },
-  closeBtn: { position: "absolute", top: 8, right: 12, background: "none", border: "none", fontSize: "22px", cursor: "pointer", color: "#999" },
-  progBg: { height: 6, background: "#eee", borderRadius: 3, marginTop: 4, overflow: "hidden" },
-  progFill: { height: "100%", borderRadius: 3 }
+  layout: { 
+    display: "flex", 
+    height: "100vh", 
+    width: "100vw", 
+    background: "#f5f5f5", 
+    overflow: "hidden", 
+    fontFamily: "system-ui" 
+  },
+  sidebar: { 
+    width: "260px", 
+    background: "#28a745", 
+    color: "white", 
+    display: "flex", 
+    flexDirection: "column", 
+    padding: "20px", 
+    flexShrink: 0 
+  },
+  sidebarHeader: { 
+    marginBottom: "40px" 
+  },
+  logoContainer: { 
+    display: "flex", 
+    alignItems: "center", 
+    gap: "10px" 
+  },
+  logoImage: { 
+    width: "40px", 
+    height: "40px", 
+    objectFit: "contain" 
+  },
+  brand: { 
+    display: "flex", 
+    flexDirection: "column" 
+  },
+  brandTitle: { 
+    fontSize: "22px", 
+    fontWeight: 800 
+  },
+  brandSubtitle: { 
+    fontSize: "11px", 
+    opacity: 0.9 
+  },
+  nav: { 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: "12px" 
+  },
+  navItem: { 
+    border: "none", 
+    background: "rgba(255,255,255,0.1)", 
+    color: "white", 
+    padding: "12px 16px", 
+    borderRadius: "10px", 
+    textAlign: "left", 
+    cursor: "pointer", 
+    fontSize: "15px", 
+    width: "100%", 
+    transition: "background 0.3s ease" 
+  },
+  active: { 
+    background: "rgba(0,0,0,0.3)", 
+    fontWeight: "700", 
+    borderLeft: "4px solid white" 
+  },
+  sidebarFooter: { 
+    marginTop: "auto", 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: "10px" 
+  },
+  logoutBtn: { 
+    backgroundColor: "rgba(255,255,255,0.15)", 
+    fontWeight: "600" 
+  },
+  copyright: { 
+    fontSize: "11px", 
+    opacity: 0.8 
+  },
+  rightContainer: { 
+    flex: 1, 
+    display: "flex", 
+    flexDirection: "column" 
+  },
+  topbar: { 
+    display: "flex", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    padding: "18px 28px", 
+    background: "#28a745", 
+    color: "white" 
+  },
+  title: { 
+    fontSize: "24px", 
+    margin: 0, 
+    fontWeight: "600" 
+  },
+  topRight: { 
+    display: "flex", 
+    alignItems: "center", 
+    gap: "15px" 
+  },
+  avatar: { 
+    width: "34px", 
+    height: "34px", 
+    borderRadius: "50%", 
+    background: "white", 
+    color: "#28a745", 
+    display: "flex", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    fontWeight: 700 
+  },
+  main: { 
+    flex: 1, 
+    padding: "20px", 
+    position: "relative" 
+  },
+  mapWrapper: { 
+    height: "100%", 
+    width: "100%", 
+    borderRadius: "15px", 
+    overflow: "hidden", 
+    boxShadow: "0 10px 30px rgba(0,0,0,0.1)", 
+    position: "relative" 
+  },
+  loading: { 
+    height: "100%", 
+    display: "flex", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    background: "#eee" 
+  },
+  clusterCard: { 
+    position: "absolute", 
+    top: 20, 
+    left: 20, 
+    zIndex: 1000, 
+    background: "white", 
+    padding: "20px", 
+    borderRadius: "12px", 
+    width: "260px", 
+    boxShadow: "0 10px 25px rgba(0,0,0,0.2)" 
+  },
+  closeBtn: { 
+    position: "absolute", 
+    top: 8, 
+    right: 12, 
+    background: "none", 
+    border: "none", 
+    fontSize: "22px", 
+    cursor: "pointer", 
+    color: "#999" 
+  },
+  progBg: { 
+    height: 6, 
+    background: "#eee", 
+    borderRadius: 3, 
+    marginTop: 4, 
+    overflow: "hidden" 
+  },
+  progFill: { 
+    height: "100%", 
+    borderRadius: 3 
+  }
 };

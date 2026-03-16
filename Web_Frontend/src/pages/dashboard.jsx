@@ -346,6 +346,9 @@ export default function Dashboard() {
 
         .dashboard-topbar {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 18px 28px;
           background: #28a745;
           color: #fff;
           flex-shrink: 0;

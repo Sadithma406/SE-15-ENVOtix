@@ -120,7 +120,7 @@ const fetchNotifications = async () => {
                         {new Date(item.createdAt).toLocaleDateString()}
                       </Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => deleteNotification(item._id)}>
                       <Trash2 size={20} color="#666" />
                     </TouchableOpacity>
                   </View>

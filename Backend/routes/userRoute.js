@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
         const newUser = new User({
             name,
             email,
-            contact_number: contactNumber, // Maps frontend camelCase to DB underscore
+            contact_number: contactNumber,
             address,
             RFID,
             password,
@@ -73,7 +73,7 @@ router.put('/update/:userId', async (req, res) => {
             { 
                 name, 
                 email, 
-                contact_number, // Must match your DB field exactly
+                contact_number,
                 address 
             },
             { new: true } 
@@ -86,6 +86,29 @@ router.put('/update/:userId', async (req, res) => {
         res.status(200).json({ message: "Success", user: updatedUser });
     } catch (err) {
         console.error("Update Error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// 3. GET - For fetching profile data (KEEP AT THE BOTTOM)
+// Inside userRoute.js -> router.get
+router.get('/:userId', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Return exact keys as stored in MongoDB
+        res.json({
+            name: user.name,
+            email: user.email,
+            coin_balance: user.coin_balance, 
+            coin_last_updated: user.coin_last_updated, 
+            coin_history: user.coin_history || [],
+            contact_number: user.contact_number, 
+            address: user.address,
+            RFID: user.RFID 
+        });
+    } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });

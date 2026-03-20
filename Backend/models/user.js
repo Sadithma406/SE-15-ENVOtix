@@ -7,6 +7,11 @@ const UserSchema = new mongoose.Schema({
   address: { type: String, required: true },
   coin_balance: { type: Number, default: 0 },
   coin_last_updated: { type: String, default: new Date().toISOString() },
+  coin_history: [{
+    message: { type: String, required: true },
+    coins: { type: Number, required: true },
+    date: { type: Date, default: Date.now }
+  }],
   RFID: { type: String, required: true, unique: true },
   password: { type: String, required: true }
 });

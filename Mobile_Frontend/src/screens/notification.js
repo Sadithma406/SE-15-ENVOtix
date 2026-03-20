@@ -16,17 +16,16 @@ import { useFocusEffect } from '@react-navigation/native';
 import API_BASE_URL from '../config/api';
 
 export default function Notification({ navigation, route }) {
-  // 1. CATCH the userId passed from the previous screen (e.g., Home or Login)
+  // CATCH the userId passed from the previous screen 
   const userId = route?.params?.userId;
 
   // 2. State for notifications
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 3. Fetch notifications using the DYNAMIC userId
- // 3. Fetch and Filter notifications
+  // Fetch notifications using the DYNAMIC userId
 const fetchNotifications = async () => {
-  // 1. Safety check: If userId is missing, stop the spinner immediately
+  // Safety check: If userId is missing, stop the spinner immediately
   if (!userId) {
     console.log("No userId passed to this screen!");
     setLoading(false);
@@ -36,15 +35,14 @@ const fetchNotifications = async () => {
   try {
     setLoading(true);
     
-    // 2. Fetch notifications for Laknidu
-    // Use your laptop's IP address (e.g. 192.168.x.x) if using a real phone!
+    // Fetch notifications for Laknidu
     const response = await fetch(`${API_BASE_URL}/api/notifications/${userId}`);
     
     if (!response.ok) throw new Error("Server responded with an error");
 
     const data = await response.json();
 
-    // 3. Set the data. If the array is empty, it will show "No notifications found"
+    // Set the data. If the array is empty, it will show "No notifications found"
     if (Array.isArray(data)) {
       setNotifications(data);
     } else {
@@ -52,9 +50,9 @@ const fetchNotifications = async () => {
     }
   } catch (error) {
     console.error("Fetch Error:", error);
-    setNotifications([]); // Clear list on error to stop spinner
+    setNotifications([]);
   } finally {
-    // 4. THIS IS THE MOST IMPORTANT PART: Stop the spinner no matter what
+    //Stop the spinner no matter what
     setLoading(false);
   }
 };
@@ -66,6 +64,16 @@ const fetchNotifications = async () => {
       fetchNotifications();
     }, [userId])
   );
+
+    // Delete a notification from the database and local state
+  const deleteNotification = async (notifId) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/notifications/${notifId}`, { method: 'DELETE' });
+      setNotifications(prev => prev.filter(n => n._id !== notifId));
+    } catch (error) {
+      console.error("Delete Error:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>

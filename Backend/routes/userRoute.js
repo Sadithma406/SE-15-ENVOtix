@@ -89,25 +89,5 @@ router.put('/update/:userId', async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-// 3. GET - For fetching profile data (KEEP AT THE BOTTOM)
-// Inside userRoute.js -> router.get('/:userId', ...)
-router.get('/:userId', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.userId);
-        if (!user) return res.status(404).json({ message: 'User not found' });
 
-        // FIX: Return exact keys as stored in MongoDB
-        res.json({
-            name: user.name,
-            email: user.email,
-            coin_balance: user.coin_balance, 
-            coin_last_updated: user.coin_last_updated, 
-            contact_number: user.contact_number, // Fixed
-            address: user.address,
-            RFID: user.RFID // Fixed
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Server error" });
-    }
-});
 module.exports = router;

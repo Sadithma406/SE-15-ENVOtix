@@ -29,4 +29,15 @@ router.patch('/read/:id', async (req, res) => {
   }
 });
 
+// DELETE a notification by its _id
+router.delete('/:id', async (req, res) => {
+  try {
+    await Notification.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Notification deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 module.exports = router;

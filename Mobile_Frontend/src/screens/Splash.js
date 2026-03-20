@@ -1,67 +1,62 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigation.replace("Register");
+      navigation.replace("Login");
     }, 2000);
 
     return () => clearTimeout(timeout);
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../../assets/whiteLogoNoBg2.png')}
-        style={styles.logo}
-      />
+    <ImageBackground
+      source={require('../../assets/bg.jpg')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.content}>
+        <Image
+          source={require('../../assets/logoNoName.png')}
+          style={styles.logo}
+        />
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.envo}>ENVO</Text>
-        <Text style={styles.tix}>tix</Text>
+        <Text style={styles.brandName}>
+          <Text style={styles.envo}>ENVO</Text>
+          <Text style={styles.tix}>tix</Text>
+        </Text>
+
+        <Text style={styles.subtitle}>WASTE MANAGEMENT</Text>
       </View>
-
-      <Text style={styles.subtitle}>Waste Management</Text>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#6BBE45",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   logo: {
-    width: 150,
-    height: 150,
-    backgroundColor: "#fff",
-    borderWidth: 4,
-    borderColor: "#000",
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
+    width: 140,
+    height: 140,
+    resizeMode: "contain",
+    marginBottom: 25,
+    borderRadius: 25
   },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  brandName: {
+    fontSize: 38,
+    fontWeight: "bold",
+    letterSpacing: 2,
+    marginBottom: 5,
   },
   envo: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#fff",
+    color: "#1B3A1D",
   },
   tix: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#000",
-    marginLeft: 5,
+    color: "#1B3A1D",
   },
   subtitle: {
-    fontSize: 18,
-    color: "#000",
-    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#1B3A1D",
+    letterSpacing: 3,
   },
 });

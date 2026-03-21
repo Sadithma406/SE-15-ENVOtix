@@ -26,29 +26,19 @@ function Settings() {
 
         {/* NAVIGATION */}
         <nav style={styles.nav}>
-          <button
-            style={styles.navItem}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.3)")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)")}
-            onClick={() => navigate("/dashboard")}
-          >
-            📊 Dashboard Overview
+          <button className="nav-item" onClick={() => navigate("/dashboard")}>
+            <span className="nav-icon">📊</span>
+            <span className="nav-text">Dashboard Overview</span>
           </button>
 
-          <button
-            style={styles.navItem}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.3)")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)")}
-            onClick={() => navigate("/mapview")}
-          >
-            🗺️ Map View
+          <button className="nav-item" onClick={() => navigate("/mapview")}>
+            <span className="nav-icon">🗺️</span>
+            <span className="nav-text">Map View</span>
           </button>
 
-          <button
-            style={{ ...styles.navItem, ...styles.active }}
-            onClick={() => navigate("/settings")}
-          >
-            ⚙️ Settings & Legend
+          <button className="nav-item nav-item-active" onClick={() => navigate("/settings")}>
+            <span className="nav-icon">⚙️</span>
+            <span className="nav-text">Settings & Legend</span>
           </button>
         </nav>
 
@@ -175,6 +165,51 @@ function Settings() {
       </div>
 
       <style>{`
+        .nav-item {
+          display: flex;
+          align-items: center;
+          border: none;
+          background: rgba(255,255,255,0.1);
+          color: white;
+          padding: 12px;
+          border-radius: 10px;
+          text-align: left;
+          cursor: pointer;
+          font-size: 15px;
+          transition: max-width 0.4s ease, background 0.3s ease;
+          max-width: 45px;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        .nav-item:hover {
+          background: rgba(255,255,255,0.2);
+          max-width: 100%;
+        }
+
+        .nav-item-active {
+          background: rgba(0,0,0,0.3);
+          font-weight: 700;
+          border-left: 4px solid white;
+          padding-left: 8px; /* account for border size */
+        }
+
+        .nav-icon {
+          min-width: 21px;
+          text-align: center;
+          font-size: 16px;
+        }
+
+        .nav-text {
+          margin-left: 12px;
+          opacity: 0;
+          transition: opacity 0.2s 0.1s ease;
+        }
+
+        .nav-item:hover .nav-text {
+          opacity: 1;
+        }
+
         .profile-avatar {
           width: 34px;
           height: 34px;

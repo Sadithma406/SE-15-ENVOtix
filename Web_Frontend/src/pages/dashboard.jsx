@@ -170,7 +170,7 @@ export default function Dashboard() {
         <nav className="sidebar-nav">
           <button className="nav-item nav-item-active" onClick={() => navigate("/dashboard")}>
             <span className="nav-icon">📊</span>
-            <span className="nav-text">Dashboard Overview</span>
+            <span className="nav-text">Dashboard</span>
           </button>
           <button className="nav-item" onClick={() => navigate("/mapview")}>
             <span className="nav-icon">🗺️</span>
@@ -178,7 +178,7 @@ export default function Dashboard() {
           </button>
           <button className="nav-item" onClick={() => navigate("/settings")}>
             <span className="nav-icon">⚙️</span>
-            <span className="nav-text">Settings & Legend</span>
+            <span className="nav-text">Settings</span>
           </button>
         </nav>
 
@@ -267,7 +267,7 @@ export default function Dashboard() {
         
         /* SIDEBAR STYLES */
         .dashboard-sidebar {
-          width: 260px;
+          width: 230px;
           background: #28a745;
           color: #fff;
           display: flex;

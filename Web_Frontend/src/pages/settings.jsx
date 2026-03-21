@@ -28,7 +28,7 @@ function Settings() {
         <nav style={styles.nav}>
           <button className="nav-item" onClick={() => navigate("/dashboard")}>
             <span className="nav-icon">📊</span>
-            <span className="nav-text">Dashboard Overview</span>
+            <span className="nav-text">Dashboard</span>
           </button>
 
           <button className="nav-item" onClick={() => navigate("/mapview")}>
@@ -38,7 +38,7 @@ function Settings() {
 
           <button className="nav-item nav-item-active" onClick={() => navigate("/settings")}>
             <span className="nav-icon">⚙️</span>
-            <span className="nav-text">Settings & Legend</span>
+            <span className="nav-text">Settings</span>
           </button>
         </nav>
 
@@ -292,7 +292,7 @@ const styles = {
     overflow: "hidden"
   },
   sidebar: {
-    width: "260px",
+    width: "230px",
     background: "#28a745",
     color: "white",
     display: "flex",

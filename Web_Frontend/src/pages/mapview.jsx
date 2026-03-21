@@ -120,7 +120,7 @@ export default function MapView() {
         <nav style={styles.nav}>
           <button className="nav-item" onClick={() => navigate("/dashboard")}>
             <span className="nav-icon">📊</span>
-            <span className="nav-text">Dashboard Overview</span>
+            <span className="nav-text">Dashboard</span>
           </button>
           <button className="nav-item nav-item-active" onClick={() => navigate("/mapview")}>
             <span className="nav-icon">🗺️</span>
@@ -128,7 +128,7 @@ export default function MapView() {
           </button>
           <button className="nav-item" onClick={() => navigate("/settings")}>
             <span className="nav-icon">⚙️</span>
-            <span className="nav-text">Settings & Legend</span>
+            <span className="nav-text">Settings</span>
           </button>
         </nav>
 
@@ -356,7 +356,7 @@ const styles = {
     fontFamily: "system-ui"
   },
   sidebar: {
-    width: "260px",
+    width: "230px",
     background: "#28a745",
     color: "white",
     display: "flex",

@@ -19,13 +19,13 @@ export default function Notification({ navigation, route }) {
   // CATCH the userId passed from the previous screen 
   const userId = route?.params?.userId;
 
-  // 2. State for notifications
+  // State for notifications
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch notifications using the DYNAMIC userId
 const fetchNotifications = async () => {
-  // Safety check: If userId is missing, stop the spinner immediately
+  // If userId is missing, stop the spinner immediately
   if (!userId) {
     console.log("No userId passed to this screen!");
     setLoading(false);
@@ -57,7 +57,7 @@ const fetchNotifications = async () => {
   }
 };
 
-  // Use useFocusEffect to refetch data every time the screen comes into focus
+  //Use useFocusEffect to refetch data every time the screen comes into focus
   useFocusEffect(
     useCallback(() => {
       console.log("NotificationScreen focused, userId:", userId);

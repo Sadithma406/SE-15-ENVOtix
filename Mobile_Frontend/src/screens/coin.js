@@ -24,15 +24,16 @@ import {
 import API_BASE_URL from '../config/api';
 
 const CoinsScreen = ({ navigation, route }) => {
-  // 1. Get the userId passed from LoginScreen params
+  
   const  userId  = route?.params?.userId;
 
-  // 2. State for dynamic data
+
   const [balance, setBalance] = useState(0);
   const [lastUpdated, setLastUpdated] = useState('Loading...');
   const [isLoading, setIsLoading] = useState(true);
+  const [coinHistory, setCoinHistory] = useState([]);
 
-  // 3. Fetch function using dynamic userId
+  
   const fetchUserData = async () => {
     try {
       setIsLoading(true);
@@ -46,9 +47,15 @@ const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
 const data = await response.json();
 
 if (data) {
-  setBalance(data.coin_balance || 0); // Now matches backend
+  setBalance(data.coin_balance || 0);
   
-  const date = new Date(data.coin_last_updated); // Now matches backend
+  // Set coin history (newest first)
+  if (data.coin_history && data.coin_history.length > 0) {
+    const sorted = [...data.coin_history].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setCoinHistory(sorted);
+  }
+  
+  const date = new Date(data.coin_last_updated);
   if (!isNaN(date)) {
     setLastUpdated(`Last updated: ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`);
   }
@@ -120,16 +127,24 @@ if (data) {
 
         <Text style={styles.sectionTitle}>Recent Activity</Text>
         
-        <ActivityRow title="Waste added to the plastic bin" date="2025-11-01" points="+15" />
-        <ActivityRow title="Waste added to the organic bin" date="2025-10-24" points="+25" />
-        <ActivityRow title="Waste added to the paper bin" date="2025-10-20" points="+10" />
-        <ActivityRow title="Waste added to the organic bin" date="2025-10-16" points="+30" />
+        {coinHistory.length > 0 ? (
+          coinHistory.map((item, index) => (
+            <ActivityRow
+              key={item._id || index}
+              title={item.message}
+              date={new Date(item.date).toLocaleDateString()}
+              points={`+${item.coins}`}
+            />
+          ))
+        ) : (
+          <Text style={{ textAlign: 'center', color: '#999', marginTop: 10 }}>No activity yet</Text>
+        )}
 
         <View style={styles.redeemSection}>
           <Text style={styles.redeemTitle}>Ready to redeem your coins?</Text>
           <Text style={styles.redeemSubtitle}>
             Exchange your earned EcoCoins for exciting discounts and offers at our partner shops.
-          </Text>          <TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops', { userId })}>
+          </Text><TouchableOpacity style={styles.redeemButton} onPress={() => navigation.navigate('Shops', { userId })}>
             <Text style={styles.redeemButtonText}>View Redeem Shops</Text>
           </TouchableOpacity>
         </View>

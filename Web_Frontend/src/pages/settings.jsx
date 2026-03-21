@@ -145,20 +145,20 @@ function Settings() {
           {/* ACTION BUTTONS */}
           <div style={styles.buttonRow}>
             <button
-              style={styles.cancelBtn}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f0f0")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
-              onClick={() => navigate("/dashboard")}
-            >
-              Cancel
-            </button>
-            <button
               style={styles.saveBtn}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#256629")}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2e7d32")}
               onClick={() => alert("Changes saved successfully!")}
             >
               Save Changes
+            </button>
+            <button
+              style={styles.cancelBtn}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f0f0")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
+              onClick={() => navigate("/dashboard")}
+            >
+              Cancel
             </button>
           </div>
         </main>
@@ -444,8 +444,9 @@ const styles = {
   },
   buttonRow: {
     display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "8px",
     marginTop: "10px",
     paddingBottom: "20px"
   },

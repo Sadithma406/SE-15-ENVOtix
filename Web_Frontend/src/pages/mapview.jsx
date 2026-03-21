@@ -440,7 +440,7 @@ const styles = {
     color: "white"
   },
   title: {
-    fontSize: "24px",
+    fontSize: "28px",
     margin: 0,
     fontWeight: "600"
   },

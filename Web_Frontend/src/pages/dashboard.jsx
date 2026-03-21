@@ -408,7 +408,7 @@ export default function Dashboard() {
         }
 
         .topbar-title {
-          font-size: 22px;
+          font-size: 28px;
           margin: 0;
           font-weight: 600;
         }

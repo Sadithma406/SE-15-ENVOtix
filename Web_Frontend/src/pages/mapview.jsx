@@ -51,7 +51,7 @@ export default function MapView() {
               name: bin.laneName,
               location: bin.laneName,
               coordinates: { lat: bin.location.latitude, lng: bin.location.longitude },
-              fillLevels: { organic: 0, plastic: 0, glass: 0 },
+              fillLevels: { organic: 0, plastic: 0, paper: 0 },
             };
           }
           const binType = bin.binType.toLowerCase();
@@ -62,7 +62,7 @@ export default function MapView() {
         setLoading(false);
       } catch (err) {
         setError(err.message);
-        setBins([{ _id: "101", name: "Sample Bin", location: "Downtown Plaza", coordinates: { lat: 6.8792, lng: 79.8853 }, fillLevels: { organic: 86, plastic: 68, glass: 42 } }]);
+        setBins([{ _id: "101", name: "Sample Bin", location: "Downtown Plaza", coordinates: { lat: 6.8792, lng: 79.8853 }, fillLevels: { organic: 86, plastic: 68, paper: 42 } }]);
         setLoading(false);
       }
     };
@@ -80,7 +80,7 @@ export default function MapView() {
     const dots = [
       getFillLevelClass(bin.fillLevels?.organic || 0),
       getFillLevelClass(bin.fillLevels?.plastic || 0),
-      getFillLevelClass(bin.fillLevels?.glass || 0),
+      getFillLevelClass(bin.fillLevels?.paper || 0),
     ];
 
     const svgIcon = `
@@ -187,7 +187,7 @@ export default function MapView() {
                 <button style={styles.closeBtn} onClick={() => setSelectedBin(null)}>×</button>
                 <h3 style={{ margin: "0 0 5px 0" }}>{selectedBin.name}</h3>
                 <p style={{ fontSize: '12px', color: '#666', marginBottom: '15px' }}>{selectedBin.location}</p>
-                {['organic', 'plastic', 'glass'].map(type => (
+                {['organic', 'plastic', 'paper'].map(type => (
                   <div key={type} style={{ marginBottom: 10 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
                       <span style={{ textTransform: 'capitalize' }}>{type}</span>

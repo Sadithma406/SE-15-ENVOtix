@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
+import {
+  View,
+  Text,
   StyleSheet,
   ScrollView,
   Image,
-  Platform, 
+  Platform,
   StatusBar,
   TouchableOpacity,
   ActivityIndicator
@@ -70,9 +70,9 @@ const PaperBinScreen = ({ navigation, route }) => {
 
         {/* Header Section */}
         <View style={styles.header}>
-          <Image 
-            source={require('../../assets/whiteLogoNoBg2.png')} 
-            style={styles.logo} 
+          <Image
+            source={require('../../assets/whiteLogoNoBg2.png')}
+            style={styles.logo}
             resizeMode="contain"
           />
           <View style={styles.headerTextContainer}>
@@ -95,17 +95,17 @@ const PaperBinScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft color="#333" size={24} />
           </TouchableOpacity>
-          <Text style={styles.subHeaderTitle}>paper Bin</Text>
+          <Text style={styles.subHeaderTitle}>Paper Bin</Text>
         </View>
 
         <View style={styles.iconTitleSection}>
-          <Image 
-            source={require('../../assets/glass.png')} 
-            style={styles.paperImage} 
+          <Image
+            source={require('../../assets/paper.png')}
+            style={styles.paperImage}
             resizeMode="contain"
           />
           <Text style={styles.iconSectionText}>Paper Bin</Text>
-        </View> 
+        </View>
 
         {/* Main Gauge Card */}
         <View style={styles.mainCard}>
@@ -127,12 +127,12 @@ const PaperBinScreen = ({ navigation, route }) => {
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
             <Lightbulb color="#4CAF50" size={20} />
-            <Text style={styles.tipsTitle}>paper Recycling Tips</Text>
+            <Text style={styles.tipsTitle}>Paper Recycling Tips</Text>
           </View>
-          <Text style={styles.tipItem}>• Rinse plastic bottles and containers before placing them in recycling.</Text>
-          <Text style={styles.tipItem}>• Avoid throwing plastic waste carelessly as it pollutes the environment.</Text>
-          <Text style={styles.tipItem}>•  Reuse plastic containers for storage instead of discarding them immediately.</Text>
-          <Text style={styles.tipItem}>• Improper plastic disposal harms wildlife and contaminates land and water.</Text>
+          <Text style={styles.tipItem}>• Flatten cardboard boxes to maximize space in recycling bins.</Text>
+          <Text style={styles.tipItem}>• Remove tape and staples from paper to prevent processing issues.</Text>
+          <Text style={styles.tipItem}>• Avoid recycling greasy paper like pizza boxes, as food ruins the batch.</Text>
+          <Text style={styles.tipItem}>• Shred and reuse sensitive documents as eco-friendly packing material.</Text>
         </View>
       </ScrollView>
 
@@ -142,12 +142,12 @@ const PaperBinScreen = ({ navigation, route }) => {
           <Home color="#666" size={24} />
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate('Coins', { userId })}>
           <Wallet color="#666" size={24} />
           <Text style={styles.footerText}>Coins</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.footerTab} onPress={() => navigation.navigate('Shops', { userId })}>
           <Store color="#666" size={24} />
           <Text style={styles.footerText}>Shops</Text>
@@ -159,14 +159,14 @@ const PaperBinScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F5F5F5' },
-  header: { 
-    backgroundColor: '#4CAF50', 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+  header: {
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 9, 
+    paddingVertical: 9,
     alignItems: 'center',
-    marginTop: -20, 
+    marginTop: -20,
     marginHorizontal: -20,
     paddingTop: 20,
   },
@@ -181,9 +181,9 @@ const styles = StyleSheet.create({
   iconTitleSection: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   iconSectionText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   scrollContent: { padding: 20 },
-  mainCard: { 
-    backgroundColor: 'white', 
-    borderRadius: 25, 
+  mainCard: {
+    backgroundColor: 'white',
+    borderRadius: 25,
     paddingTop: 20,
     paddingBottom: 30,
     alignItems: 'center',

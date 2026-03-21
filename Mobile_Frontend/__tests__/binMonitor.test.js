@@ -10,16 +10,16 @@ describe('Mobile App - Bin Monitoring Display', () => {
         const mockBins = [
             { _id: '1', laneName: 'Nugegoda', binType: 'Organic', fillLevel: 45 },
             { _id: '2', laneName: 'Nugegoda', binType: 'Plastic', fillLevel: 30 },
-            { _id: '3', laneName: 'Nugegoda', binType: 'Glass', fillLevel: 20 }
+            { _id: '3', laneName: 'Nugegoda', binType: 'Paper', fillLevel: 20 }
         ];
         expect(mockBins.length).toBe(3);
     });
 
     test('should display fill level for each bin type', () => {
-        const bins = { organic: 45, plastic: 30, glass: 20 };
+        const bins = { organic: 45, plastic: 30, paper: 20 };
         expect(bins.organic).toBe(45);
         expect(bins.plastic).toBe(30);
-        expect(bins.glass).toBe(20);
+        expect(bins.paper).toBe(20);
     });
 
     test('should format fill level as percentage', () => {

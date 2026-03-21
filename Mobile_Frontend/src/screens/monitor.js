@@ -141,7 +141,7 @@ export default function MonitorScreen({ navigation, route }) {
                 <TouchableOpacity style={styles.wasteCard} onPress={() => navigation.navigate('Paper', { userId })}>
                     <View style={styles.cardContent}>
                         <View style={styles.cardLeft}>
-                            <Image source={require('../../assets/glass.png')} style={styles.wasteIcon} resizeMode="contain" />
+                            <Image source={require('../../assets/paper.png')} style={styles.wasteIcon} resizeMode="contain" />
                             <View style={styles.cardTextContainer}>
                                 <Text style={styles.wasteType}>Paper Waste</Text>
                                 <Text style={styles.fillPercentage}>{paperData.fill}</Text>

@@ -37,12 +37,12 @@ describe('Dashboard & Map View Tests', () => {
         const bins = [
             { binType: 'Organic' },
             { binType: 'Plastic' },
-            { binType: 'Glass' }
+            { binType: 'Paper' }
         ];
         const types = bins.map(b => b.binType);
         expect(types).toContain('Organic');
         expect(types).toContain('Plastic');
-        expect(types).toContain('Glass');
+        expect(types).toContain('Paper');
     });
 
     test('should show last updated timestamp', () => {

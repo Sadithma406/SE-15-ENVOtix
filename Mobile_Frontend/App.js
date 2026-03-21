@@ -8,7 +8,7 @@ import SideScreen from './src/screens/sideBar';
 import CoinsScreen from './src/screens/coin';
 import OrganicBinScreen from './src/screens/organic';
 import Notification from './src/screens/notification';
-import GlassBinScreen from './src/screens/glass';
+import PaperBinScreen from './src/screens/paper';
 import Shops from './src/screens/RedeemShops/shopsDetails';
 import ShopDetails from './src/screens/RedeemShopsOfferDetails/RedeemShopsOfferDetails';
 import LoginScreen from './src/screens/Login_Page';
@@ -31,7 +31,7 @@ export default function App() {
           <Stack.Screen name="Coins" component={CoinsScreen} />
           <Stack.Screen name="Organic" component={OrganicBinScreen} />
           <Stack.Screen name="Notification" component={Notification} />
-          <Stack.Screen name="Glass" component={GlassBinScreen} />
+          <Stack.Screen name="Paper" component={PaperBinScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen name="Shops" component={Shops} />

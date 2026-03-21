@@ -10,7 +10,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         const mockBins = [
             { _id: '1', laneName: 'Nugegoda', binType: 'Organic', fillLevel: 45 },
             { _id: '2', laneName: 'Nugegoda', binType: 'Plastic', fillLevel: 30 },
-            { _id: '3', laneName: 'Colombo', binType: 'Glass', fillLevel: 20 }
+            { _id: '3', laneName: 'Colombo', binType: 'Paper', fillLevel: 20 }
         ];
         expect(mockBins.length).toBe(3);
         expect(mockBins[0].fillLevel).toBe(45);
@@ -46,7 +46,7 @@ describe('LaneBin - Dashboard Data Display', () => {
     });
 
     test('should validate bin types are correct enum values', () => {
-        const validTypes = ['Plastic', 'Glass', 'Organic'];
+        const validTypes = ['Plastic', 'Paper', 'Organic'];
         const bin = { binType: 'Organic' };
         expect(validTypes).toContain(bin.binType);
     });

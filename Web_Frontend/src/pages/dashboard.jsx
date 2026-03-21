@@ -315,7 +315,8 @@ export default function Dashboard() {
         .sidebar-nav {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 20px;
+          align-items: center;
         }
 
         .nav-item {
@@ -324,13 +325,13 @@ export default function Dashboard() {
           border: none;
           background: rgba(255,255,255,0.1);
           color: white;
-          padding: 12px;
-          border-radius: 10px;
+          padding: 15px;
+          border-radius: 12px;
           text-align: left;
           cursor: pointer;
-          font-size: 15px;
+          font-size: 17px;
           transition: max-width 0.4s ease, background 0.3s ease;
-          max-width: 45px;
+          max-width: 55px;
           overflow: hidden;
           white-space: nowrap;
         }
@@ -343,18 +344,18 @@ export default function Dashboard() {
         .nav-item-active {
           background: rgba(0,0,0,0.3);
           font-weight: 700;
-          border-left: 4px solid white;
-          padding-left: 8px; /* account for border size */
+          border-left: 5px solid white;
+          padding-left: 10px; /* account for border size */
         }
 
         .nav-icon {
-          min-width: 21px;
+          min-width: 25px;
           text-align: center;
-          font-size: 16px;
+          font-size: 20px;
         }
 
         .nav-text {
-          margin-left: 12px;
+          margin-left: 15px;
           opacity: 0;
           transition: opacity 0.2s 0.1s ease;
         }

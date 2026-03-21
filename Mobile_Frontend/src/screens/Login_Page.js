@@ -1,38 +1,34 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  ScrollView
-} from "react-native";
+  StyleSheet, Text, View, TextInput, TouchableOpacity,
+  SafeAreaView, Dimensions, ActivityIndicator, KeyboardAvoidingView,
+  Platform, ScrollView, Image
+} from 'react-native';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
 
+const { width, height } = Dimensions.get('window');
+
 export default function LoginScreen({ navigation }) {
+  // --- Backend State ---
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  // State for specific red error messages
-  
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // --- Error States ---
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
 
   const handleLogin = async () => {
-   
+    // Reset errors
     setEmailError("");
     setPasswordError("");
     setGeneralError("");
 
     let hasError = false;
-
-    // 1. Frontend Empty Field Validation added
     if (!email.trim()) {
       setEmailError("Email is required");
       hasError = true;
@@ -42,34 +38,29 @@ export default function LoginScreen({ navigation }) {
       hasError = true;
     }
 
-    if (hasError) return;    setLoading(true);
+    if (hasError) return;
+
+    setLoading(true);
     try {
-      // Use your local IP if testing on a real phone (e.g., http://192.168.x.x:5000)
       const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
         email: email.trim().toLowerCase(),
         password: password
       });
 
       if (response.status === 200) {
-        // Clear inputs and navigate on success
         setEmail("");
         setPassword("");
+        // Navigate to Home with the User ID
         navigation.navigate("Home", { userId: response.data.userId });
       }
     } catch (error) {
       const status = error.response?.status;
-      const message = error.response?.data?.message;
-
-      // 2. Backend Error Mapping (No more alerts)
-      // ha ha
-      // hu uh
-      // hellow
       if (status === 404) {
-        setEmailError("No user account found");
+        setEmailError("No account found");
       } else if (status === 401) {
-        setPasswordError("Password is incorrect");
+        setPasswordError("Incorrect password");
       } else {
-        setGeneralError("Server connection failed. Try again later.");
+        setGeneralError("Connection failed. Try again.");
       }
     } finally {
       setLoading(false);
@@ -77,84 +68,119 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always">
-      
-      <Image
-        source={require("../../assets/whiteLogoNoBg2.png")}
-        style={styles.logo}
-      />
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1, width: '100%' }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
 
-      <Text style={styles.title}>Welcome to ENVOtix</Text>
-      <Text style={styles.subtitle}>
-        Login to continue managing your waste smartly
-      </Text>
+          {/* Top Logo Section */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/logoNoNameBg.png')}
+              style={styles.logoImage}
+            />
+            <Text style={styles.brandName}>ENVOtix</Text>
+          </View>
 
-      {/* Email Input Section */}
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={[styles.input, emailError ? styles.inputError : null]}
-        placeholder="Enter your email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={(text) => {
-          setEmail(text);
-          setEmailError(""); // Clear error as user types
-        }}
-        autoCapitalize="none"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {/* Card Content */}
+          <View style={styles.card}>
+            <Text style={styles.title}>Log In</Text>
 
-      {/* Password Input Section */}
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={[styles.input, passwordError ? styles.inputError : null]}
-        placeholder="Enter your password"
-        secureTextEntry
-        value={password}
-        onChangeText={(text) => {
-          setPassword(text);
-          setPasswordError(""); // Clear error as user types
-        }}
-      />
-      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={[styles.input, emailError ? styles.inputError : null]}
+                placeholder="johndoe@xyz.com"
+                placeholderTextColor="#999"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError("");
+                }}
+              />
+              {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+            </View>
 
-      {/* General System Errors (like Server Down) */}
-      {generalError ? <Text style={[styles.errorText, {textAlign: 'center', marginTop: 10}]}>{generalError}</Text> : null}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={[styles.input, passwordError ? styles.inputError : null]}
+                secureTextEntry
+                placeholder="************"
+                placeholderTextColor="#999"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError("");
+                }}
+              />
+              {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+            </View>
+            {generalError ? <Text style={styles.generalErrorText}>{generalError}</Text> : null}
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
-      </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Log In</Text>
+              )}
+            </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={styles.forgot}>Forgot Password?</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <Text>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={styles.link}> Create one</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.footerText}>
+                Don't have an account? <Text style={styles.linkText}>Sign Up</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, padding: 25, justifyContent: "center", backgroundColor: "#fff" },
-  logo: { width: 120, height: 120, resizeMode: "contain", alignSelf: "center", marginBottom: 20 },
-  title: { fontSize: 28, fontWeight: "bold", textAlign: "center" },
-  subtitle: { textAlign: "center", marginBottom: 20, color: "#666" },
-  label: { marginTop: 15, fontSize: 14, fontWeight: "600", color: "#333" },
-  input: { borderWidth: 2, borderColor: "#000", borderRadius: 10, padding: 12, marginTop: 5 },
-  inputError: { borderColor: "red" },
-  errorText: { color: "red", fontSize: 12, marginLeft: 5, marginTop: 5, fontWeight: "500" },
-  button: { backgroundColor: "#6BBE45", padding: 15, borderRadius: 8, marginTop: 25 },
-  buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold", fontSize: 16 },
-  forgot: { textAlign: "center", marginTop: 15, color: "#6BBE45" },
-  footer: { flexDirection: "row", justifyContent: "center", marginTop: 25 },
-  link: { color: "#6BBE45", fontWeight: "bold" },
+  container: { flex: 1, backgroundColor: '#E8F5E9' },
+  scrollContent: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 20 },
+  logoContainer: { alignItems: 'center', marginBottom: 20 },
+  logoImage: { width: 100, height: 100, resizeMode: 'contain' },
+  brandName: { fontSize: 24, fontWeight: 'bold', color: '#006B4D', marginTop: 10 },
+  card: {
+    width: width * 0.9,
+    maxWidth: 450,
+    backgroundColor: '#6BBE45',
+    borderRadius: 30,
+    padding: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
+  },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#FFF', textAlign: 'center', marginBottom: 25 },
+  inputGroup: { marginBottom: 15 },
+  label: { color: '#FFF', fontSize: 14, marginBottom: 5, fontWeight: '600' },
+  input: { backgroundColor: '#FFF', borderRadius: 10, padding: 12, fontSize: 14, color: '#333' },
+  inputError: { borderWidth: 2, borderColor: '#FFCDD2' },
+  errorText: { color: '#FFCDD2', fontSize: 11, marginTop: 5, fontWeight: 'bold' },
+  generalErrorText: { color: '#FFCDD2', textAlign: 'center', marginBottom: 10, fontWeight: 'bold' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  checkboxContainer: { flexDirection: 'row', alignItems: 'center' },
+  checkbox: { width: 18, height: 18, borderWidth: 1, borderColor: '#FFF', borderRadius: 4, marginRight: 8 },
+  checked: { backgroundColor: '#4CAF50' },
+  smallText: { color: '#FFF', fontSize: 12 },
+  forgotText: { color: '#FFF', fontSize: 12, textDecorationLine: 'underline' },
+  button: { backgroundColor: '#1A1A1A', padding: 15, borderRadius: 10, alignItems: 'center', marginBottom: 20 },
+  buttonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
+  orText: { color: '#FFF', textAlign: 'center', fontSize: 12, marginBottom: 15 },
+  socialRow: { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: 20 },
+  footerText: { color: '#FFF', textAlign: 'center', fontSize: 13 },
+  linkText: { fontWeight: 'bold', textDecorationLine: 'underline' }
 });

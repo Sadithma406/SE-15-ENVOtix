@@ -61,7 +61,7 @@ export default function MapView() {
               name: bin.laneName,
               location: bin.laneName,
               coordinates: { lat: bin.location.latitude, lng: bin.location.longitude },
-              fillLevels: { organic: 0, plastic: 0, glass: 0 },
+              fillLevels: { organic: 0, plastic: 0, paper: 0 },
               lastUpdated: bin.lastUpdated,
             };
           }
@@ -84,7 +84,7 @@ export default function MapView() {
             name: "Bin Cluster 101",
             location: "Downtown Eco Plaza",
             coordinates: { lat: 6.8792, lng: 79.8853 },
-            fillLevels: { organic: 86, plastic: 68, glass: 42 },
+            fillLevels: { organic: 86, plastic: 68, paper: 42 },
           },
         ]);
         setLoading(false);
@@ -115,7 +115,7 @@ export default function MapView() {
     const dots = [
       getFillLevel(bin.fillLevels?.organic || 0),
       getFillLevel(bin.fillLevels?.plastic || 0),
-      getFillLevel(bin.fillLevels?.glass || 0),
+      getFillLevel(bin.fillLevels?.paper || 0),
     ];
 
     const colors = {
@@ -296,13 +296,13 @@ export default function MapView() {
                   </div>
 
                   <div className="cluster-row">
-                    <span>🍶 Glass</span>
-                    <span>{selectedBin.fillLevels?.glass || 0}%</span>
+                    <span>🍶 Paper</span>
+                    <span>{selectedBin.fillLevels?.paper || 0}%</span>
                   </div>
                   <div className="progress-bar">
                     <div
-                      className={`progress-fill ${getFillLevel(selectedBin.fillLevels?.glass || 0)}`}
-                      style={{ width: `${selectedBin.fillLevels?.glass || 0}%` }}
+                      className={`progress-fill ${getFillLevel(selectedBin.fillLevels?.paper || 0)}`}
+                      style={{ width: `${selectedBin.fillLevels?.paper || 0}%` }}
                     ></div>
                   </div>
                 </div>

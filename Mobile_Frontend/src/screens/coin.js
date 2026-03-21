@@ -42,7 +42,9 @@ if(!userId){
   console.log("No userId provided");
   setIsLoading(false);
   return;
-}      
+} 
+
+  //fetching coin history from backend
 const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
 const data = await response.json();
 

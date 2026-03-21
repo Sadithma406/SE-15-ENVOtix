@@ -351,7 +351,7 @@ const styles = {
     display: "flex",
     height: "100vh",
     width: "100vw",
-    background: "#f5f5f5",
+    background: "#28a745",
     overflow: "hidden",
     fontFamily: "system-ui"
   },
@@ -463,7 +463,9 @@ const styles = {
   main: {
     flex: 1,
     padding: "20px",
-    position: "relative"
+    position: "relative",
+    background: "#f8f9fa",
+    borderRadius: "15px"
   },
   mapWrapper: {
     height: "100%",

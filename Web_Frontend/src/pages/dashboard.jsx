@@ -261,7 +261,7 @@ export default function Dashboard() {
           height: 100vh;
           width: 100vw;
           font-family: 'Inter', system-ui, sans-serif;
-          background: #f8f9fa;
+          background: #28a745;
           overflow: hidden;
         }
         
@@ -490,6 +490,9 @@ export default function Dashboard() {
         /* CONTENT STYLES */
         .dashboard-content-wrapper {
           padding: 25px;
+          border-radius: 15px;
+          background: #f8f9fa;
+          flex: 1;
         }
 
         .section-title {

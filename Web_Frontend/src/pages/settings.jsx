@@ -288,7 +288,7 @@ const styles = {
     height: "100vh",
     width: "100vw",
     fontFamily: "system-ui",
-    background: "#f5f5f5",
+    background: "#28a745",
     overflow: "hidden"
   },
   sidebar: {
@@ -380,7 +380,9 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     padding: "25px",
-    overflowY: "auto"
+    overflowY: "auto",
+    background: "#f8f9fa",
+    borderRadius: "15px"
   },
   title: {
     fontSize: "28px",

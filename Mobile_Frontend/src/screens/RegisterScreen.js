@@ -1,179 +1,181 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from 'react';
+import {
+  StyleSheet, Text, View, TextInput, TouchableOpacity,
+  SafeAreaView, ScrollView, ActivityIndicator
+} from 'react-native';
+import { ChevronLeft, Eye, EyeOff } from 'lucide-react-native';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
-export default function RegisterScreen({ navigation }) {
+
+
+export default function SignupScreen({ navigation }) {
+  // 1. Re-integrate State
   const [formData, setFormData] = useState({
     name: "", email: "", contactNumber: "", address: "", RFID: "", password: "", confirmPassword: "",
   });
-
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // Exact Regex patterns
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*?#&]{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  // 2. Re-integrate Logic
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
-    
-    let currentError = "";
-
-    // Clear specific field errors when user starts typing again
-    if (name === "password" && value.length > 0 && !passwordRegex.test(value)) {
-      currentError = "Password must be 8+ chars, including letters, numbers, and symbols.";
-    } else if (name === "confirmPassword" && value.length > 0 && value !== formData.password) {
-      currentError = "Passwords do not match.";
-    } else if (name === "contactNumber" && value.length > 0 && !/^\d{10}$/.test(value)) {
-      currentError = "Contact number must be exactly 10 digits.";
-    } else if (name === "email" || name === "name" || name === "address" || name === "RFID") {
-      currentError = ""; // Clear "required" errors when typing
-    }
-
-    setErrors(prev => ({ ...prev, [name]: currentError, general: "" }));
+    setErrors(prev => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handleRegister = async () => {
     const { name, email, contactNumber, address, RFID, password, confirmPassword } = formData;
     let newErrors = {};
 
-    // 1. Check for empty fields
-    if (!name.trim()) newErrors.name = "Name is required";
-    if (!email.trim()) newErrors.email = "Email is required";
-    if (!contactNumber.trim()) newErrors.contactNumber = "Phone is required";
-    if (!address.trim()) newErrors.address = "Address is required";
-    if (!RFID.trim()) newErrors.RFID = "Bin ID is required";
-    if (!password.trim()) newErrors.password = "Password is required";
-
-    // 2. Format Validations
-    if (email.trim() && !emailRegex.test(email)) newErrors.email = "Please enter a valid email address.";
-    if (password.trim() && !passwordRegex.test(password)) newErrors.password = "Password must be 8+ chars, with letters, numbers, and symbols.";
-    if (confirmPassword !== password) newErrors.confirmPassword = "Passwords do not match.";
-    if (contactNumber.trim() && !/^\d{10}$/.test(contactNumber)) newErrors.contactNumber = "Must be 10 digits.";
+    if (!name.trim()) newErrors.name = "Required";
+    if (!email.trim() || !emailRegex.test(email)) newErrors.email = "Invalid email";
+    if (!contactNumber.trim() || !/^\d{10}$/.test(contactNumber)) newErrors.contactNumber = "10 digits required";
+    if (!address.trim()) newErrors.address = "Required";
+    if (!RFID.trim()) newErrors.RFID = "Bin ID required";
+    if (!password.trim() || !passwordRegex.test(password)) newErrors.password = "8+ chars, incl. symbols";
+    if (confirmPassword !== password) newErrors.confirmPassword = "Passwords match error";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
-    }    try {
-      // Use computer IP if on physical device
+    }
+
+    setLoading(true);
+    try {
       const response = await axios.post(`${API_BASE_URL}/api/users/register`, {
         name, email, contactNumber, address, RFID, password
       });
 
       if (response.status === 201) {
-        navigation.navigate("Login"); // Direct navigation on success
+        navigation.navigate("Login");
       }
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Registration failed.";
-      if (error.response?.status === 409 || errorMsg.includes("RFID")) {
-        setErrors({ RFID: "User already registered to this Bin ID." });
-      } else if (errorMsg.includes("email")) {
-        setErrors({ email: "Email already in use." });
-      } else {
-        setErrors({ general: errorMsg });
-      }
+      setErrors({ general: errorMsg });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always">
-        <Text style={styles.title}>Join ENVOtix</Text>
-        <Text style={styles.subtitle}>Smarter waste management starts here.</Text>
-
-        <TouchableOpacity style={styles.avatar}>
-          <Ionicons name="person" size={40} color="#fff" />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <ChevronLeft color="#333" size={30} />
         </TouchableOpacity>
+        <Text style={styles.headerTitle}>Sign Up</Text>
+      </View>
 
-        <Text style={styles.label}>Your Name</Text>
-        <TextInput 
-          style={[styles.input, errors.name ? styles.inputError : null]} 
-          onChangeText={(val) => handleChange("name", val)} 
-        />
-        {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-        <Text style={styles.label}>Your Email</Text>
-        <TextInput 
-          style={[styles.input, errors.email ? styles.inputError : null]} 
-          keyboardType="email-address" 
-          onChangeText={(val) => handleChange("email", val)} 
-        />
-        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+        <View style={styles.card}>
+          {/* Form Fields */}
+          {[
+            { label: 'Full Name', key: 'name', placeholder: 'John Doe' },
+            { label: 'Email', key: 'email', placeholder: 'johndoe@xyz.com', keyboard: 'email-address' },
+            { label: 'Contact Number', key: 'contactNumber', placeholder: '07XXXXXXXX', keyboard: 'phone-pad' },
+            { label: 'Address', key: 'address', placeholder: 'Street, City' },
+            { label: 'Bin ID (RFID)', key: 'RFID', placeholder: 'B21XXXXXXX' },
+          ].map((field) => (
+            <View key={field.key} style={styles.inputGroup}>
+              <Text style={styles.label}>{field.label}</Text>
+              <TextInput
+                style={[styles.input, errors[field.key] && styles.inputError]}
+                placeholder={field.placeholder}
+                placeholderTextColor="#999"
+                keyboardType={field.keyboard || 'default'}
+                value={formData[field.key]}
+                onChangeText={(val) => handleChange(field.key, val)}
+              />
+              {errors[field.key] && <Text style={styles.errorText}>{errors[field.key]}</Text>}
+            </View>
+          ))}
 
-        <Text style={styles.label}>Your Contact number</Text>
-        <TextInput 
-          style={[styles.input, errors.contactNumber ? styles.inputError : null]} 
-          keyboardType="phone-pad" 
-          maxLength={10} 
-          onChangeText={(val) => handleChange("contactNumber", val)} 
-        />
-        {errors.contactNumber ? <Text style={styles.errorText}>{errors.contactNumber}</Text> : null}
+          {/* Password Fields with Eye Toggle */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.passWrapper}>
+              <TextInput
+                style={[styles.input, { flex: 1 }, errors.password && styles.inputError]}
+                placeholder="********"
+                placeholderTextColor="#999"
+                secureTextEntry={!showPassword}
+                value={formData.password}
+                onChangeText={(val) => handleChange("password", val)}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                {showPassword ? <EyeOff size={20} color="#666" /> : <Eye size={20} color="#666" />}
+              </TouchableOpacity>
+            </View>
+            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+          </View>
 
-        <Text style={styles.label}>Your Address</Text>
-        <TextInput 
-          style={[styles.input, errors.address ? styles.inputError : null]} 
-          onChangeText={(val) => handleChange("address", val)} 
-        />
-        {errors.address ? <Text style={styles.errorText}>{errors.address}</Text> : null}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <View style={styles.passWrapper}>
+              <TextInput
+                style={[styles.input, { flex: 1 }, errors.confirmPassword && styles.inputError]}
+                placeholder="********"
+                placeholderTextColor="#999"
+                secureTextEntry={!showConfirm}
+                value={formData.confirmPassword}
+                onChangeText={(val) => handleChange("confirmPassword", val)}
+              />
+              <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)} style={styles.eyeIcon}>
+                {showConfirm ? <EyeOff size={20} color="#666" /> : <Eye size={20} color="#666" />}
+              </TouchableOpacity>
+            </View>
+            {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+          </View>
 
-        <Text style={styles.label}>Your Bin ID (RFID)</Text>
-        <TextInput 
-          style={[styles.input, errors.RFID ? styles.inputError : null]} 
-          onChangeText={(val) => handleChange("RFID", val)} 
-        />
-        {errors.RFID ? <Text style={styles.errorText}>{errors.RFID}</Text> : null}
+          {errors.general && <Text style={styles.generalError}>{errors.general}</Text>}
 
-        <Text style={styles.label}>Password</Text>
-        <View style={styles.passwordWrapper}>
-          <TextInput 
-            style={[styles.input, { flex: 1 }, errors.password ? styles.inputError : null]} 
-            secureTextEntry={!showPassword} 
-            onChangeText={(val) => handleChange("password", val)} 
-          />
-          <TouchableOpacity style={styles.toggleIcon} onPress={() => setShowPassword(!showPassword)}>
-            <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#666" />
+          <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={loading}>
+            {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Sign Up</Text>}
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.footerText}>
+              Already have an account? <Text style={styles.linkText}>Sign In</Text>
+            </Text>
           </TouchableOpacity>
         </View>
-        {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
-
-        <Text style={styles.label}>Confirm Password</Text>
-        <View style={styles.passwordWrapper}>
-          <TextInput 
-            style={[styles.input, { flex: 1 }, errors.confirmPassword ? styles.inputError : null]} 
-            secureTextEntry={!showConfirm} 
-            onChangeText={(val) => handleChange("confirmPassword", val)} 
-          />
-          <TouchableOpacity style={styles.toggleIcon} onPress={() => setShowConfirm(!showConfirm)}>
-            <Ionicons name={showConfirm ? "eye-off" : "eye"} size={20} color="#666" />
-          </TouchableOpacity>
-        </View>
-        {errors.confirmPassword ? <Text style={styles.errorText}>{errors.confirmPassword}</Text> : null}
-
-        {errors.general ? <Text style={[styles.errorText, {textAlign: 'center', marginTop: 15}]}>{errors.general}</Text> : null}
-
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Create Account</Text>
-        </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: { flex: 1, backgroundColor: "#fff" },
-  container: { padding: 20, paddingBottom: 40 },
-  title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginTop: 50 },
-  subtitle: { textAlign: "center", marginVertical: 10, color: "#666", fontSize: 13 },
-  avatar: { alignSelf: "center", backgroundColor: "#6BBE45", width: 70, height: 70, borderRadius: 35, justifyContent: "center", alignItems: "center", marginTop: 10 },
-  label: { marginTop: 15, fontSize: 14, fontWeight: "600", color: "#333" },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 8, padding: 12, marginTop: 5, fontSize: 14 },
-  inputError: { borderColor: "#d93025" },
-  errorText: { color: "#d93025", fontSize: 12, marginTop: 5, fontWeight: "500" },
-  passwordWrapper: { flexDirection: 'row', alignItems: 'center', position: 'relative' },
-  toggleIcon: { position: 'absolute', right: 12, top: 18 },
-  button: { backgroundColor: "#1aad4f", padding: 15, borderRadius: 8, marginTop: 30 },
-  buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold", fontSize: 16 },
+  container: { flex: 1, backgroundColor: '#E8F5E9' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingTop: 10 },
+  backButton: { padding: 10 },
+  headerTitle: { fontSize: 32, fontWeight: 'bold', color: '#333', marginLeft: 5 },
+  scrollContent: { alignItems: 'center', paddingBottom: 40, paddingTop: 20 },
+  card: {
+    width: '90%',
+    backgroundColor: '#6BBE45',
+    borderRadius: 30,
+    padding: 25,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+  },
+  inputGroup: { marginBottom: 15 },
+  label: { color: '#FFF', fontSize: 14, marginBottom: 5, fontWeight: '600' },
+  input: { backgroundColor: '#FFF', borderRadius: 10, padding: 12, color: '#333' },
+  inputError: { borderWidth: 2, borderColor: '#FF5252' },
+  passWrapper: { flexDirection: 'row', backgroundColor: '#FFF', borderRadius: 10, alignItems: 'center' },
+  eyeIcon: { paddingHorizontal: 10 },
+  errorText: { color: '#FFCDD2', fontSize: 11, marginTop: 4, fontWeight: 'bold' },
+  generalError: { color: '#FFCDD2', textAlign: 'center', marginBottom: 10, fontWeight: 'bold' },
+  button: { backgroundColor: '#1A1A1A', padding: 15, borderRadius: 10, alignItems: 'center', marginTop: 10, marginBottom: 20 },
+  buttonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
+  footerText: { color: '#FFF', textAlign: 'center', fontSize: 13 },
+  linkText: { fontWeight: 'bold', textDecorationLine: 'underline' }
 });

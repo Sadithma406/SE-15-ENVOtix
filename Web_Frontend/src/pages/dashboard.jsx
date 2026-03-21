@@ -14,10 +14,10 @@ export default function Dashboard() {
     total: 0,
     criticalOrganic: 0,
     criticalPlastic: 0,
-    criticalGlass: 0,
+    criticalPaper: 0,
     organicDonut: { high: 0, medium: 0, low: 0 },
     plasticDonut: { high: 0, medium: 0, low: 0 },
-    glassDonut: { high: 0, medium: 0, low: 0 }
+    paperDonut: { high: 0, medium: 0, low: 0 }
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function Dashboard() {
     // 1. Filter bins by type
     const organicBins = allBins.filter(b => b.binType === "Organic");
     const plasticBins = allBins.filter(b => b.binType === "Plastic");
-    const glassBins = allBins.filter(b => b.binType === "Glass");
+    const paperBins = allBins.filter(b => b.binType === "Paper");
 
     // 2. Helper to calculate donut percentages
     const getDonutData = (typeArray) => {
@@ -64,10 +64,10 @@ export default function Dashboard() {
       total: allBins.length,
       criticalOrganic: organicBins.filter(b => b.fillLevel >= 85).length,
       criticalPlastic: plasticBins.filter(b => b.fillLevel >= 85).length,
-      criticalGlass: glassBins.filter(b => b.fillLevel >= 85).length,
+      criticalPaper: paperBins.filter(b => b.fillLevel >= 85).length,
       organicDonut: getDonutData(organicBins),
       plasticDonut: getDonutData(plasticBins),
-      glassDonut: getDonutData(glassBins)
+      paperDonut: getDonutData(paperBins)
     });
   };
 
@@ -109,15 +109,15 @@ export default function Dashboard() {
   /* ========== AREA WISE COMPONENT (Placeholder) ========== */
   function AreaWiseFillLevels() {
     const data = [
-      { province: "Central Province", organic: 120, plastic: 80, glass: 48 },
-      { province: "North Central Province", organic: 65, plastic: 105, glass: 70 },
-      { province: "Southern Province", organic: 140, plastic: 60, glass: 40 },
-      { province: "Eastern Province", organic: 100, plastic: 90, glass: 68 },
-      { province: "Western Province", organic: 85, plastic: 110, glass: 75 },
-      { province: "Uva Province", organic: 110, plastic: 65, glass: 42 },
+      { province: "Central Province", organic: 120, plastic: 80, paper: 48 },
+      { province: "North Central Province", organic: 65, plastic: 105, paper: 70 },
+      { province: "Southern Province", organic: 140, plastic: 60, paper: 40 },
+      { province: "Eastern Province", organic: 100, plastic: 90, paper: 68 },
+      { province: "Western Province", organic: 85, plastic: 110, paper: 75 },
+      { province: "Uva Province", organic: 110, plastic: 65, paper: 42 },
     ];
 
-    const maxValue = Math.max(...data.flatMap((d) => [d.organic, d.plastic, d.glass]));
+    const maxValue = Math.max(...data.flatMap((d) => [d.organic, d.plastic, d.paper]));
     const barMaxHeight = 200;
 
     return (
@@ -128,7 +128,7 @@ export default function Dashboard() {
           {data.map((row, i) => (
             <div key={i} className="group">
               <div className="bars-container">
-                {["organic", "plastic", "glass"].map((type) => (
+                {["organic", "plastic", "paper"].map((type) => (
                   <div
                     key={type}
                     className={`bar ${type}`}
@@ -145,7 +145,7 @@ export default function Dashboard() {
         <div className="legend-vertical">
           <p><i className="lg organic"></i> Organic</p>
           <p><i className="lg plastic"></i> Plastic</p>
-          <p><i className="lg glass"></i> Glass</p>
+          <p><i className="lg paper"></i> Paper</p>
         </div>
       </div>
     );
@@ -216,8 +216,8 @@ export default function Dashboard() {
                 <p className="card-value">{stats.criticalPlastic}</p>
               </div>
               <div className="dashboard-card danger">
-                <h3>Critical Glass Bins</h3>
-                <p className="card-value">{stats.criticalGlass}</p>
+                <h3>Critical Paper Bins</h3>
+                <p className="card-value">{stats.criticalPaper}</p>
               </div>
             </div>
 
@@ -225,7 +225,7 @@ export default function Dashboard() {
             <div className="donut-cards-wrapper">
               <DonutCard title="Organic waste fill levels" data={stats.organicDonut} />
               <DonutCard title="Plastic waste fill levels" data={stats.plasticDonut} />
-              <DonutCard title="Glass waste fill levels" data={stats.glassDonut} />
+              <DonutCard title="Paper waste fill levels" data={stats.paperDonut} />
             </div>
 
             <AreaWiseFillLevels />
@@ -288,13 +288,13 @@ export default function Dashboard() {
         .bar span { font-size: 10px; margin-bottom: 4px; }
         .bar.organic { background: #57b65f; }
         .bar.plastic { background: #2fa395; }
-        .bar.glass { background: #203f4a; }
+        .bar.paper { background: #203f4a; }
         .province { text-align: center; font-size: 10px; margin-top: 6px; }
         .legend-vertical { display: flex; justify-content: center; gap: 20px; margin-top: 18px; }
         .lg { width: 10px; height: 10px; display: inline-block; margin-right: 6px; border-radius: 2px; }
         .lg.organic { background: #57b65f; }
         .lg.plastic { background: #2fa395; }
-        .lg.glass { background: #203f4a; }
+        .lg.paper { background: #203f4a; }
       `}</style>
     </>
   );

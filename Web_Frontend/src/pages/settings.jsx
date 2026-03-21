@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
   const navigate = useNavigate();
   const [percentage, setPercentage] = useState(80);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
     <div style={styles.layout}>
@@ -69,8 +70,24 @@ function Settings() {
       <div style={styles.rightContainer}>
         <header style={styles.topbar}>
           <h1 style={styles.title}>Settings & Legend</h1>
-          <div style={styles.topRight}>
-            <div style={styles.avatar}>A</div>
+          <div style={{ ...styles.topRight, position: 'relative' }}>
+            <button
+              className="profile-avatar"
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            >
+              A
+            </button>
+            {isProfileOpen && (
+              <div className="profile-dropdown">
+                <div className="profile-dropdown-info">
+                  <p className="profile-name">Admin User</p>
+                  <p className="profile-id">ID: ENV-001</p>
+                </div>
+                <button className="profile-logout-btn" onClick={() => navigate("/")}>
+                  🚪 Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -146,6 +163,76 @@ function Settings() {
           </div>
         </main>
       </div>
+
+      <style>{`
+        .profile-avatar {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #28a745;
+          font-weight: 700;
+          cursor: pointer;
+          border: none;
+          padding: 0;
+          transition: background 0.2s;
+        }
+        
+        .profile-avatar:hover {
+          background: #f0f0f0;
+        }
+
+        .profile-dropdown {
+          position: absolute;
+          top: 50px;
+          right: 0;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          width: 200px;
+          overflow: hidden;
+          z-index: 2000;
+          color: #333;
+        }
+
+        .profile-dropdown-info {
+          padding: 15px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .profile-name {
+          margin: 0;
+          font-weight: 600;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .profile-id {
+          margin: 5px 0 0 0;
+          font-size: 12px;
+          color: #666;
+        }
+
+        .profile-logout-btn {
+          width: 100%;
+          padding: 12px 15px;
+          border: none;
+          background: none;
+          text-align: left;
+          font-size: 14px;
+          color: #e53935;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background 0.2s;
+        }
+
+        .profile-logout-btn:hover {
+          background: #ffebee;
+        }
+      `}</style>
     </div>
   );
 }

@@ -169,13 +169,16 @@ export default function Dashboard() {
 
         <nav className="sidebar-nav">
           <button className="nav-item nav-item-active" onClick={() => navigate("/dashboard")}>
-            📊 Dashboard Overview
+            <span className="nav-icon">📊</span>
+            <span className="nav-text">Dashboard Overview</span>
           </button>
           <button className="nav-item" onClick={() => navigate("/mapview")}>
-            🗺️ Map View
+            <span className="nav-icon">🗺️</span>
+            <span className="nav-text">Map View</span>
           </button>
           <button className="nav-item" onClick={() => navigate("/settings")}>
-            ⚙️ Settings & Legend
+            <span className="nav-icon">⚙️</span>
+            <span className="nav-text">Settings & Legend</span>
           </button>
         </nav>
 
@@ -316,26 +319,48 @@ export default function Dashboard() {
         }
 
         .nav-item {
+          display: flex;
+          align-items: center;
           border: none;
           background: rgba(255,255,255,0.1);
           color: white;
-          padding: 12px 16px;
+          padding: 12px;
           border-radius: 10px;
           text-align: left;
           cursor: pointer;
           font-size: 15px;
-          transition: 0.3s;
-          width: 100%;
+          transition: max-width 0.4s ease, background 0.3s ease;
+          max-width: 45px;
+          overflow: hidden;
+          white-space: nowrap;
         }
 
         .nav-item:hover {
           background: rgba(255,255,255,0.2);
+          max-width: 100%;
         }
 
         .nav-item-active {
           background: rgba(0,0,0,0.3);
           font-weight: 700;
           border-left: 4px solid white;
+          padding-left: 8px; /* account for border size */
+        }
+
+        .nav-icon {
+          min-width: 21px;
+          text-align: center;
+          font-size: 16px;
+        }
+
+        .nav-text {
+          margin-left: 12px;
+          opacity: 0;
+          transition: opacity 0.2s 0.1s ease;
+        }
+
+        .nav-item:hover .nav-text {
+          opacity: 1;
         }
         
         .sidebar-footer {

@@ -155,6 +155,45 @@ void connectWiFi() {
   Serial.printf("\n[WIFI] Connected — IP: %s\n", WiFi.localIP().toString().c_str());
 }
 
+// =============== MQTT CALLBACK ===============
+
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  // Null-terminate the payload
+  char message[length + 1];
+  memcpy(message, payload, length);
+  message[length] = '\0';
+
+  Serial.printf("[MQTT] Received on '%s': %s\n", topic, message);
+
+  String result = String(message);
+  result.trim();
+
+  int angle = ANGLE_DEFAULT;
+
+  // Case-insensitive comparisons matching the Python ML output
+  if (result.equalsIgnoreCase("Paper")) {
+    angle = ANGLE_PAPER;
+    Serial.println("[SERVO] → Paper detected — rotating to 120°");
+  } else if (result.equalsIgnoreCase("Plastic")) {
+    angle = ANGLE_PLASTIC;
+    Serial.println("[SERVO] → Plastic detected — rotating to 240°");
+  } else if (result.equalsIgnoreCase("Organic")) {
+    angle = ANGLE_ORGANIC;
+    Serial.println("[SERVO] → Organic detected — rotating to 80°");
+  } else {
+    Serial.printf("[SERVO] → Unknown class '%s' — going to default 0°\n", message);
+  }
+
+  // Move servo
+  lidServo.write(angle);
+  Serial.printf("[SERVO] Moved to %d°\n", angle);
+
+  // Hold position for 3 seconds, then return to default
+  delay(3000);
+  lidServo.write(ANGLE_DEFAULT);
+  Serial.println("[SERVO] Returned to 0° (default)");
+}
+
 
 // =============== MQTT CONNECT ===============
 

@@ -407,7 +407,8 @@ const styles = {
   subtitle: {
     fontSize: "15px",
     color: "#444",
-    marginBottom: "22px"
+    marginBottom: "22px",
+    textAlign: "center"
   },
   card: {
     background: "white",

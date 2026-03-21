@@ -10,7 +10,7 @@ const SegregateBinSchema = new mongoose.Schema({
     status: String,
     organic: CompartmentSchema,
     plastic: CompartmentSchema,
-    glass: CompartmentSchema
+    paper: CompartmentSchema
 });
 
 // The first argument is the name of your COLLECTION IN MongoDB Atlas

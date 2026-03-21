@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../assets/logoNoName.png";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -26,7 +27,6 @@ export default function Dashboard() {
 
   const fetchBinData = async () => {
     try {
-      // Ensure your backend is running on port 5000
       const response = await axios.get("http://localhost:5000/api/lanebins");
       const data = response.data;
       setBins(data);
@@ -39,16 +39,13 @@ export default function Dashboard() {
   };
 
   const calculateAnalytics = (allBins) => {
-    // 1. Filter bins by type
     const organicBins = allBins.filter(b => b.binType === "Organic");
     const plasticBins = allBins.filter(b => b.binType === "Plastic");
     const paperBins = allBins.filter(b => b.binType === "Paper");
 
-    // 2. Helper to calculate donut percentages
     const getDonutData = (typeArray) => {
       const total = typeArray.length;
       if (total === 0) return { high: 0, medium: 0, low: 0 };
-
       const high = typeArray.filter(b => b.fillLevel >= 85).length;
       const medium = typeArray.filter(b => b.fillLevel >= 50 && b.fillLevel < 85).length;
       const low = typeArray.filter(b => b.fillLevel < 50).length;
@@ -74,7 +71,6 @@ export default function Dashboard() {
   /* ========== DONUT CARD COMPONENT ========== */
   function DonutCard({ title, data }) {
     const { high, medium, low } = data;
-    // Calculate degrees for CSS conic-gradient
     const highDeg = (high / 100) * 360;
     const mediumDeg = (medium / 100) * 360;
 
@@ -100,24 +96,23 @@ export default function Dashboard() {
         <div className="donut-values">
           High (≥85%): {high}% <br />
           Medium (50-84%): {medium}% <br />
-          Low (≥50%): {low}%
+          Low ({"<"}50%): {low}%
         </div>
       </div>
     );
   }
 
-  /* ========== AREA WISE COMPONENT (Placeholder) ========== */
+  /* ========== AREA WISE COMPONENT ========== */
   function AreaWiseFillLevels() {
     const data = [
-      { province: "Central Province", organic: 120, plastic: 80, paper: 48 },
-      { province: "North Central Province", organic: 65, plastic: 105, paper: 70 },
-      { province: "Southern Province", organic: 140, plastic: 60, paper: 40 },
-      { province: "Eastern Province", organic: 100, plastic: 90, paper: 68 },
-      { province: "Western Province", organic: 85, plastic: 110, paper: 75 },
-      { province: "Uva Province", organic: 110, plastic: 65, paper: 42 },
+      { province: "Colomno", organic: 60, plastic: 70, paper: 48 },
+      { province: "City 1", organic: 0, plastic: 0, paper: 0 },
+      { province: "City 2", organic: 0, plastic: 0, paper: 0 },
+      { province: "City 3", organic: 0, plastic: 0, paper: 0 },
+      { province: "City 4", organic: 0, plastic: 0, paper: 0 },
+      { province: "City 5", organic: 0, plastic: 0, paper: 0 },
     ];
-
-    const maxValue = Math.max(...data.flatMap((d) => [d.organic, d.plastic, d.paper]));
+    const maxValue = Math.max(...data.flatMap((d) => [d.organic, d.plastic, d.paper]), 1);
     const barMaxHeight = 200;
 
     return (
@@ -152,150 +147,444 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading Analytics...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#28a745', fontWeight: 'bold' }}>Loading Analytics...</div>;
   }
 
   return (
-    <>
-      <div className="dashboard-root">
-        {/* SIDEBAR */}
-        <aside className="dashboard-sidebar">
-          <div className="sidebar-header">
-            <div className="logo-circle"><span className="logo-letter">E</span></div>
+    <div className="dashboard-root">
+      <aside className="dashboard-sidebar">
+        <div className="sidebar-header">
+          <div className="logo-container">
+            <img src={logo} alt="Logo" className="logo-img" />
             <div className="sidebar-brand">
-              <span className="brand-title">ENVOtix</span>
+              <div className="brand-title-wrap">
+                <span className="brand-black">ENVO</span>
+                <span className="brand-white">tix</span>
+              </div>
               <span className="brand-subtitle">smart waste management</span>
             </div>
           </div>
-          <nav className="sidebar-nav">
-            <button className="nav-item nav-item-active" onClick={() => navigate("/dashboard")}>
-              <span className="nav-icon">📊</span>
-              <span>Dashboard Overview</span>
-            </button>
-            <button className="nav-item" onClick={() => navigate("/mapview")}>
-              <span className="nav-icon">🗺️</span>
-              <span>Map View</span>
-            </button>
-            <button className="nav-item" onClick={() => navigate("/settings")}>
-              <span className="nav-icon">⚙️</span>
-              <span>Settings or Legend</span>
-            </button>
-          </nav>
-          <div className="sidebar-footer">
-            <button className="logout-btn">Logout</button>
-            <p className="sidebar-copy">©️ ENVOtix smart waste management</p>
+        </div>
+
+        <nav className="sidebar-nav">
+          <button className="nav-item nav-item-active" onClick={() => navigate("/dashboard")}>
+            📊 Dashboard Overview
+          </button>
+          <button className="nav-item" onClick={() => navigate("/mapview")}>
+            🗺️ Map View
+          </button>
+          <button className="nav-item" onClick={() => navigate("/settings")}>
+            ⚙️ Settings & Legend
+          </button>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={() => navigate("/")}>
+            🚪 Logout
+          </button>
+          <p className="sidebar-copy">©️ ENVOtix smart waste management</p>
+        </div>
+      </aside>
+
+      <main className="dashboard-main">
+        <header className="dashboard-topbar">
+          <h1 className="topbar-title">Waste Management Dashboard</h1>
+          <div className="topbar-right">
+            <div className="profile-avatar">A</div>
           </div>
-        </aside>
+        </header>
 
-        {/* MAIN */}
-        <main className="dashboard-main">
-          <header className="dashboard-topbar">
-            <h1 className="topbar-title">Waste Management Dashboard</h1>
-            <div className="topbar-right">
-              <div className="topbar-search">
-                <span className="search-icon">🔍</span>
-                <input type="text" placeholder="Search..." className="search-input" />
-              </div>
-              <div className="profile-avatar"><span className="avatar-initial">A</span></div>
+        <section className="dashboard-content-wrapper">
+          <div className="dashboard-cards">
+            <div className="dashboard-card">
+              <h3>Total Smart Bins</h3>
+              <p className="card-value">{stats.total}</p>
             </div>
-          </header>
-
-          <section className="dashboard-content-wrapper">
-            {/* TOP CARDS - DYNAMIC DATA */}
-            <div className="dashboard-cards">
-              <div className="dashboard-card">
-                <h3>Total Smart Bins</h3>
-                <p className="card-value">{stats.total}</p>
-              </div>
-              <div className="dashboard-card warning">
-                <h3>Critical Organic Bins</h3>
-                <p className="card-value">{stats.criticalOrganic}</p>
-              </div>
-              <div className="dashboard-card success">
-                <h3>Critical Plastic Bins</h3>
-                <p className="card-value">{stats.criticalPlastic}</p>
-              </div>
-              <div className="dashboard-card danger">
-                <h3>Critical Paper Bins</h3>
-                <p className="card-value">{stats.criticalPaper}</p>
-              </div>
+            <div className="dashboard-card warning">
+              <h3>Critical Organic</h3>
+              <p className="card-value">{stats.criticalOrganic}</p>
             </div>
-
-            <h2>Collection Overview</h2>
-            <div className="donut-cards-wrapper">
-              <DonutCard title="Organic waste fill levels" data={stats.organicDonut} />
-              <DonutCard title="Plastic waste fill levels" data={stats.plasticDonut} />
-              <DonutCard title="Paper waste fill levels" data={stats.paperDonut} />
+            <div className="dashboard-card success">
+              <h3>Critical Plastic</h3>
+              <p className="card-value">{stats.criticalPlastic}</p>
             </div>
+            <div className="dashboard-card danger">
+              <h3>Critical Paper</h3>
+              <p className="card-value">{stats.criticalPaper}</p>
+            </div>
+          </div>
 
-            <AreaWiseFillLevels />
-          </section>
-        </main>
-      </div>
+          <h2 className="section-title">Collection Overview</h2>
+          <div className="donut-cards-wrapper">
+            <DonutCard title="Organic waste fill levels" data={stats.organicDonut} />
+            <DonutCard title="Plastic waste fill levels" data={stats.plasticDonut} />
+            <DonutCard title="Paper waste fill levels" data={stats.paperDonut} />
+          </div>
+
+          <AreaWiseFillLevels />
+        </section>
+      </main>
 
       <style>{`
-        /* Keep your existing CSS exactly as it was provided */
-        .dashboard-root { display: flex; min-height: 100vh; font-family: sans-serif; background: #f5f5f5; }
-        .dashboard-sidebar { width: 260px; background: #28a745; color: #fff; display: flex; flex-direction: column; padding: 20px 24px; }
-        .sidebar-header { display: flex; align-items: center; margin-bottom: 40px; }
-        .logo-circle { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; margin-right: 10px; }
-        .logo-letter { color: #28a745; font-weight: 800; font-size: 22px; }
-        .sidebar-brand { display: flex; flex-direction: column; }
-        .brand-title { font-size: 22px; font-weight: 700; }
-        .brand-subtitle { font-size: 11px; opacity: 0.9; }
-        .sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 999px; border: none; background: transparent; color: inherit; font-size: 14px; cursor: pointer; text-align: left; }
-        .nav-item-active { background: rgba(0, 0, 0, 0.25); }
-        .sidebar-footer { margin-top: auto; }
-        .logout-btn { border: none; background: transparent; color: #fff; font-size: 14px; cursor: pointer; }
-        .dashboard-main { flex: 1; display: flex; flex-direction: column; }
-        .dashboard-topbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; background: #28a745; color: #fff; }
+        .dashboard-root {
+          display: flex;
+          height: 100vh;
+          width: 100vw;
+          font-family: 'Inter', system-ui, sans-serif;
+          background: #f8f9fa;
+          overflow: hidden;
+        }
+        
+        /* SIDEBAR STYLES */
+        .dashboard-sidebar {
+          width: 260px;
+          background: #28a745;
+          color: #fff;
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+          flex-shrink: 0;
+        }
+
+        .sidebar-header {
+          margin-bottom: 40px;
+        }
+
+        .logo-container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .logo-img {
+          width: 40px;
+          height: 40px;
+          object-fit: contain;
+        }
+
+        .brand-title-wrap {
+          font-size: 22px;
+          font-weight: 800;
+          line-height: 1;
+        }
+
+        .brand-black {
+          color: #000;
+        }
+
+        .brand-white {
+          color: #fff;
+        }
+
+        .brand-subtitle {
+          font-size: 11px;
+          opacity: 0.9;
+          display: block;
+        }
+        
+        .sidebar-nav {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .nav-item {
+          border: none;
+          background: rgba(255,255,255,0.1);
+          color: white;
+          padding: 12px 16px;
+          border-radius: 10px;
+          text-align: left;
+          cursor: pointer;
+          font-size: 15px;
+          transition: 0.3s;
+          width: 100%;
+        }
+
+        .nav-item:hover {
+          background: rgba(255,255,255,0.2);
+        }
+
+        .nav-item-active {
+          background: rgba(0,0,0,0.3);
+          font-weight: 700;
+          border-left: 4px solid white;
+        }
+        
+        .sidebar-footer {
+          margin-top: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .logout-btn {
+          border: none;
+          background: rgba(255,255,255,0.15);
+          color: white;
+          padding: 12px;
+          border-radius: 10px;
+          cursor: pointer;
+          font-weight: 600;
+          text-align: left;
+          transition: 0.3s;
+        }
+
+        .sidebar-copy {
+          font-size: 11px;
+          opacity: 0.8;
+          margin: 0;
+        }
+
+        /* MAIN & TOPBAR */
+        .dashboard-main {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+        }
+
+        .dashboard-topbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 18px 28px;
+          background: #28a745;
+          color: #fff;
+          flex-shrink: 0;
+        }
+
         .topbar-title {
           font-size: 22px;
+          margin: 0;
           font-weight: 600;
         }
+
         .topbar-right {
           display: flex;
           align-items: center;
-          gap: 18px;
         }
 
-        .topbar-search { display: flex; align-items: center; background: #fff; border-radius: 999px; padding: 6px 12px; min-width: 260px; }
-        .search-input { border: none; outline: none; font-size: 14px; width: 100%; }
-        .profile-avatar { width: 34px; height: 34px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; color: #28a745; font-weight: 600; }
-        .dashboard-content-wrapper { padding: 28px; }
-        .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; margin-bottom: 36px; }
-        .dashboard-card { background: #fff; border-radius: 18px; padding: 26px; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16); }
-        .card-value { font-size: 38px; font-weight: 700; }
-        .donut-cards-wrapper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 18px; }
-        .donut-card { background: #fff; padding: 26px; border-radius: 16px; }
-        .donut-title { font-size: 17px; font-weight: 600; margin-bottom: 18px; }
-        .donut-center-wrap { display: flex; justify-content: center; margin-bottom: 10px; }
-        .donut { position: relative; width: 170px; height: 170px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: conic-gradient(#f07b57 0deg var(--high), #203f4a var(--high) calc(var(--high) + var(--medium)), #2fa395 calc(var(--high) + var(--medium)) 360deg); }
-        .donut::after { content: ""; position: absolute; width: 118px; height: 118px; background: #fff; border-radius: 50%; }
-        .donut-center { position: relative; z-index: 2; font-size: 20px; font-weight: 700; color: #333; }
-        .donut-legend-row { display: flex; justify-content: space-between; font-size: 11px; margin-top: 10px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .dot.low { background: #2fa395; }
-        .dot.medium { background: #203f4a }
-        .dot.high { background: #f07b57; }
-        .donut-values { margin-top: 10px; font-size: 12px; color: #444; }
-        .area-card { margin-top: 24px; background: #fff; padding: 20px; border-radius: 12px; }
-        .chart { height: 260px; display: flex; align-items: flex-end; gap: 22px; margin-top: 20px; }
-        .group { flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .bars-container { display: flex; gap: 6px; align-items: flex-end; }
-        .bar { width: 30px; border-radius: 6px 6px 0 0; display: flex; align-items: flex-end; justify-content: center; }
-        .bar span { font-size: 10px; margin-bottom: 4px; }
-        .bar.organic { background: #57b65f; }
+        .profile-avatar {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #28a745;
+          font-weight: 700;
+        }
+
+        /* CONTENT STYLES */
+        .dashboard-content-wrapper {
+          padding: 25px;
+        }
+
+        .section-title {
+          font-size: 20px;
+          color: #333;
+          margin: 30px 0 15px 0;
+        }
+
+        .dashboard-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+        }
+
+        .dashboard-card {
+          background: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+          border-top: 4px solid #28a745;
+        }
+
+        .dashboard-card.warning { border-top-color: #ffb300; }
+        .dashboard-card.danger { border-top-color: #e53935; }
+
+        .card-value {
+          font-size: 32px;
+          font-weight: 800;
+          margin: 10px 0 0 0;
+          color: #222;
+        }
+        
+        .donut-cards-wrapper {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 25px;
+        }
+
+        .donut-card {
+          background: #fff;
+          padding: 20px;
+          border-radius: 15px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .donut-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 20px;
+          text-align: center;
+          color: #444;
+        }
+
+        .donut-center-wrap {
+          display: flex;
+          justify-content: center;
+        }
+
+        .donut {
+          position: relative;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center; 
+          background: conic-gradient(#e53935 0deg var(--high), #203f4a var(--high) calc(var(--high) + var(--medium)), #43a047 calc(var(--high) + var(--medium)) 360deg);
+        }
+
+        .donut::after {
+          content: "";
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          background: #fff;
+          border-radius: 50%;
+        }
+
+        .donut-center {
+          position: relative;
+          z-index: 2;
+          font-size: 18px;
+          font-weight: 800;
+          text-align: center;
+          line-height: 1.2;
+        }
+        
+        .donut-legend-row {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin-top: 15px;
+          font-size: 12px;
+        }
+
+        .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+
+        .dot.low { background: #43a047; }
+        .dot.medium { background: #203f4a; }
+        .dot.high { background: #e53935; }
+
+        .donut-values {
+          margin-top: 15px;
+          font-size: 12px;
+          color: #666;
+          border-top: 1px solid #eee;
+          padding-top: 10px;
+        }
+
+        .area-card {
+          margin-top: 30px;
+          background: #fff;
+          padding: 25px;
+          border-radius: 15px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* UPDATED CHART WITH VERTICAL LINES */
+        .chart {
+          height: 250px;
+          display: flex;
+          align-items: flex-end;
+          gap: 15px;
+          margin-top: 25px;
+          border-bottom: 2px solid #eee;
+          padding: 0 15px 10px 15px;
+          overflow-x: auto;
+          background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px);
+          background-size: 95px 100%;
+        }
+
+        .group {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 80px;
+          z-index: 2;
+        }
+
+        .bars-container {
+          display: flex;
+          gap: 4px;
+          align-items: flex-end;
+        }
+
+        .bar {
+          width: 20px;
+          border-radius: 4px 4px 0 0;
+          position: relative;
+          transition: 0.3s;
+        }
+
+        .bar span {
+          position: absolute;
+          top: -20px;
+          width: 100%;
+          text-align: center;
+          font-size: 10px;
+          font-weight: 700;
+        }
+
+        .bar.organic { background: #43a047; }
         .bar.plastic { background: #2fa395; }
         .bar.paper { background: #203f4a; }
-        .province { text-align: center; font-size: 10px; margin-top: 6px; }
-        .legend-vertical { display: flex; justify-content: center; gap: 20px; margin-top: 18px; }
-        .lg { width: 10px; height: 10px; display: inline-block; margin-right: 6px; border-radius: 2px; }
-        .lg.organic { background: #57b65f; }
+
+        .province {
+          font-size: 10px;
+          font-weight: 600;
+          text-align: center;
+          margin-top: 10px;
+          color: #666;
+          height: 30px;
+        }
+
+        .legend-vertical {
+          display: flex;
+          justify-content: center;
+          gap: 25px;
+          margin-top: 20px;
+        }
+
+        .lg {
+          width: 12px;
+          height: 12px;
+          display: inline-block;
+          margin-right: 8px;
+          border-radius: 3px;
+        }
+
+        .lg.organic { background: #43a047; }
         .lg.plastic { background: #2fa395; }
         .lg.paper { background: #203f4a; }
+
+        .y-label {
+          font-size: 11px;
+          color: #888;
+          font-weight: bold;
+        }
       `}</style>
-    </>
+    </div>
   );
 }

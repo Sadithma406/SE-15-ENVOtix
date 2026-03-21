@@ -61,6 +61,86 @@ Servo        lidServo;
 
 unsigned long lastFillPublish = 0;
 
+// =============== ULTRASONIC FUNCTIONS ===============
+
+/**
+ * Measures distance in centimeters using an HC-SR04 sensor.
+ * Returns distance in cm, or -1 if no echo received (timeout).
+ */
+float measureDistance(int trigPin, int echoPin) {
+  // Send a 10µs HIGH pulse on TRIG
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the echo pulse duration (timeout after 30ms = ~500cm max)
+  long duration = pulseIn(echoPin, HIGH, 30000);
+
+  if (duration == 0) {
+    return -1;  // No echo received
+  }
+
+  // Speed of sound = 343 m/s → 0.0343 cm/µs → distance = duration * 0.0343 / 2
+  float distance = duration * 0.0343 / 2.0;
+  return distance;
+}
+
+/**
+ * Converts distance (cm) to fill level percentage.
+ * When distance == BIN_HEIGHT_CM → bin is empty (0%)
+ * When distance == 0             → bin is full (100%)
+ */
+int distanceToFillPercent(float distanceCm) {
+  if (distanceCm < 0) return 0;  // Sensor error, default to 0%
+  if (distanceCm >= BIN_HEIGHT_CM) return 0;   // Empty
+  if (distanceCm <= 2.0) return 100;           // Full (HC-SR04 min range ~2cm)
+
+  float fillPercent = ((BIN_HEIGHT_CM - distanceCm) / BIN_HEIGHT_CM) * 100.0;
+
+  // Clamp to 0-100
+  if (fillPercent < 0) fillPercent = 0;
+  if (fillPercent > 100) fillPercent = 100;
+
+  return (int)fillPercent;
+}
+
+/**
+ * Reads all 3 ultrasonic sensors and publishes fill levels via MQTT.
+ * Payload format matches what householdMqttService.js expects:
+ * { "binId": "40247c61", "organic": 45, "plastic": 12, "paper": 78 }
+ */
+void publishFillLevels() {
+  // Read each sensor
+  float organicDist = measureDistance(ORGANIC_TRIG, ORGANIC_ECHO);
+  float plasticDist = measureDistance(PLASTIC_TRIG, PLASTIC_ECHO);
+  float paperDist   = measureDistance(PAPER_TRIG, PAPER_ECHO);
+
+  // Convert to fill percentages
+  int organicFill = distanceToFillPercent(organicDist);
+  int plasticFill = distanceToFillPercent(plasticDist);
+  int paperFill   = distanceToFillPercent(paperDist);
+
+  Serial.printf("[FILL] Distances: Organic=%.1fcm, Plastic=%.1fcm, Paper=%.1fcm\n",
+                organicDist, plasticDist, paperDist);
+  Serial.printf("[FILL] Levels:    Organic=%d%%, Plastic=%d%%, Paper=%d%%\n",
+                organicFill, plasticFill, paperFill);
+
+  // Build JSON payload (no ArduinoJson library needed)
+  char payload[128];
+  snprintf(payload, sizeof(payload),
+           "{\"binId\":\"%s\",\"organic\":%d,\"plastic\":%d,\"paper\":%d}",
+           BIN_ID, organicFill, plasticFill, paperFill);
+
+  // Publish to MQTT
+  if (mqttClient.publish(TOPIC_FILL, payload)) {
+    Serial.printf("[FILL] Published to %s: %s\n", TOPIC_FILL, payload);
+  } else {
+    Serial.println("[FILL] Failed to publish fill levels!");
+  }
+}
+
 
 
 // =============== WIFI ===============

@@ -1,6 +1,5 @@
 # ML Hardware Dependencies for Waste Classification
-tensorflow>=2.20.0,<2.21.0
-keras==3.10.0
+tensorflow>=2.16.0
 flask>=2.3.0
 numpy>=1.23.0
 opencv-python>=4.7.0

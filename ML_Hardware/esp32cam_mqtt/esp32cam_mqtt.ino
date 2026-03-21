@@ -7,8 +7,8 @@
 // =============== USER CONFIG ===============
 
 // WiFi credentials — change these to match your network
-const char* WIFI_SSID     = "--";
-const char* WIFI_PASSWORD = "--";
+const char* WIFI_SSID     = "REDMI 15C";
+const char* WIFI_PASSWORD = "23456789";
 
 // MQTT broker (free public HiveMQ broker)
 const char* MQTT_BROKER = "broker.hivemq.com";

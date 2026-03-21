@@ -1,4 +1,26 @@
-
+/*
+ *  ENVOtix - ESP32 Waste Classifier Servo Node + Ultrasonic Fill Monitoring
+ *
+ * Hardware:
+ *   - ESP32 (or ESP32-CAM board)
+ *   - Servo motor on GPIO 13
+ *   - 3x HC-SR04 Ultrasonic Sensors:
+ *       Organic  → TRIG=12, ECHO=14
+ *       Plastic  → TRIG=27, ECHO=26
+ *       Paper    → TRIG=25, ECHO=33
+ *
+ * Flow:
+ *   1. Subscribes to "envotix/result" via MQTT
+ *   2. Receives classification ("Paper", "Plastic", "Organic")
+ *   3. Servo rotates to the corresponding angle
+ *   4. Returns to default angle after 3 seconds
+ *   5. Every 10 seconds, reads ultrasonic sensors and publishes fill levels
+ *      to "envotix/household/fill" for MongoDB storage
+ *
+ * Required Libraries (install via Arduino Library Manager):
+ *   - PubSubClient  (by Nick O'Leary)
+ *   - ESP32Servo     (by Kevin Harrington)
+ */
 
 #include <WiFi.h>
 #include <PubSubClient.h>

@@ -80,11 +80,21 @@ function Settings() {
             {isProfileOpen && (
               <div className="profile-dropdown">
                 <div className="profile-dropdown-info">
-                  <p className="profile-name">Admin User</p>
-                  <p className="profile-id">ID: ENV-001</p>
+                  <p className="profile-name">
+                    {(() => {
+                      try { return JSON.parse(localStorage.getItem("user"))?.name || "Municipal Admin"; }
+                      catch (e) { return "Municipal Admin"; }
+                    })()}
+                  </p>
+                  <p className="profile-id" style={{ wordBreak: "break-all" }}>
+                    {(() => {
+                      try { return JSON.parse(localStorage.getItem("user"))?.email || "admin@munisipalcounsil.lk"; }
+                      catch (e) { return "admin@munisipalcounsil.lk"; }
+                    })()}
+                  </p>
                 </div>
-                <button className="profile-logout-btn" onClick={() => navigate("/")}>
-                  🚪 Sign Out
+                <button className="profile-logout-btn" onClick={() => { localStorage.removeItem("user"); navigate("/"); }}>
+                  🚪 Logout
                 </button>
               </div>
             )}

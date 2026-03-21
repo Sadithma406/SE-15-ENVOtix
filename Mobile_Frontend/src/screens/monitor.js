@@ -21,7 +21,7 @@ export default function MonitorScreen({ navigation, route }) {
     // State for each bin type
     const [organicData, setOrganicData] = useState({ fill: '...', time: 'Loading...' });
     const [plasticData, setPlasticData] = useState({ fill: '...', time: 'Loading...' });
-    const [glassData, setGlassData] = useState({ fill: '...', time: 'Loading...' });
+    const [paperData, setPaperData] = useState({ fill: '...', time: 'Loading...' });
 
     // 2. Fetch Function
     const fetchBinLevels = async () => {
@@ -50,10 +50,10 @@ export default function MonitorScreen({ navigation, route }) {
                             time: new Date(binData.plastic.last_updated).toLocaleTimeString() 
                         });
                     }
-                    if (binData.glass) {
-                        setGlassData({ 
-                            fill: `${binData.glass.fill_level}%`, 
-                            time: new Date(binData.glass.last_updated).toLocaleTimeString() 
+                    if (binData.paper) {
+                        setPaperData({ 
+                            fill: `${binData.paper.fill_level}%`, 
+                            time: new Date(binData.paper.last_updated).toLocaleTimeString() 
                         });
                     }
                 }
@@ -138,14 +138,14 @@ export default function MonitorScreen({ navigation, route }) {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.wasteCard} onPress={() => navigation.navigate('Glass', { userId })}>
+                <TouchableOpacity style={styles.wasteCard} onPress={() => navigation.navigate('Paper', { userId })}>
                     <View style={styles.cardContent}>
                         <View style={styles.cardLeft}>
                             <Image source={require('../../assets/glass.png')} style={styles.wasteIcon} resizeMode="contain" />
                             <View style={styles.cardTextContainer}>
-                                <Text style={styles.wasteType}>Glass Waste</Text>
-                                <Text style={styles.fillPercentage}>{glassData.fill}</Text>
-                                <Text style={styles.lastUpdated}>Last Updated: {glassData.time}</Text>
+                                <Text style={styles.wasteType}>Paper Waste</Text>
+                                <Text style={styles.fillPercentage}>{paperData.fill}</Text>
+                                <Text style={styles.lastUpdated}>Last Updated: {paperData.time}</Text>
                             </View>
                         </View>
                         <ChevronRight color="#666" size={24} />

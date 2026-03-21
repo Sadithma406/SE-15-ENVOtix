@@ -15,7 +15,7 @@ import CircularGauge from '../components/CircularGauge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import API_BASE_URL from '../config/api';
 
-const GlassBinScreen = ({ navigation, route }) => {
+const PaperBinScreen = ({ navigation, route }) => {
   // 1. Catch the userId passed from the previous screen
   const userId = route?.params?.userId;
 
@@ -44,9 +44,9 @@ const GlassBinScreen = ({ navigation, route }) => {
           const binResponse = await fetch(`${API_BASE_URL}/api/bins/${userRFID}`);
           const binData = await binResponse.json();
 
-          if (binData && binData.glass) {
-            setFillLevel(binData.glass.fill_level);
-            setLastUpdated(`Last updated: ${new Date(binData.glass.last_updated).toLocaleTimeString()}`);
+          if (binData && binData.paper) {
+            setFillLevel(binData.paper.fill_level);
+            setLastUpdated(`Last updated: ${new Date(binData.paper.last_updated).toLocaleTimeString()}`);
           }
         }
       } catch (error) {
@@ -95,16 +95,16 @@ const GlassBinScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft color="#333" size={24} />
           </TouchableOpacity>
-          <Text style={styles.subHeaderTitle}>Glass Bin</Text>
+          <Text style={styles.subHeaderTitle}>paper Bin</Text>
         </View>
 
         <View style={styles.iconTitleSection}>
           <Image 
             source={require('../../assets/glass.png')} 
-            style={styles.glassImage} 
+            style={styles.paperImage} 
             resizeMode="contain"
           />
-          <Text style={styles.iconSectionText}>Glass Bin</Text>
+          <Text style={styles.iconSectionText}>Paper Bin</Text>
         </View> 
 
         {/* Main Gauge Card */}
@@ -127,12 +127,12 @@ const GlassBinScreen = ({ navigation, route }) => {
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
             <Lightbulb color="#4CAF50" size={20} />
-            <Text style={styles.tipsTitle}>Glass Recycling Tips</Text>
+            <Text style={styles.tipsTitle}>paper Recycling Tips</Text>
           </View>
-          <Text style={styles.tipItem}>• Rinse glass bottles and jars before placing them in recycling.</Text>
-          <Text style={styles.tipItem}>• Throwing glass carelessly causes injuries and environmental damage.</Text>
-          <Text style={styles.tipItem}>• Reuse glass containers for storage instead of discarding.</Text>
-          <Text style={styles.tipItem}>• Improper glass disposal harms wildlife and public safety.</Text>
+          <Text style={styles.tipItem}>• Rinse plastic bottles and containers before placing them in recycling.</Text>
+          <Text style={styles.tipItem}>• Avoid throwing plastic waste carelessly as it pollutes the environment.</Text>
+          <Text style={styles.tipItem}>•  Reuse plastic containers for storage instead of discarding them immediately.</Text>
+          <Text style={styles.tipItem}>• Improper plastic disposal harms wildlife and contaminates land and water.</Text>
         </View>
       </ScrollView>
 
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   headerIcons: { flexDirection: 'row' },
   subHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 25, marginTop: 20 },
   subHeaderTitle: { fontSize: 22, fontWeight: 'bold', marginLeft: 10, color: '#333' },
-  glassImage: { width: 55, height: 55, marginRight: 2 },
+  paperImage: { width: 55, height: 55, marginRight: 2 },
   iconTitleSection: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   iconSectionText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   scrollContent: { padding: 20 },
@@ -208,4 +208,4 @@ const styles = StyleSheet.create({
   footerText: { fontSize: 12, marginTop: 4, color: '#666', fontWeight: '500' }
 });
 
-export default GlassBinScreen;
+export default PaperBinScreen;

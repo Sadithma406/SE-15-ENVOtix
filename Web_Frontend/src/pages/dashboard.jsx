@@ -9,6 +9,7 @@ export default function Dashboard() {
   // State for raw database data
   const [bins, setBins] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // State for calculated analytics
   const [stats, setStats] = useState({
@@ -190,7 +191,23 @@ export default function Dashboard() {
         <header className="dashboard-topbar">
           <h1 className="topbar-title">Waste Management Dashboard</h1>
           <div className="topbar-right">
-            <div className="profile-avatar">A</div>
+            <button
+              className="profile-avatar"
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            >
+              A
+            </button>
+            {isProfileOpen && (
+              <div className="profile-dropdown">
+                <div className="profile-dropdown-info">
+                  <p className="profile-name">Admin User</p>
+                  <p className="profile-id">ID: ENV-001</p>
+                </div>
+                <button className="profile-logout-btn" onClick={() => navigate("/")}>
+                  🚪 Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -363,6 +380,7 @@ export default function Dashboard() {
         .topbar-right {
           display: flex;
           align-items: center;
+          position: relative;
         }
 
         .profile-avatar {
@@ -375,6 +393,62 @@ export default function Dashboard() {
           justify-content: center;
           color: #28a745;
           font-weight: 700;
+          cursor: pointer;
+          border: none;
+          padding: 0;
+          transition: background 0.2s;
+        }
+        
+        .profile-avatar:hover {
+          background: #f0f0f0;
+        }
+
+        .profile-dropdown {
+          position: absolute;
+          top: 50px;
+          right: 0;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          width: 200px;
+          overflow: hidden;
+          z-index: 100;
+          color: #333;
+        }
+
+        .profile-dropdown-info {
+          padding: 15px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .profile-name {
+          margin: 0;
+          font-weight: 600;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .profile-id {
+          margin: 5px 0 0 0;
+          font-size: 12px;
+          color: #666;
+        }
+
+        .profile-logout-btn {
+          width: 100%;
+          padding: 12px 15px;
+          border: none;
+          background: none;
+          text-align: left;
+          font-size: 14px;
+          color: #e53935;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background 0.2s;
+        }
+
+        .profile-logout-btn:hover {
+          background: #ffebee;
         }
 
         /* CONTENT STYLES */

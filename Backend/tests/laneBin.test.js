@@ -1,11 +1,11 @@
-/**
- * Unit Tests for LaneBin Model - Dashboard Data Display
- * Tests: Fetching bin data for dashboard display (10 tests)
- */
+
+//Tests: Fetching bin data for dashboard display (10 tests)
 
 describe('LaneBin - Dashboard Data Display', () => {
 
-    // === DATA FETCHING TESTS (5) ===
+    // DATA FETCHING TESTS (5)
+
+    //return all bins for dashboard display
     test('should return all bins for dashboard display', () => {
         const mockBins = [
             { _id: '1', laneName: 'Nugegoda', binType: 'Organic', fillLevel: 45 },
@@ -16,6 +16,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         expect(mockBins[0].fillLevel).toBe(45);
     });
 
+    //include all required fields for display
     test('should include all required fields for display', () => {
         const bin = { _id: '123', laneName: 'Nugegoda', binType: 'Organic', fillLevel: 45, status: 'active', location: { latitude: 6.8649, longitude: 79.8997 } };
         expect(bin._id).toBeDefined();
@@ -25,6 +26,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         expect(bin.location).toBeDefined();
     });
 
+    //filter bins by lane name
     test('should filter bins by lane name', () => {
         const bins = [
             { laneName: 'Nugegoda', binType: 'Organic' },
@@ -35,6 +37,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         expect(nugegodaBins.length).toBe(2);
     });
 
+    //filter bins by type
     test('should filter bins by type', () => {
         const bins = [
             { binType: 'Organic', fillLevel: 45 },
@@ -45,19 +48,23 @@ describe('LaneBin - Dashboard Data Display', () => {
         expect(organicBins.length).toBe(2);
     });
 
+    //validate bin types are correct enum values
     test('should validate bin types are correct enum values', () => {
         const validTypes = ['Plastic', 'Paper', 'Organic'];
         const bin = { binType: 'Organic' };
         expect(validTypes).toContain(bin.binType);
     });
 
-    // === MAP & GPS TESTS (5) ===
+    // MAP & GPS TESTS (5)
+
+    //include GPS coordinates for map display
     test('should include GPS coordinates for map display', () => {
         const bin = { location: { latitude: 6.8649, longitude: 79.8997 } };
         expect(bin.location.latitude).toBeCloseTo(6.8649, 4);
         expect(bin.location.longitude).toBeCloseTo(79.8997, 4);
     });
 
+    //validate latitude range for Sri Lanka
     test('should validate latitude range for Sri Lanka', () => {
         const bins = [{ location: { latitude: 6.8649 } }, { location: { latitude: 7.2906 } }];
         bins.forEach(bin => {
@@ -66,6 +73,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         });
     });
 
+    //validate longitude range for Sri Lanka
     test('should validate longitude range for Sri Lanka', () => {
         const bins = [{ location: { longitude: 79.8997 } }, { location: { longitude: 80.6337 } }];
         bins.forEach(bin => {
@@ -74,6 +82,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         });
     });
 
+    //determine fill level status color
     test('should determine fill level status color', () => {
         const getStatusColor = (level) => {
             if (level >= 80) return 'red';
@@ -85,6 +94,7 @@ describe('LaneBin - Dashboard Data Display', () => {
         expect(getStatusColor(30)).toBe('green');
     });
 
+    //return bins with valid status for map markers
     test('should return bins with valid status for map markers', () => {
         const bins = [
             { _id: '1', status: 'active', fillLevel: 45, location: { latitude: 6.8649, longitude: 79.8997 } },

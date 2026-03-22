@@ -71,7 +71,7 @@ export default function Signup() {
     setSuccessMessage('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, {
         name: formData.name,
         email: formData.email,
         password: formData.password
@@ -103,7 +103,7 @@ export default function Signup() {
       }
 
       // Send Google user data to backend
-      const response = await axios.post('http://localhost:5000/api/auth/google-signup', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google-signup`, {
         name: decoded.name,
         email: decoded.email,
         googleId: decoded.sub,

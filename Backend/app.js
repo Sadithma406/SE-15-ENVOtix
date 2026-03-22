@@ -16,8 +16,10 @@ app.use(express.json());
 
 initMQTT();
 initHouseholdMQTT();
-// connecting with the Data_Envotix database in MongoDB Atlas
-const mongoUrl = "mongodb+srv://sadithma20242193_db_user:himandiIIT20242193@cluster0.cjexidk.mongodb.net/Data_Envotix?appName=cluster0";
+require('dotenv').config();
+
+// connecting with the Data_Envotix database in MongoDB Atlas using Environment Variables
+const mongoUrl = process.env.MONGO_URI || "mongodb://localhost:27017/Data_Envotix";
 
 mongoose.connect(mongoUrl)
     .then(() => console.log("ENVOtix Database Connected"))

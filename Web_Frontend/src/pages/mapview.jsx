@@ -38,7 +38,7 @@ export default function MapView() {
     const fetchBins = async () => {
       try {
         setError(null);
-        const response = await axios.get("http://localhost:5000/api/lanebins");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/lanebins`);
         const rawData = response.data;
         if (!Array.isArray(rawData)) throw new Error("Invalid data format");
 

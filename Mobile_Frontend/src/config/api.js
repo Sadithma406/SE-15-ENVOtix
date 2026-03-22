@@ -1,11 +1,16 @@
-// API Configuration - Change this IP to your computer's local IP address
-// Find your IP: Run 'ipconfig' in terminal and look for IPv4 Address
+// API Configuration dynamically handles ANY network (Wi-Fi, Hotspot)
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
-const API_IP = '10.168.7.103';
+// Automatically grabs your computer's IP from the Expo Dev server!
+let API_IP = '192.168.1.196'; // Fallback IP
+if (Constants.expoConfig?.hostUri) {
+  API_IP = Constants.expoConfig.hostUri.split(':')[0];
+}
+
 const API_PORT = '5000';
 
-// Use localhost for web, IP address for mobile devices
+// Use localhost for web, dynamic computer IP for mobile devices
 export const API_BASE_URL = Platform.OS === 'web' 
   ? `http://localhost:${API_PORT}` 
   : `http://${API_IP}:${API_PORT}`;

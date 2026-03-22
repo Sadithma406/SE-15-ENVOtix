@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   const fetchBinData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/lanebins");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/lanebins`);
       const data = response.data;
       setBins(data);
       calculateAnalytics(data);

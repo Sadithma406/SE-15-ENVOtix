@@ -19,10 +19,10 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid = "REDMI 15C";
+const char* password = "23456789";
 const char* mqtt_server = "broker.hivemq.com";
-const char* myBinId = "6988ff9898e4690a4a14770c"; // Lane 04 - Nugegoda
+const char* myBinId = "6988ff9898e4690a4a14770c"; 
 
 unsigned long lastUpdate = 0;
 const int BIN_HEIGHT_CM = 80; 

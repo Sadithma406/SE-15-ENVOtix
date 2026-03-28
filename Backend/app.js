@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,12 +13,17 @@ const initMQTT = require('./services/mqttService');
 const initHouseholdMQTT = require('./services/householdMqttService');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://app.envotix.com',
+    'http://localhost:5173'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 initMQTT();
 initHouseholdMQTT();
-require('dotenv').config();
 
 // connecting with the Data_Envotix database in MongoDB Atlas using Environment Variables
 const mongoUrl = process.env.MONGO_URI || "mongodb://localhost:27017/Data_Envotix";
@@ -32,5 +39,5 @@ app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/lanebins', lanebinRoutes);
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

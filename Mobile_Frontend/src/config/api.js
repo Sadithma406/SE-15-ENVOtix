@@ -1,18 +1,19 @@
-// API Configuration dynamically handles ANY network (Wi-Fi, Hotspot)
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 
-// Automatically grabs your computer's IP from the Expo Dev server!
-let API_IP = '192.168.1.196'; // Fallback IP
+// Production Backend URL (Render deployment)
+const PRODUCTION_API_URL = 'https://se-15-envotix.onrender.com';
+
+// Development: auto-detect local IP from Expo Dev Server
+let DEV_API_URL = 'http://192.168.1.196:5000'; // Fallback
 if (Constants.expoConfig?.hostUri) {
-  API_IP = Constants.expoConfig.hostUri.split(':')[0];
+  const devIP = Constants.expoConfig.hostUri.split(':')[0];
+  DEV_API_URL = `http://${devIP}:5000`;
 }
 
-const API_PORT = '5000';
-
-// Use localhost for web, dynamic computer IP for mobile devices
-export const API_BASE_URL = Platform.OS === 'web' 
-  ? `http://localhost:${API_PORT}` 
-  : `http://${API_IP}:${API_PORT}`;
+// __DEV__ is true in Expo Go / dev mode, false in production APK
+export const API_BASE_URL = __DEV__
+  ? (Platform.OS === 'web' ? 'http://localhost:5000' : DEV_API_URL)
+  : PRODUCTION_API_URL;
 
 export default API_BASE_URL;

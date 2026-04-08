@@ -6,9 +6,9 @@ const Notification = require('../models/notification');
 const NUGEGODA_ORGANIC_BIN_ID = "6988ff9898e4690a4a14770c";
 
 // Lane bin height configuration
-// Arduino code uses 80cm, but the actual bin height is 55cm
+// Arduino code uses 80cm, but the actual bin height is 51cm
 const ARDUINO_BIN_HEIGHT = 80;   // cm — what the Arduino thinks the bin height is
-const ACTUAL_BIN_HEIGHT = 55;   // cm — the real bin height
+const ACTUAL_BIN_HEIGHT = 51;   // cm — the real bin height (measured: empty bin reads ~51cm distance)
 
 /**
  * Recalculates fill level from Arduino's value to the correct value.
@@ -29,17 +29,13 @@ function recalcFillLevel(arduinoFillLevel) {
     return Math.round(corrected);
 }
 
-// Coin reward configuration
-// 1 coin is awarded for every 5cm of waste dumped into the bin
-const CM_PER_COIN = 5;
-
 // Tracks the current corrected fill level (%)
 let lastKnownFillLevel = 0;
 
-// The "stable" fill level before any waste was added.
-// Only updates when fill stays the same or decreases (not on increase).
-// This captures the fill level BEFORE someone dumps waste.
-let stableBaseline = 0;
+// The fill level at the moment of the last RFID tap.
+// Coins are awarded based on: (currentFill - fillAtLastTap)
+// This way, any garbage added between taps is always counted.
+let fillAtLastTap = 0;
 
 // Track which bin last had a fill increase (so we know the bin type on RFID tap)
 let lastFillBinId = null;
@@ -56,26 +52,25 @@ const initMQTT = () => {
         try {
             const data = JSON.parse(message.toString());
 
-            // DEBUG: Log all incoming messages
-            console.log(`[${topic}]`, data);
-
             // ROUTE 1: FILL LEVEL
             if (topic === 'envotix/lane/updates') {
                 const { binId, fillLevel } = data;
                 if (!binId) return;
 
-                // Recalculate fill level (Arduino uses 80cm, actual bin is 55cm)
+                // Recalculate fill level (Arduino uses 80cm, actual bin is 51cm)
                 const correctedFill = recalcFillLevel(fillLevel);
-                console.log(`[Lane] Fill recalc: Arduino=${fillLevel}% → Corrected=${correctedFill}%`);
+                console.log(`[envotix/lane/updates] { binId: '${binId}', fillLevel: ${correctedFill} }`);
 
-                // Update the stable baseline:
-                // If fill stayed the same or decreased → update baseline (no dump happening)
-                // If fill increased → someone dumped waste, keep baseline where it was
-                if (correctedFill <= lastKnownFillLevel) {
-                    stableBaseline = correctedFill;
-                } else {
-                    // Fill increased — remember which bin it was
+                // Track which bin had a fill increase (for the reward message)
+                if (correctedFill > lastKnownFillLevel) {
                     lastFillBinId = binId;
+                }
+
+                // Detect bin emptied: if fill drops by 30%+ it means the collector emptied the bin
+                // Reset fillAtLastTap so the next user isn't penalized
+                if (lastKnownFillLevel - correctedFill >= 30) {
+                    fillAtLastTap = correctedFill;
+                    console.log(`[Lane] Bin emptied detected! Baseline reset to ${correctedFill}%`);
                 }
 
                 lastKnownFillLevel = correctedFill;
@@ -90,8 +85,6 @@ const initMQTT = () => {
                     { $set: { fillLevel: correctedFill, status: status, lastUpdated: new Date() } },
                     { new: true }
                 );
-
-                console.log(`[Lane] Baseline: ${stableBaseline}% | Current: ${correctedFill}%`);
             }
 
             // ROUTE 2: GPS LOCATION
@@ -112,17 +105,16 @@ const initMQTT = () => {
                 );
             }
 
-            // ROUTE 3: RFID TAP — Award coins based on fill increase since baseline
+            // ROUTE 3: RFID TAP — Award coins based on fill increase since last tap
             if (topic === 'envotix/user/rfidTap') {
                 const { rfidTag } = data;
                 if (!rfidTag) return;
 
-                // 1. Calculate the percentage increase directly
-                const fillIncrease = lastKnownFillLevel - stableBaseline;
+                // Calculate the fill increase since the last RFID tap
+                const fillIncrease = lastKnownFillLevel - fillAtLastTap;
 
                 if (fillIncrease > 0) {
-                    // 2. Award 1 coin for every 10% increase
-                    // Example: 10% increase = 1 coin | 100% increase = 10 coins
+                    // Award 1 coin for every 10% increase
                     const coinsEarned = Math.floor(fillIncrease / 10);
 
                     if (coinsEarned > 0) {
@@ -164,16 +156,17 @@ const initMQTT = () => {
                             }).save();
                         }
 
-                        console.log(`[Reward] RFID ${rfidTag}: ${historyMessage} | +${fillIncrease}% -> ${coinsEarned} coin(s)`);
+                        console.log(`[Reward] RFID ${rfidTag}: +${fillIncrease}% -> ${coinsEarned} coin(s)`);
                     } else {
                         console.log(`[Reward] RFID ${rfidTag}: +${fillIncrease}% — Not enough for a coin (need at least 10%)`);
                     }
-
-                    // 3. Reset baseline to current level after rewarding
-                    stableBaseline = lastKnownFillLevel;
                 } else {
-                    console.log(`[Reward] RFID ${rfidTag}: No fill increase detected — 0 coins`);
+                    console.log(`[Reward] RFID ${rfidTag}: No fill increase since last tap — 0 coins`);
                 }
+
+                // Always reset: remember current fill level for the next tap
+                fillAtLastTap = lastKnownFillLevel;
+                console.log(`[Reward] Baseline reset to ${fillAtLastTap}% for next tap`);
             }
         } catch (err) {
             // Silent error handling

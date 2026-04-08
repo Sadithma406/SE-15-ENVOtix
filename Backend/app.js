@@ -16,7 +16,9 @@ const app = express();
 app.use(cors({
   origin: [
     'https://app.envotix.com',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'http://localhost:8081',
+    'http://localhost:19006'
   ],
   credentials: true
 }));

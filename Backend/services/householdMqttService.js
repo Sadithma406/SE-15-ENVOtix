@@ -25,7 +25,10 @@ const initHouseholdMQTT = () => {
             // ROUTE 1: FILL LEVELS from ultrasonic sensors
             // Expected payload: { "binId": "40247c61", "organic": 45, "plastic": 12, "paper": 78 }
             if (topic === 'envotix/household/fill') {
-                const { binId, organic, plastic, paper } = data;
+                const { binId, organic } = data;
+                // Swap plastic ↔ paper (sensors are physically swapped on the hardware)
+                const plastic = data.paper;
+                const paper = data.plastic;
                 if (!binId) return;
 
                 const now = new Date().toISOString();
